@@ -1,1 +1,21 @@
-{ "recommendations": ["expo.vscode-expo-tools"] }
+{
+  "recommendations": [
+    "bradlc.vscode-tailwindcss",
+    "dbaeumer.vscode-eslint",
+    "deinsoftware.arrow-function-snippets",
+    "denoland.vscode-deno",
+    "dsznajder.es7-react-js-snippets",
+    "esbenp.prettier-vscode",
+    "expo.vscode-expo-tools",
+    "formulahendry.auto-close-tag",
+    "formulahendry.auto-rename-tag",
+    "jock.svg",
+    "kisstkondoros.vscode-gutter-preview",
+    "mariusalchimavicius.json-to-ts",
+    "mikestead.dotenv",
+    "msjsdiag.vscode-react-native",
+    "naumovs.color-highlight",
+    "postman.postman-for-vscode",
+    "xabikos.javascriptsnippets"
+  ]
+}

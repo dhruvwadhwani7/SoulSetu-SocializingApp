@@ -7,6 +7,9 @@
     "icon": "./assets/images/icon.png",
     "scheme": "soulsetusocializingapp",
     "userInterfaceStyle": "automatic",
+    "androidNavigationBar": {
+      "backgroundColor": "#0a0a0a"
+    },
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true

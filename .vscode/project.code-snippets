@@ -1,0 +1,61 @@
+{
+  "Expo Router Page": {
+    "prefix": "page",
+    "body": [
+      "import { Text, View } from \"react-native\";",
+      "",
+      "export default function Page() {",
+      "  return (",
+      "    <View>",
+      "      <Text>${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}</Text>",
+      "    </View>",
+      "  );",
+      "}",
+      ""
+    ],
+    "description": "Create an Expo Router Page"
+  },
+  "Expo Router Stack Layout": {
+    "prefix": "stack",
+    "body": [
+      "import { Stack } from \"expo-router\";",
+      "",
+      "export default function Layout() {",
+      "  return <Stack></Stack>;",
+      "}",
+      ""
+    ],
+    "description": "Create a Expo Router Stack Layout"
+  },
+  "Expo Router Tabs Layout": {
+    "prefix": "tabs",
+    "body": [
+      "import { Tabs } from \"expo-router\";",
+      "",
+      "export default function Layout() {",
+      "  return <Tabs></Tabs>;",
+      "}",
+      ""
+    ],
+    "description": "Create a Expo Router Tabs Layout"
+  },
+  "React Native Default Export Functional Component": {
+    "prefix": "comp",
+    "body": [
+      "import { FC } from \"react\";",
+      "import { Text, View } from \"react-native\";",
+      "",
+      "interface Props {}",
+      "",
+      "export const ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}: FC<Props> = () => {",
+      "  return (",
+      "    <View>",
+      "      <Text>${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/}</Text>",
+      "    </View>",
+      "  );",
+      "};",
+      ""
+    ],
+    "description": "Create a React Native Functional Component with TypeScript"
+  }
+}
