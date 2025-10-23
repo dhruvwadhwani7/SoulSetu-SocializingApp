@@ -200,7 +200,7 @@ otp_expiry = 3600
 
 [auth.sms]
 # Allow/disallow new user signups via SMS to your project.
-enable_signup = false
+enable_signup = true
 # If enabled, users need to confirm their phone number before signing in.
 enable_confirmations = false
 # Template for sending OTP to users
@@ -209,8 +209,35 @@ template = "Your code is {{ .Code }}"
 max_frequency = "5s"
 
 # Use pre-defined map of phone number to OTP for testing.
-# [auth.sms.test_otp]
-# 4152127777 = "123456"
+
+[auth.sms.test_otp]
+18761234567 = "111111"
+10000000000 = "111111"
+10000000001 = "111111"
+10000000002 = "111111"
+10000000003 = "111111"
+10000000004 = "111111"
+10000000005 = "111111"
+10000000006 = "111111"
+10000000007 = "111111"
+10000000008 = "111111"
+10000000009 = "111111"
+10000000010 = "111111"
+10000000011 = "111111"
+10000000012 = "111111"
+10000000014 = "111111"
+10000000015 = "111111"
+10000000016 = "111111"
+10000000017 = "111111"
+10000000018 = "111111"
+10000000019 = "111111"
+10000000020 = "111111"
+10000000021 = "111111"
+10000000022 = "111111"
+10000000023 = "111111"
+10000000024 = "111111"
+10000000025 = "111111"
+
 
 # Configure logged in session timeouts.
 # [auth.sessions]
@@ -230,12 +257,12 @@ max_frequency = "5s"
 # uri = "pg-functions://<database>/<schema>/<hook_name>"
 
 # Configure one of the supported SMS providers: `twilio`, `twilio_verify`, `messagebird`, `textlocal`, `vonage`.
-[auth.sms.twilio]
-enabled = false
-account_sid = ""
-message_service_sid = ""
+[auth.sms.twilio_verify]
+enabled = true
+account_sid = "ACfeb41212ab45ae70eb010e48d2a3dd0b"
+message_service_sid = "VA54e9c88b0620df8e621f2b72fe1a5c3b"
 # DO NOT commit your Twilio auth token to git. Use environment variable substitution instead:
-auth_token = "env(SUPABASE_AUTH_SMS_TWILIO_AUTH_TOKEN)"
+auth_token = "0498045c4e38ef4399998168767098fc"
 
 # Multi-factor-authentication is available to Supabase Pro plan.
 [auth.mfa]
