@@ -1,4 +1,7 @@
-import { Ionicons } from "@expo/vector-icons";
+import Card from "@/components/assets/Card";
+import Heart from "@/components/assets/Heart";
+import Home from "@/components/assets/Home";
+import Person from "@/components/assets/Person";
 import { Tabs } from "expo-router";
 import colors from "tailwindcss/colors";
 
@@ -7,43 +10,36 @@ export default function Layout() {
     <Tabs
       screenOptions={{
         tabBarStyle: {
-          backgroundColor: colors.neutral[950],
+          backgroundColor: "#D9D9D9",
         },
         tabBarActiveTintColor: colors.white,
-        tabBarInactiveTintColor: colors.neutral[500],
+        tabBarInactiveTintColor: colors.black,
         tabBarShowLabel: false,
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home-outline" color={color} size={size} />
-          ),
+          tabBarIcon: ({ color }) => <Home fill={color} />,
         }}
       />
       <Tabs.Screen
         name="likes"
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="heart-outline" color={color} size={size} />
-          ),
+          tabBarIcon: ({ color }) => <Heart fill={color} />,
         }}
       />
       <Tabs.Screen
-        name="matches"
+        name="profile"
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="chatbox-outline" color={color} size={size} />
-          ),
+          headerShown: false,
+          tabBarIcon: ({ color }) => <Card fill={color} />,
         }}
       />
       <Tabs.Screen
         name="hinge"
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-circle" color={color} size={size} />
-          ),
+          tabBarIcon: ({ color }) => <Person fill={color} />,
         }}
       />
     </Tabs>
