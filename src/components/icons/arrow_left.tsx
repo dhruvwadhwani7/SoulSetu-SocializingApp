@@ -1,23 +1,80 @@
-import React from "react";
+import { useRouter } from "expo-router";
+import React, { useRef } from "react";
+import { Animated, Pressable, StyleProp, ViewStyle } from "react-native";
 import Svg, { Path, SvgProps } from "react-native-svg";
 
 type ArrowLeftProps = SvgProps & {
   width?: number | string;
   height?: number | string;
   fill?: string;
+  style?: StyleProp<ViewStyle>;
+  onPress?: () => void;
 };
+
+/**
+ * Pressable ArrowLeft icon
+ * - Animates scale on press
+ * - Calls provided onPress or defaults to router.back()
+ */
 const ArrowLeft: React.FC<ArrowLeftProps> = ({
   width = 16,
   height = 16,
   fill = "black",
+  style,
+  onPress,
   ...props
-}) => (
-  <Svg width={width} height={height} viewBox="0 0 16 16" {...props}>
-    <Path
-      d="M3.90289 9.19876L8.41716 13.9581C8.62534 14.1853 8.74053 14.4897 8.73793 14.8056C8.73533 15.1215 8.61513 15.4237 8.40324 15.6471C8.19135 15.8705 7.9047 15.9972 7.60505 16C7.3054 16.0027 7.01671 15.8813 6.80117 15.6618L0.336039 8.84573C0.229542 8.7341 0.145029 8.60136 0.0873586 8.45517C0.0296886 8.30898 0 8.15221 0 7.99388C0 7.83555 0.0296886 7.67878 0.0873586 7.53258C0.145029 7.38639 0.229542 7.25366 0.336039 7.14202L6.80117 0.325981C7.01768 0.111927 7.30469 -0.00492096 7.60147 0.000159264C7.89825 0.00523949 8.18151 0.131852 8.39132 0.353205C8.60113 0.574557 8.72102 0.873283 8.72563 1.18618C8.73024 1.49907 8.61921 1.80158 8.41602 2.02969L3.90174 6.78899H14.8571C15.1602 6.78899 15.4509 6.91593 15.6653 7.14189C15.8796 7.36785 16 7.67432 16 7.99388C16 8.31343 15.8796 8.6199 15.6653 8.84586C15.4509 9.07182 15.1602 9.19876 14.8571 9.19876H3.90289Z"
-      fill={fill}
-    />
-  </Svg>
-);
+}) => {
+  const router = useRouter();
+  const scale = useRef(new Animated.Value(1)).current;
+
+  const handlePressIn = () => {
+    Animated.spring(scale, {
+      toValue: 0.92,
+      useNativeDriver: true,
+      speed: 20,
+      bounciness: 0,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scale, {
+      toValue: 1,
+      useNativeDriver: true,
+      speed: 20,
+      bounciness: 8,
+    }).start();
+  };
+
+  const handlePress = () => {
+    if (onPress) {
+      onPress();
+    } else {
+      // default behavior: pop/back
+      try {
+        router.back();
+      } catch {
+        // graceful fallback if router not available
+      }
+    }
+  };
+
+  return (
+    <Animated.View style={[{ transform: [{ scale }] }, style]}>
+      <Pressable
+        onPress={handlePress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        accessibilityRole="button"
+      >
+        <Svg width={width} height={height} viewBox="0 0 16 16" {...props}>
+          <Path
+            d="M3.90289 9.19876L8.41716 13.9581C8.62534 14.1853 8.74053 14.4897 8.73793 14.8056C8.73533 15.1215 8.61513 15.4237 8.40324 15.6471C8.19135 15.8705 7.9047 15.9972 7.60505 16C7.3054 16.0027 7.01671 15.8813 6.80117 15.6618L0.336039 8.84573C0.229542 8.7341 0.145029 8.60136 0.0873586 8.45517C0.0296886 8.30898 0 8.15221 0 7.99388C0 7.83555 0.0296886 7.67878 0.0873586 7.53258C0.145029 7.38639 0.229542 7.25366 0.336039 7.14202L6.80117 0.325981C7.01768 0.111927 7.30469 -0.00492096 7.60147 0.000159264C7.89825 0.00523949 8.18151 0.131852 8.39132 0.353205C8.60113 0.574557 8.72102 0.873283 8.72563 1.18618C8.73024 1.49907 8.61921 1.80158 8.41602 2.02969L3.90174 6.78899H14.8571C15.1602 6.78899 15.4509 6.91593 15.6653 7.14189C15.8796 7.36785 16 7.67432 16 7.99388C16 8.31343 15.8796 8.6199 15.6653 8.84586C15.4509 9.07182 15.1602 9.19876 14.8571 9.19876H3.90289Z"
+            fill={fill}
+          />
+        </Svg>
+      </Pressable>
+    </Animated.View>
+  );
+};
 
 export default React.memo(ArrowLeft);

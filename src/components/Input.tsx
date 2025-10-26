@@ -8,10 +8,13 @@ import React, {
 import {
   Platform,
   Pressable,
+  StyleProp,
   StyleSheet,
   Text,
   TextInput,
+  TextStyle,
   View,
+  ViewStyle,
 } from "react-native";
 
 type InputProps = {
@@ -21,6 +24,10 @@ type InputProps = {
   value: string;
   onChangeText: (val: string) => void;
   error?: string;
+  multiline?: boolean;
+  numberOfLines?: number;
+  containerStyle?: StyleProp<ViewStyle>;
+  inputTextStyle?: StyleProp<TextStyle>;
 };
 
 const Input = forwardRef(
@@ -32,11 +39,40 @@ const Input = forwardRef(
       value,
       onChangeText,
       error,
+      multiline = false,
+      numberOfLines,
+      containerStyle,
+      inputTextStyle,
     }: InputProps,
     ref: React.Ref<any>
   ) => {
     const [showDatePicker, setShowDatePicker] = useState(false);
     const textInputRef = useRef<TextInput | null>(null);
+
+    // helper: pad single digit numbers
+    const pad = (n: number) => (n < 10 ? `0${n}` : `${n}`);
+
+    // format Date -> "dd-mm-yyyy"
+    const formatDate = (d: Date) =>
+      `${pad(d.getDate())}-${pad(d.getMonth() + 1)}-${d.getFullYear()}`;
+
+    // parse "dd-mm-yyyy" or fallback to Date(value) if possible; returns a valid Date
+    const parseDateFromString = (s?: string) => {
+      if (!s) return new Date();
+      const dmY = s.trim();
+      const parts = dmY.split("-");
+      if (parts.length === 3) {
+        const dd = parseInt(parts[0], 10);
+        const mm = parseInt(parts[1], 10);
+        const yyyy = parseInt(parts[2], 10);
+        if (!Number.isNaN(dd) && !Number.isNaN(mm) && !Number.isNaN(yyyy)) {
+          return new Date(yyyy, mm - 1, dd);
+        }
+      }
+      // fallback: try Date constructor (handles ISO etc.)
+      const fallback = new Date(s);
+      return isNaN(fallback.getTime()) ? new Date() : fallback;
+    };
 
     useImperativeHandle(ref, () => ({
       focus: () => {
@@ -89,7 +125,11 @@ const Input = forwardRef(
         {type === "dob" ? (
           <>
             <Pressable
-              style={[styles.input, error && styles.errorBorder]}
+              style={[
+                styles.input,
+                error && styles.errorBorder,
+                containerStyle,
+              ]}
               onPress={() => setShowDatePicker(true)}
             >
               <Text style={value ? styles.valueText : styles.placeholderText}>
@@ -99,28 +139,46 @@ const Input = forwardRef(
 
             {showDatePicker && (
               <DateTimePicker
-                value={value ? new Date(value) : new Date()}
+                value={parseDateFromString(value)}
                 mode="date"
                 display="default"
                 onChange={(_, selectedDate) => {
+                  // close picker (Android will dismiss; iOS might keep open depending on implementation)
                   setShowDatePicker(false);
-                  if (selectedDate) onChangeText(selectedDate.toISOString());
+                  if (selectedDate) {
+                    // emit date as dd-mm-yyyy (no time)
+                    onChangeText(formatDate(selectedDate));
+                  }
                 }}
               />
             )}
           </>
         ) : (
-          <TextInput
-            ref={textInputRef}
-            style={[styles.input, error && styles.errorBorder]}
-            placeholder={placeholder}
-            keyboardType={getKeyboardType()}
-            textContentType={getTextContentType()}
-            secureTextEntry={isSecure}
-            value={value}
-            onChangeText={onChangeText}
-            autoCapitalize={type === "email" ? "none" : "sentences"}
-          />
+          <View
+            style={[
+              styles.input,
+              multiline && styles.textarea,
+              error && styles.errorBorder,
+              containerStyle,
+            ]}
+          >
+            <TextInput
+              ref={textInputRef}
+              style={[styles.textInput, inputTextStyle]}
+              placeholder={placeholder}
+              keyboardType={getKeyboardType()}
+              textContentType={getTextContentType()}
+              secureTextEntry={isSecure}
+              value={value}
+              onChangeText={onChangeText}
+              autoCapitalize={type === "email" ? "none" : "sentences"}
+              multiline={multiline}
+              numberOfLines={multiline ? (numberOfLines ?? 5) : 1}
+              textAlignVertical={
+                multiline ? ("top" as const) : ("center" as const)
+              }
+            />
+          </View>
         )}
 
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
@@ -155,6 +213,17 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     minHeight: 44, // ensures tappable area on small screens
     justifyContent: "center", // centers value/placeholder vertically for pressable DOB
+  },
+  textarea: {
+    minHeight: 120,
+    paddingTop: 12,
+    paddingBottom: 12,
+  },
+  textInput: {
+    padding: 0,
+    margin: 0,
+    flexGrow: 1,
+    color: "#000",
   },
   errorBorder: {
     borderWidth: 1,
