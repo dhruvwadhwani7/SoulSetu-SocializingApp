@@ -68,6 +68,7 @@ export default function Page() {
           <Fab
             disabled={!isValid}
             onPress={handleSubmit}
+            className="absolute bottom-6 right-2"
             // loading={isPending}
           />
         </View>
