@@ -7,11 +7,15 @@ import { useEffect } from "react";
 import { useFonts } from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import { supabase } from "@/lib/supabase";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 cssInterop(VideoView, { className: { target: "style" } });
 cssInterop(Ionicons, { className: { target: "style" } });
-export default function Layout() {
 
+SplashScreen.preventAutoHideAsync();
+
+const queryClient = new QueryClient();
+export default function Layout() {
   const [loaded, error] = useFonts(fonts);
 
   useEffect(() => {
@@ -24,12 +28,14 @@ export default function Layout() {
     return null;
   }
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <Stack.Screen name="(app)" />
-    </Stack>
+    <QueryClientProvider client={queryClient}>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen name="(app)" />
+      </Stack>
+    </QueryClientProvider>
   );
 }

@@ -13,3 +13,6 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
     detectSessionInUrl: false,
   },
 });
+
+// console.log("BASE_URL:", process.env.EXPO_PUBLIC_BASE_URL);
+// console.log("ANON_KEY:", process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY?.slice(0, 10));

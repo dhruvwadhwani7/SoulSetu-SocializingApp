@@ -1,6 +1,7 @@
+import { useVerifyOtp } from "@/api/auth";
 import { Fab } from "@/components/fab";
 import { StackHeader } from "@/components/stack-header";
-import { router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { useMemo, useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -15,8 +16,18 @@ import colors from "tailwindcss/colors";
 export default function Page() {
   const [otp, setOtp] = useState("");
   const { phone } = useLocalSearchParams<{ phone: string }>();
+  const {
+    mutate: verifyOtp,
+    isPending,
+    isError,
+    error,
+    reset,
+  } = useVerifyOtp();
 
   const handleOtpChange = (text: string) => {
+    if (isError) {
+      reset();
+    }
     setOtp(text);
   };
 
@@ -24,7 +35,9 @@ export default function Page() {
     return otp.length === 6;
   }, [otp]);
 
- const handleSubmit = () => {};
+  const handleSubmit = () => {
+    verifyOtp({ phone, token: otp });
+  };
 
   return (
     <KeyboardAvoidingView
@@ -39,6 +52,13 @@ export default function Page() {
           <Text className="text-4xl font-playfair-semibold">
             Enter your verification code?
           </Text>
+          <View className="items-end">
+          <Fab
+            disabled={!isValid || isPending}
+            onPress={handleSubmit}
+            loading={isPending}
+          />
+        </View>
           <View className="h-28" />
           <View className="flex-row gap-2 h-16">
             {Array.from({ length: 6 }).map((_, index) => (
@@ -67,14 +87,13 @@ export default function Page() {
             onChangeText={handleOtpChange}
             maxLength={6}
           />
+          {isError && (
+            <Text className="text-red-500 text-sm text-center mt-4">
+              {error.message}
+            </Text>
+          )}
         </View>
-        <View className="items-end">
-          <Fab
-            disabled={!isValid}
-            onPress={handleSubmit}
-            className="absolute bottom-6 right-20"
-          />
-        </View>
+        
       </View>
     </KeyboardAvoidingView>
   );
