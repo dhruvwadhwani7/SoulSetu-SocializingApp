@@ -1,10 +1,18 @@
-import { Stack } from "expo-router";
-import { StackScreen } from "react-native-screens";
+import { useAuth } from "@/store/auth";
+import { Redirect, Stack } from "expo-router";
 
 export default function Layout() {
-  return <Stack>
-    <Stack.Screen name="sign-in"/>
-    <Stack.Screen name="phone"/>
-    <Stack.Screen name="otp"/>
-  </Stack>;
+  const { session } = useAuth();
+
+  if (session) {
+    return <Redirect href={"/(app)/(tabs)"} />;
+  }
+
+  return (
+    <Stack>
+      <Stack.Screen name="sign-in" />
+      <Stack.Screen name="phone" />
+      <Stack.Screen name="otp" />
+    </Stack>
+  );
 }
