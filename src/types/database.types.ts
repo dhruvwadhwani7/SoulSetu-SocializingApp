@@ -17,10 +17,10 @@ export type Database = {
     Functions: {
       graphql: {
         Args: {
-          extensions?: Json
           operationName?: string
           query?: string
           variables?: Json
+          extensions?: Json
         }
         Returns: Json
       }
@@ -457,7 +457,6 @@ export type Database = {
           covid_vaccine_id: number | null
           created_at: string
           dob: string | null
-          email_id: string | null
           family_plan_id: number | null
           first_name: string | null
           gender_id: number | null
@@ -465,7 +464,7 @@ export type Database = {
           id: string
           last_name: string | null
           latitude: number | null
-          location: unknown
+          location: unknown | null
           longitude: number | null
           max_age: number | null
           max_distance_km: number | null
@@ -482,7 +481,6 @@ export type Database = {
           covid_vaccine_id?: number | null
           created_at?: string
           dob?: string | null
-          email_id?: string | null
           family_plan_id?: number | null
           first_name?: string | null
           gender_id?: number | null
@@ -490,7 +488,7 @@ export type Database = {
           id?: string
           last_name?: string | null
           latitude?: number | null
-          location?: unknown
+          location?: unknown | null
           longitude?: number | null
           max_age?: number | null
           max_distance_km?: number | null
@@ -507,7 +505,6 @@ export type Database = {
           covid_vaccine_id?: number | null
           created_at?: string
           dob?: string | null
-          email_id?: string | null
           family_plan_id?: number | null
           first_name?: string | null
           gender_id?: number | null
@@ -515,7 +512,7 @@ export type Database = {
           id?: string
           last_name?: string | null
           latitude?: number | null
-          location?: unknown
+          location?: unknown | null
           longitude?: number | null
           max_age?: number | null
           max_distance_km?: number | null
@@ -638,113 +635,159 @@ export type Database = {
     }
     Functions: {
       get_likes: {
-        Args: never
+        Args: Record<PropertyKey, never>
         Returns: {
-          answer_text: string
           id: string
           photo_url: string
-          profile: Json
+          answer_text: string
           question: string
+          profile: Json
         }[]
       }
       get_profile: {
-        Args: never
+        Args: Record<PropertyKey, never>
         Returns: {
-          answers: Json
-          avatar_url: string
-          children: Json
-          covid_vaccine: Json
-          dob: string
-          ethnicities: Json
-          ethnicity_preferences: Json
-          family_plan: Json
-          first_name: string
-          gender: Json
-          gender_preferences: Json
-          height_cm: number
           id: string
+          first_name: string
           last_name: string
+          dob: string
+          height_cm: number
+          neighborhood: string
           latitude: number
           longitude: number
-          max_age: number
           max_distance_km: number
           min_age: number
-          neighborhood: string
-          pets: Json
+          max_age: number
           phone: string
-          photos: Json
-          pronouns: Json
-          sexuality: Json
+          children: Json
+          family_plan: Json
+          covid_vaccine: Json
           zodiac_sign: Json
+          sexuality: Json
+          gender: Json
+          ethnicities: Json
+          pets: Json
+          pronouns: Json
+          ethnicity_preferences: Json
+          gender_preferences: Json
+          answers: Json
+          photos: Json
+          avatar_url: string
         }[]
       }
       get_profiles: {
-        Args: { page_size: number }
+        Args: {
+          page_size: number
+        }
         Returns: {
-          age: number
-          answers: Json
-          children: string
-          covid_vaccine: string
-          ethnicities: string[]
-          family_plan: string
-          first_name: string
-          gender: string
-          height_cm: number
           id: string
+          first_name: string
+          age: number
+          height_cm: number
           neighborhood: string
-          pets: string[]
-          photos: Json
-          pronouns: string[]
-          sexuality: string
+          children: string
+          family_plan: string
+          covid_vaccine: string
           zodiac_sign: string
+          gender: string
+          sexuality: string
+          ethnicities: string[]
+          pets: string[]
+          pronouns: string[]
+          photos: Json
+          answers: Json
         }[]
       }
       like_profile: {
-        Args: { answer?: string; photo?: string; profile: string }
+        Args: {
+          profile: string
+          photo?: string
+          answer?: string
+        }
         Returns: string
       }
-      match: { Args: { interaction: string }; Returns: undefined }
-      remove_like: { Args: { interaction: string }; Returns: undefined }
-      skip_profile: { Args: { profile: string }; Returns: string }
-      unmatch: { Args: { interaction: string }; Returns: undefined }
-      update_age_range: {
-        Args: { max_age: number; min_age: number }
+      match: {
+        Args: {
+          interaction: string
+        }
         Returns: undefined
       }
-      update_distance: { Args: { distance: number }; Returns: undefined }
+      remove_like: {
+        Args: {
+          interaction: string
+        }
+        Returns: undefined
+      }
+      review_profiles: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      skip_profile: {
+        Args: {
+          profile: string
+        }
+        Returns: string
+      }
+      unmatch: {
+        Args: {
+          interaction: string
+        }
+        Returns: undefined
+      }
+      update_age_range: {
+        Args: {
+          min_age: number
+          max_age: number
+        }
+        Returns: undefined
+      }
+      update_distance: {
+        Args: {
+          distance: number
+        }
+        Returns: undefined
+      }
       update_ethnicity_preferences: {
-        Args: { ethnicity_preferences: number[] }
+        Args: {
+          ethnicity_preferences: number[]
+        }
         Returns: undefined
       }
       update_gender_preferences: {
-        Args: { gender_preferences: number[] }
+        Args: {
+          gender_preferences: number[]
+        }
         Returns: undefined
       }
       update_location: {
-        Args: { latitude: number; longitude: number; neighborhood: string }
+        Args: {
+          latitude: number
+          longitude: number
+          neighborhood: string
+        }
         Returns: undefined
       }
       update_profile: {
         Args: {
-          answers?: Json
-          children?: number
-          covid_vaccine?: number
-          dob?: string
-          ethnicities?: number[]
-          family_plan?: number
           first_name?: string
-          gender?: number
-          gender_preferences?: number[]
-          height_cm?: number
           last_name?: string
+          dob?: string
+          height_cm?: number
+          neighborhood?: string
           latitude?: number
           longitude?: number
-          neighborhood?: string
-          pets?: number[]
-          photos?: Json
-          pronouns?: number[]
-          sexuality?: number
+          children?: number
+          family_plan?: number
+          covid_vaccine?: number
           zodiac_sign?: number
+          sexuality?: number
+          gender?: number
+          ethnicities?: number[]
+          pets?: number[]
+          pronouns?: number[]
+          gender_preferences?: number[]
+          answers?: Json
+          photos?: Json
         }
         Returns: undefined
       }
@@ -758,33 +801,27 @@ export type Database = {
   }
 }
 
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
-
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+type PublicSchema = Database[Extract<keyof Database, "public">]
 
 export type Tables<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+  PublicTableNameOrOptions extends
+    | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+        Database[PublicTableNameOrOptions["schema"]]["Views"])
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+      Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
+        PublicSchema["Views"])
+    ? (PublicSchema["Tables"] &
+        PublicSchema["Views"])[PublicTableNameOrOptions] extends {
         Row: infer R
       }
       ? R
@@ -792,24 +829,20 @@ export type Tables<
     : never
 
 export type TablesInsert<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+  PublicTableNameOrOptions extends
+    | keyof PublicSchema["Tables"]
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
         Insert: infer I
       }
       ? I
@@ -817,24 +850,20 @@ export type TablesInsert<
     : never
 
 export type TablesUpdate<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+  PublicTableNameOrOptions extends
+    | keyof PublicSchema["Tables"]
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
         Update: infer U
       }
       ? U
@@ -842,45 +871,29 @@ export type TablesUpdate<
     : never
 
 export type Enums<
-  DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+  PublicEnumNameOrOptions extends
+    | keyof PublicSchema["Enums"]
+    | { schema: keyof Database },
+  EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
-> = DefaultSchemaEnumNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+> = PublicEnumNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
+    ? PublicSchema["Enums"][PublicEnumNameOrOptions]
     : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof DatabaseWithoutInternals },
+    | keyof PublicSchema["CompositeTypes"]
+    | { schema: keyof Database },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof Database
   }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
-> = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
+    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
-
-export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
-  public: {
-    Enums: {},
-  },
-} as const
-
