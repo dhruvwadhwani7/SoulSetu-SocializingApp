@@ -1,11 +1,11 @@
 import { useMyProfile } from "@/api/my-profile";
 import { usePrompts, useChildren, useCovidVaccine, useEthnicities, useFamilyPlans, useGenders, usePets, usePronouns, useSexualities, useZodiacSigns } from "@/api/options";
 import { Redirect } from "expo-router";
-import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 
 
 export default function Page() {
-  const { isPending, isError ,data} = useMyProfile();
+  const { isPending, isError } = useMyProfile();
   usePrompts();
   useChildren();
   useCovidVaccine();
@@ -34,15 +34,7 @@ export default function Page() {
     );
   }
 
-  if (data) {
-    console.log(data);
-    return (
-      <ScrollView className="flex-1 bg-white">
-        <Text>{JSON.stringify(data)}</Text>
-      </ScrollView>
-    )
-  }
   
 
   return <Redirect href={"/(app)/(tabs)"} />;
-}
+} 

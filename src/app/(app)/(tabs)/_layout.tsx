@@ -1,8 +1,13 @@
 import { Tabs } from "expo-router";
 import colors from "tailwindcss/colors"
 import { Ionicons } from "@expo/vector-icons";
+import { useMyProfile } from "@/api/my-profile";
+import { Image } from "expo-image";
+import { View } from "react-native";
+import { cn } from "@/utils/cn";
 
 export default function Layout() {
+  const {data : profile} = useMyProfile()
   return <Tabs 
   screenOptions={{
         tabBarStyle: {
@@ -28,7 +33,7 @@ export default function Layout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="heart-outline" color={color} size={size} />
           ),
-          headerShown: false,
+         
         }}
       />
       <Tabs.Screen
@@ -37,15 +42,28 @@ export default function Layout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="chatbox-outline" color={color} size={size} />
           ),
-          headerShown: false,
+         
         }}
       />
     <Tabs.Screen name="profile"
      options={{
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color, size,focused }) => profile && profile.avatar_url ? (
+            <View
+                style={{
+                  width: size,
+                  height: size,
+                }}
+                className={cn(
+                  focused && "border border-white rounded-full p-0.5"
+                )}
+              >
+              <Image source={profile.avatar_url} 
+              className="flex-1 aspect-square rounded-full bg-neutral-200"/>
+            </View>
+          ) : (
             <Ionicons name="person-circle" color={color} size={size} />
           ),
-          headerShown: false,
+          
         }}/>  
   </Tabs>;
 }

@@ -1,0 +1,1 @@
+ttps://<your-supabase-project>.supabase.co/storage/v1/object/public/profiles/<file-path>

@@ -5,6 +5,7 @@ import "../../global.css";
 import { fonts } from "@/constants/fonts";
 import { useEffect } from "react";
 import { useFonts } from "expo-font";
+import { Image } from "expo-image";
 import { Ionicons } from "@expo/vector-icons";
 // import { supabase } from "@/lib/supabase";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -12,6 +13,7 @@ import { AuthProvider } from "@/store/auth";
 
 cssInterop(VideoView, { className: { target: "style" } });
 cssInterop(Ionicons, { className: { target: "style" } });
+cssInterop(Image, { className: { target: "style" } });
 
 SplashScreen.preventAutoHideAsync();
 
@@ -36,7 +38,18 @@ export default function Layout() {
             headerShown: false,
           }}
         >
-          <Stack.Screen name="(app)" />
+          <Stack.Screen
+              name="(app)"
+              options={{
+                animation: "none",
+              }}
+            />
+          <Stack.Screen
+              name="(auth)"
+              options={{
+                animation: "none",
+              }}
+            />
         </Stack>
       </AuthProvider>
     </QueryClientProvider>
