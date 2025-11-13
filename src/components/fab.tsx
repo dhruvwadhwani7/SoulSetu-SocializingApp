@@ -25,7 +25,7 @@ export const Fab: FC<Props> = ({
   return (
     <Pressable
       className={cn(
-        "h-16 aspect-square rounded-full justify-center items-center bg-fuchsia-900",
+        "h-16 aspect-square rounded-full justify-center items-center bg-[#5D5D5C]",
         {
           "bg-neutral-200": disabled && !loading,
           "opacity-50": disabled,
@@ -58,4 +58,3 @@ export const Fab: FC<Props> = ({
     </Pressable>
   );
 };
-

@@ -4,17 +4,19 @@ import { StackHeader } from "@/components/stack-header";
 import { router, useFocusEffect } from "expo-router";
 import { useMemo, useRef, useState } from "react";
 import {
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
-  StatusBar,
   Text,
   TextInput,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import colors from "tailwindcss/colors";
 
 export default function Page() {
   const [phone, setPhone] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
   const phoneRef = useRef<TextInput>(null);
   const {
     mutate: signInWithOtp,
@@ -56,43 +58,64 @@ export default function Page() {
       keyboardVerticalOffset={100}
     >
       <StackHeader />
-      <StatusBar barStyle={"dark-content"} />
-      <View className="flex-1 justify-center pt-28">
-        <View className="flex-1">
-          <Text className="text-4xl font-playfair-semibold">
-            Whats your phone number?
-          </Text>
-          <View className="h-28" />
-          <TextInput
-            className="border-b h-16 text-4xl font-poppins-semibold"
-            style={
-              Platform.OS === "ios" && {
-                lineHeight: undefined,
-              }
-            }
-            selectionColor={colors.black}
-            keyboardType="phone-pad"
-            textContentType="telephoneNumber"
-            autoFocus={true}
-            value={phone}
-            onChangeText={handlePhoneChange}
-            maxLength={16}
-            ref={phoneRef}
-          />
-          {isError && (
-            <Text className="text-red-500 text-sm text-center mt-4">
-              {error.message}
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+          phoneRef.current?.blur();
+        }}
+        accessible={false}
+      >
+        <View className="flex-1 justify-center pt-28">
+          <View className="flex-1">
+            <Text className="text-3xl font-poppins-medium">
+              Enter Your Phone Number
             </Text>
-          )}
+            <View className="h-28" />
+            <View className="relative">
+              <TextInput
+                className="pl-5 rounded-[10px] h-16 text-4xl font-poppins-semibold bg-[#E7E7E7]"
+                style={
+                  Platform.OS === "ios" ? { lineHeight: undefined } : undefined
+                }
+                placeholder="" // native placeholder disabled; using custom overlay so native styling doesn't interfere
+                selectionColor={colors.black}
+                keyboardType="phone-pad"
+                textContentType="telephoneNumber"
+                autoFocus={true}
+                value={phone}
+                onChangeText={handlePhoneChange}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+                maxLength={16}
+                ref={phoneRef}
+              />
+              {!phone && !isFocused && (
+                <View
+                  pointerEvents="none"
+                  className="absolute left-4 top-0 bottom-0 justify-center"
+                >
+                  <Text className="text-sm text-neutral-500">
+                    Your Phone Number
+                  </Text>
+                </View>
+              )}
+            </View>
+
+            {isError && (
+              <Text className="text-red-500 text-sm text-center mt-4">
+                {error.message}
+              </Text>
+            )}
+          </View>
+          <View className="items-end">
+            <Fab
+              disabled={!isValid || isPending}
+              onPress={handleSubmit}
+              loading={isPending}
+            />
+          </View>
         </View>
-        <View className="items-end">
-          <Fab
-            disabled={!isValid || isPending}
-            onPress={handleSubmit}
-            loading={isPending}
-          />
-        </View>
-      </View>
+      </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
 }
