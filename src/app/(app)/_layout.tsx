@@ -1,4 +1,5 @@
 import { useAuth } from "@/store/auth";
+import { EditProvider } from "@/store/edit";
 import { Redirect, Stack } from "expo-router";
 import { Text } from "react-native";
 
@@ -14,20 +15,22 @@ export default function Layout() {
   }
 
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <Stack.Screen name="(tabs)" options={{ animation: "none" }} />
-      <Stack.Screen
-        name="settings"
-        options={{ animation: "slide_from_bottom" }}
-      />
-      <Stack.Screen
-        name="profile"
-        options={{ animation: "slide_from_bottom" }}
-      />
-    </Stack>
+    <EditProvider>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen name="(tabs)" options={{ animation: "none" }} />
+        <Stack.Screen
+          name="settings"
+          options={{ animation: "slide_from_bottom" }}
+        />
+        <Stack.Screen
+          name="profile"
+          options={{ animation: "slide_from_bottom" }}
+        />
+      </Stack>
+    </EditProvider>
   );
 }
