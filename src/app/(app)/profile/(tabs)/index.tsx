@@ -1,3 +1,4 @@
+import { AnswerList } from "@/components/answer-list";
 import { PhotoGrid } from "@/components/photo-grid";
 import { useEdit } from "@/store/edit";
 import { ScrollView, Text, View } from "react-native";
@@ -22,6 +23,9 @@ export default function Page() {
       <View className="px-5">
         <Text className="text-base font-poppins-semibold mb-2">My Photos</Text>
         <PhotoGrid profile={edits} />
+        <View className="h-10" />
+        <Text className="text-base font-poppins-semibold mb-2">Answers</Text>
+        <AnswerList profile={edits} />
       </View>
     </ScrollView>
   );

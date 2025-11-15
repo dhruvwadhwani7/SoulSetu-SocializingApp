@@ -30,6 +30,14 @@ export default function Layout() {
           name="profile"
           options={{ animation: "slide_from_bottom" }}
         />
+        <Stack.Screen
+          name="write-answer"
+          options={{ animation: "slide_from_bottom" }}
+        />
+        <Stack.Screen
+          name="prompts"
+          options={{ animation: "slide_from_bottom" }}
+        />
       </Stack>
     </EditProvider>
   );
