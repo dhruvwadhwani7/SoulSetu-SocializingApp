@@ -1,16 +1,18 @@
 import { usePrompts } from "@/api/options";
 import { Prompt } from "@/api/options/types";
 import { StackHeaderV2 } from "@/components/stack-header-v2";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 
 export default function Page() {
   const { data: prompts } = usePrompts();
+  const { itemId } = useLocalSearchParams();
   const handlePress = (item: Prompt) => {
     router.dismissTo({
       pathname: "/write-answer",
       params: {
         promptId: item.id,
+        itemId,
       },
     });
   };
