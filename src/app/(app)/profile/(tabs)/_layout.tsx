@@ -1,4 +1,4 @@
-import { useMyProfile} from "@/api/my-profile";
+import { useMyProfile } from "@/api/my-profile";
 import { StackHeaderV3 } from "@/components/stack-header-v3";
 import { MaterialTopTabs } from "@/layouts/material-top-tabs";
 import { useEdit } from "@/store/edit";
@@ -14,11 +14,11 @@ export default function Layout() {
   // const { mutate } = useUpdateProfile();
 
   const handlePressCancel = async () => {
-    router.dismiss()
+    router.dismiss();
   };
 
   const handlePresDone = async () => {
-    router.dismiss()
+    router.dismiss();
   };
   return (
     <>
@@ -39,7 +39,7 @@ export default function Layout() {
           },
           tabBarActiveTintColor: colors.fuchsia[900],
           tabBarInactiveTintColor: colors.neutral[300],
-          // swipeEnabled: !gridActive, 
+          swipeEnabled: !gridActive,
         }}
       >
         <Stack.Screen
