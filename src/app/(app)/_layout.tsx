@@ -38,6 +38,10 @@ export default function Layout() {
           name="prompts"
           options={{ animation: "slide_from_bottom" }}
         />
+        <Stack.Screen
+          name="preferences"
+          options={{ animation: "slide_from_bottom" }}
+        />
       </Stack>
     </EditProvider>
   );
