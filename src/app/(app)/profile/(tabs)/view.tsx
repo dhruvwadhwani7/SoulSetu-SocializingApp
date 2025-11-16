@@ -16,7 +16,7 @@ export default function Page() {
 
   return (
     <View className="flex-1 px-5">
-      <ProfileView profile={transformPrivateProfile(edits)}/>
+      <ProfileView profile={transformPrivateProfile(edits)} myProfile/>
     </View>
   );
 }

@@ -10,10 +10,16 @@ import { Ionicons } from "@expo/vector-icons";
 // import { supabase } from "@/lib/supabase";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/store/auth";
+import MapView from "react-native-maps";
+import Checkbox from "expo-checkbox";
+import LottieView from "lottie-react-native";
 
 cssInterop(VideoView, { className: { target: "style" } });
 cssInterop(Ionicons, { className: { target: "style" } });
 cssInterop(Image, { className: { target: "style" } });
+cssInterop(MapView, { className: { target: "style" } });
+cssInterop(Checkbox, { className: { target: "style" } });
+cssInterop(LottieView, { className: { target: "style" } });
 
 SplashScreen.preventAutoHideAsync();
 
