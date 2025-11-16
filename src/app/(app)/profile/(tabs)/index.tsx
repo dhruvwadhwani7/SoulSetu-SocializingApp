@@ -16,21 +16,55 @@ export default function Page() {
       </View>
     );
   }
+
   return (
     <ScrollView
-      className="flex-1 bg-white pt-10"
-      contentContainerClassName="pb-20 gap-5"
+      className="flex-1 bg-white"
+      contentContainerClassName="pb-24"
       showsVerticalScrollIndicator={false}
       scrollEnabled={!gridActive}
     >
-      <View className="px-5">
-        <Text className="text-base font-poppins-semibold mb-2">My Photos</Text>
+      {/* Subtle decorative background blobs */}
+      <View className="absolute top-[-50] right-[-60] w-64 h-64 bg-[#F2EFFF] opacity-40 rounded-full blur-3xl" />
+      <View className="absolute bottom-[-50] left-[-50] w-72 h-72 bg-[#F6F8FF] opacity-40 rounded-full blur-3xl" />
+
+      <View className="px-6 pt-14">
+
+        {/* Section Header: My Photos */}
+        <Text
+          style={{
+            fontSize: 17,
+            fontWeight: "600",
+            color: "#1A1A1A",
+            letterSpacing: 0.3,
+            marginBottom: 12,
+          }}
+        >
+          My Photos
+        </Text>
+
         <PhotoGrid profile={edits} />
-        <View className="h-10" />
-        <Text className="text-base font-poppins-semibold mb-2">Answers</Text>
+
+        <View style={{ height: 34 }} />
+
+        {/* Section Header: Answers */}
+        <Text
+          style={{
+            fontSize: 17,
+            fontWeight: "600",
+            color: "#1A1A1A",
+            letterSpacing: 0.3,
+            marginBottom: 12,
+          }}
+        >
+          Answers
+        </Text>
+
         <AnswerList profile={edits} />
       </View>
-      <View className="pl-5 gap-10">
+
+      {/* Additional Lists */}
+      <View className="px-6 mt-6 gap-10">
         <List title="My Vitals" data={vitals} profile={edits} />
         <List title="Identity" data={identity} profile={edits} />
       </View>

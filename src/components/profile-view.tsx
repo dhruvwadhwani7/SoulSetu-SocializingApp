@@ -1,6 +1,6 @@
 import { Profile } from "@/types/profile";
 import { FC, JSX } from "react";
-import { ScrollView, Text } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { ProfileAnswer } from "./profile-answer";
 import { ProfileItem } from "./profile-item";
 import { ProfilePhoto } from "./profile-photo";
@@ -33,52 +33,65 @@ export const ProfileView: FC<Props> = ({ profile, myProfile, onLike }) => {
     let photoIndex = 0;
     let answerIndex = 0;
 
-    layout.forEach((item, _) => {
+    layout.forEach((item, i) => {
       if (item === "traits") {
-        elements.push(<ProfileTraits key={item} profile={profile} />);
-      }
-      if (item === "photo" && photoIndex < photos.length) {
-        const item = photos[photoIndex++];
         elements.push(
-          <ProfileItem
-            key={`p${item.id}`}
-            onLike={onLike}
-            item={item}
-            type="photo"
-          >
-            <ProfilePhoto photo={item} />
-          </ProfileItem>
+          <View key={`traits_${i}`} style={{ paddingHorizontal: 6 }}>
+            <ProfileTraits profile={profile} />
+          </View>
         );
       }
-      if (item === "answer" && answerIndex < answers.length) {
-        const item = answers[answerIndex++];
+
+      if (item === "photo" && photoIndex < photos.length) {
+        const photo = photos[photoIndex++];
         elements.push(
-          <ProfileItem
-            key={`a${item.id}`}
-            onLike={onLike}
-            item={item}
-            type="answer"
-          >
-            <ProfileAnswer answer={item} />
-          </ProfileItem>
+          <View key={`photo_${photo.id}`} style={{ paddingHorizontal: 6 }}>
+            <ProfileItem onLike={onLike} item={photo} type="photo">
+              <ProfilePhoto photo={photo} />
+            </ProfileItem>
+          </View>
+        );
+      }
+
+      if (item === "answer" && answerIndex < answers.length) {
+        const answer = answers[answerIndex++];
+        elements.push(
+          <View key={`answer_${answer.id}`} style={{ paddingHorizontal: 6 }}>
+            <ProfileItem onLike={onLike} item={answer} type="answer">
+              <ProfileAnswer answer={answer} />
+            </ProfileItem>
+          </View>
         );
       }
     });
 
     return elements;
   };
+
   return (
-    <ScrollView
-      className="flex-1"
-      contentContainerClassName="pt-5 pb-28 gap-5"
-      showsVerticalScrollIndicator={false}
-    >
-      {!myProfile && (
-        <Text className="text-3xl  font-poppins-semibold">
-          {profile.first_name}
-        </Text>
-      )}
-      {generateProfile()}
-    </ScrollView>
+    <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
+      {/* Doodles */}
+      <View className="absolute -top-16 right-0 w-44 h-44 bg-[#EDE6FF] opacity-30 rounded-full blur-3xl" />
+      <View className="absolute bottom-0 left-[-40] w-52 h-52 bg-[#F4F1FF] opacity-40 rounded-full blur-3xl" />
+
+      <ScrollView
+        className="flex-1"
+        contentContainerClassName="pt-12 pb-32 gap-6 px-3"
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Name Header */}
+        {!myProfile && (
+          <Text
+            className="text-[34px] font-poppins-bold text-center text-[#1A1A1A]"
+            style={{ letterSpacing: 1 }}
+          >
+            {profile.first_name}
+          </Text>
+        )}
+
+        {/* Generated items */}
+        {generateProfile()}
+      </ScrollView>
+    </View>
   );
 };

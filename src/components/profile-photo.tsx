@@ -9,10 +9,29 @@ interface Props {
 
 export const ProfilePhoto: FC<Props> = ({ photo }) => {
   return (
-    <View className="w-full aspect-square rounded-md overflow-hidden ">
+    <View
+      style={{
+        width: "100%",
+        aspectRatio: 1,
+        borderRadius: 20,
+        overflow: "hidden",
+        backgroundColor: "rgba(240,240,255,0.5)", // soft light-purple tint
+        shadowColor: "#7454F6",
+        shadowOpacity: 0.06,
+        shadowRadius: 10,
+        shadowOffset: { width: 0, height: 4 },
+      }}
+    >
       <Image
         source={photo.photo_url}
-        className="flex-1 w-full bg-neutral-200"
+        contentFit="cover"
+        transition={250} // smoother fade-in
+        style={{
+          flex: 1,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "#E6E2F5", // smooth purple-gray fallback
+        }}
       />
     </View>
   );

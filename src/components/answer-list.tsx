@@ -75,19 +75,71 @@ export const AnswerList: FC<Props> = ({
         key={item.key}
       >
         {item.answer ? (
-          <View className="flex-1 rounded-md overflow-hidden border border-neutral-200 p-5">
-            <Text className="text-base font-poppins-regular">
+          <View
+            style={{
+              flex: 1,
+              padding: 16,
+              borderRadius: 18,
+              backgroundColor: "#FFFFFF",
+              borderWidth: 1,
+              borderColor: "#E8E8E8",
+              shadowColor: "#000",
+              shadowOpacity: 0.05,
+              shadowRadius: 6,
+              shadowOffset: { width: 0, height: 4 },
+              elevation: 1,
+              justifyContent: "center",
+            }}
+          >
+            {/* PROMPT QUESTION */}
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "700",
+                color: "#1A1A1A",
+                marginBottom: 6,
+              }}
+            >
               {item.answer.question}
             </Text>
+
+            {/* USER ANSWER */}
             <Text
-              className="text-base font-poppins-regular text-neutral-400"
+              style={{
+                fontSize: 14,
+                fontWeight: "400",
+                color: "#6A6A6A",
+                lineHeight: 18,
+              }}
               numberOfLines={3}
             >
               {item.answer.answer_text}
             </Text>
           </View>
         ) : (
-          <View className="flex-1 rounded-md border border-red-600 border-dashed" />
+          <View
+            style={{
+              flex: 1,
+              borderRadius: 18,
+              borderWidth: 1.25,
+              borderStyle: "dashed",
+              borderColor: "#D7D0FF",
+              backgroundColor: "#FBFAFF",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text
+              style={{
+                color: "#7B61FF",
+                fontSize: 14,
+                fontWeight: "500",
+                opacity: 0.7,
+              }}
+            >
+              Tap to add answer
+            </Text>
+          </View>
         )}
       </View>
     );
@@ -131,23 +183,24 @@ export const AnswerList: FC<Props> = ({
   };
 
   return (
-    <View>
-      <View
-        style={{
-          width: width,
-          alignSelf: "center",
-        }}
-      >
-        <DraggableGrid
-          numColumns={1}
-          renderItem={renderItem}
-          data={data}
-          onDragRelease={onDragRelease}
-          onDragItemActive={onDragItemActive}
-          onItemPress={onItemPress}
-          itemHeight={120}
-        />
-      </View>
-    </View>
-  );
+  <View
+    style={{
+      width: width,
+      alignSelf: "center",
+      paddingTop: 4,       // small spacing for air
+      paddingBottom: 12,   // room under grid
+    }}
+  >
+    <DraggableGrid
+      numColumns={1}
+      renderItem={renderItem}
+      data={data}
+      onDragRelease={onDragRelease}
+      onDragItemActive={onDragItemActive}
+      onItemPress={onItemPress}
+      itemHeight={height}
+    />
+  </View>
+);
+
 };

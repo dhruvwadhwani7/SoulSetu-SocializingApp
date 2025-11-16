@@ -4,7 +4,7 @@ import * as Crypto from "expo-crypto";
 import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
 import { FC, useEffect, useState } from "react";
-import { Dimensions, View } from "react-native";
+import { Dimensions, View, Text } from "react-native";
 import { DraggableGrid } from "react-native-draggable-grid";
 
 type Item = {
@@ -31,6 +31,7 @@ export const PhotoGrid: FC<Props> = ({
 }) => {
   const containerWidth = Dimensions.get("window").width - margin * 2;
   const itemSize = containerWidth / columns - spacing;
+
   const [data, setData] = useState<Item[]>([]);
   const { setEdits, setGridActive } = useEdit();
 
@@ -47,7 +48,6 @@ export const PhotoGrid: FC<Props> = ({
         };
       });
     setData(initialData);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const rendertem = (item: Item) => {
@@ -57,17 +57,47 @@ export const PhotoGrid: FC<Props> = ({
         style={{
           height: itemSize,
           width: itemSize,
+          borderRadius: 14,
+          overflow: "hidden",
+          borderWidth: item.photo?.photo_url ? 2 : 2,
+          borderColor: item.photo?.photo_url ? "#B8A4FF" : "#D7CCFF",
+          backgroundColor: item.photo?.photo_url ? "#fff" : "#F7F3FF",
+          shadowColor: "#7444FF",
+          shadowOpacity: 0.12,
+          shadowRadius: 6,
+          elevation: 2,
         }}
       >
         {item.photo?.photo_url ? (
-          <View className="flex-1 rounded-md overflow-hidden">
-            <Image
-              source={item.photo?.photo_url}
-              className="flex-1 bg-neutral-200"
-            />
-          </View>
+          <Image
+            source={item.photo?.photo_url}
+            className="flex-1 bg-neutral-200"
+            style={{ borderRadius: 12 }}
+          />
         ) : (
-          <View className="flex-1 border border-red-600 border-dashed rounded-md" />
+          <View
+            style={{
+              flex: 1,
+              borderStyle: "dashed",
+              borderColor: "#C8B5FF",
+              borderWidth: 2,
+              borderRadius: 12,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "rgba(240,230,255,0.4)",
+            }}
+          >
+            <Text
+              style={{
+                color: "#7B61FF",
+                fontSize: 12,
+                fontWeight: "500",
+                opacity: 0.7,
+              }}
+            >
+              Tap to upload
+            </Text>
+          </View>
         )}
       </View>
     );
@@ -82,11 +112,13 @@ export const PhotoGrid: FC<Props> = ({
         };
       })
       .filter((item) => item.photo_order !== undefined);
+
     setData(data);
     setEdits({
       ...profile,
       photos,
     });
+
     setGridActive(false);
   };
 
@@ -115,7 +147,6 @@ export const PhotoGrid: FC<Props> = ({
       const updatedData = data.map((item, index) => {
         if (!item.photo && result.assets?.length) {
           const currentAsset = result.assets.shift();
-
           if (currentAsset) {
             return {
               ...item,
@@ -161,7 +192,6 @@ export const PhotoGrid: FC<Props> = ({
       const updatedData = data.map((i, index) => {
         if (item.key === i.key && result.assets?.length) {
           const currentAsset = result.assets.shift();
-
           if (currentAsset) {
             return {
               ...i,

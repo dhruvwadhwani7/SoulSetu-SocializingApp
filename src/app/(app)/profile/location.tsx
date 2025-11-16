@@ -49,10 +49,16 @@ export default function Page() {
       <Text className="text-base font-poppins-light mb-10">
         Only the neighborhood name will appear on your profile.
       </Text>
+      <Text className="text-[14px] font-poppins-medium text-[#7454F6] mb-1">
+        Move the map to select your location.
+      </Text>
       <LocationView
         location={selectedLocation}
         onLocationChange={handleLocationChange}
       />
+      <Text className="text-[13px] font-poppins-light text-neutral-500 mb-6 mt-10">
+        Zoom and drag to adjust the area accurately.
+      </Text>
     </View>
   );
 }

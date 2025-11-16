@@ -58,6 +58,12 @@ export default function Page() {
       keyboardVerticalOffset={100}
     >
       <StackHeader />
+
+      {/* Floating doodles */}
+      <View className="absolute top-0 right-0 w-36 h-36 bg-[#FFE8F0] rounded-full opacity-40 blur-2xl" />
+      <View className="absolute -top-8 -left-8 w-40 h-40 bg-[#E8F5FF] rounded-full opacity-40 blur-xl" />
+      <View className="absolute bottom-20 -right-10 w-44 h-44 bg-[#F2FFE8] rounded-full opacity-40 blur-2xl" />
+
       <TouchableWithoutFeedback
         onPress={() => {
           Keyboard.dismiss();
@@ -65,49 +71,61 @@ export default function Page() {
         }}
         accessible={false}
       >
-        <View className="flex-1 justify-center pt-28">
-          <View className="flex-1">
-            <Text className="text-3xl font-poppins-medium">
-              Enter Your Phone Number
-            </Text>
-            <View className="h-28" />
-            <View className="relative">
-              <TextInput
-                className="pl-5 rounded-[10px] h-16 text-4xl font-poppins-semibold bg-[#E7E7E7]"
-                style={
-                  Platform.OS === "ios" ? { lineHeight: undefined } : undefined
-                }
-                placeholder="" // native placeholder disabled; using custom overlay so native styling doesn't interfere
-                selectionColor={colors.black}
-                keyboardType="phone-pad"
-                textContentType="telephoneNumber"
-                autoFocus={true}
-                value={phone}
-                onChangeText={handlePhoneChange}
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
-                maxLength={16}
-                ref={phoneRef}
-              />
-              {!phone && !isFocused && (
-                <View
-                  pointerEvents="none"
-                  className="absolute left-4 top-0 bottom-0 justify-center"
-                >
-                  <Text className="text-sm text-neutral-500">
-                    Your Phone Number
-                  </Text>
-                </View>
-              )}
-            </View>
+        <View className="flex-1 justify-center pt-20">
 
-            {isError && (
-              <Text className="text-red-500 text-sm text-center mt-4">
-                {error.message}
-              </Text>
+          {/* Title */}
+          <Text className="text-[32px] font-poppins-semibold text-[#0A0A0A] text-center leading-tight">
+            Enter Your{" "}
+            <Text className="text-[#7454F6]">Phone</Text> Number
+          </Text>
+
+          <Text className="text-center text-[#6B6B6B] mt-3 font-poppins-regular">
+            We'll send you a verification code
+          </Text>
+
+          <View className="h-20" />
+
+          {/* Phone Input */}
+          <View className="relative px-4">
+            <TextInput
+              className="rounded-2xl h-16 text-3xl font-poppins-semibold bg-[#EFEFEF] px-5"
+              style={
+                Platform.OS === "ios" ? { lineHeight: undefined } : undefined
+              }
+              placeholder=""
+              selectionColor={colors.black}
+              keyboardType="phone-pad"
+              textContentType="telephoneNumber"
+              autoFocus={true}
+              value={phone}
+              onChangeText={handlePhoneChange}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              maxLength={16}
+              ref={phoneRef}
+            />
+
+            {!phone && !isFocused && (
+              <View
+                pointerEvents="none"
+                className="absolute left-7 top-0 bottom-0 justify-center"
+              >
+                <Text className="text-base text-neutral-500 font-poppins-regular">
+                  +1 234 567 8900
+                </Text>
+              </View>
             )}
           </View>
-          <View className="items-end">
+
+          {/* Error message */}
+          {isError && (
+            <Text className="text-red-500 text-sm text-center mt-4 font-poppins-regular">
+              {error.message}
+            </Text>
+          )}
+
+          {/* FAB Button */}
+          <View className="items-end mt-10 pr-2">
             <Fab
               disabled={!isValid || isPending}
               onPress={handleSubmit}

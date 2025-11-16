@@ -32,15 +32,11 @@ export default function Page() {
   } = useVerifyOtp();
 
   const handleOtpChange = (text: string) => {
-    if (isError) {
-      reset();
-    }
+    if (isError) reset();
     setOtp(text);
   };
 
-  const isValid = useMemo(() => {
-    return otp.length === 6;
-  }, [otp]);
+  const isValid = useMemo(() => otp.length === 6, [otp]);
 
   const handleSubmit = () => {
     verifyOtp({ phone, token: otp });
@@ -52,12 +48,12 @@ export default function Page() {
         Animated.sequence([
           Animated.timing(blinkAnim, {
             toValue: 0,
-            duration: 500,
+            duration: 450,
             useNativeDriver: true,
           }),
           Animated.timing(blinkAnim, {
             toValue: 1,
-            duration: 500,
+            duration: 450,
             useNativeDriver: true,
           }),
         ])
@@ -74,9 +70,15 @@ export default function Page() {
     <KeyboardAvoidingView
       className="flex-1 bg-white p-5"
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={100}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 140 : 80}
     >
       <StackHeader />
+
+      {/* Soft doodles */}
+      <View className="absolute top-[-40] right-[-40] w-48 h-48 bg-[#F6EFFF] rounded-full opacity-40 blur-3xl" />
+      <View className="absolute top-[100] left-[-60] w-56 h-56 bg-[#EAF2FF] rounded-full opacity-35 blur-3xl" />
+      <View className="absolute bottom-[-40] right-[-50] w-64 h-64 bg-[#F3FFE8] rounded-full opacity-30 blur-3xl" />
+
       <TouchableWithoutFeedback
         onPress={() => {
           Keyboard.dismiss();
@@ -84,69 +86,85 @@ export default function Page() {
         }}
         accessible={false}
       >
-        <View className="flex-1 justify-center pt-28">
-          <View className="flex-1">
-            <Text className="text-3xl font-poppins-medium">
-              Enter your verification code?
+        <View className="flex-1 justify-start pt-10">
+
+          {/* Title */}
+          <Text className="text-[28px] font-poppins-semibold text-[#0A0A0A] text-center leading-snug px-6">
+            Enter Your
+            <Text className="text-[#7454F6]"> Verification </Text>
+            Code
+          </Text>
+
+          {/* Subtitle */}
+          <Text className="text-center text-[#6B6B6B] mt-2 font-poppins-regular italic tracking-wide px-8">
+            Sent to <Text className="text-[#4A4A4A]">{phone}</Text>
+          </Text>
+
+          <View className="h-14" />
+
+          {/* OTP Boxes */}
+          <Pressable
+            onPress={() => otpRef.current?.focus()}
+            className="flex-row gap-3 justify-center h-16 px-4"
+          >
+            {Array.from({ length: 6 }).map((_, index) => (
+              <View
+                key={index}
+                className="flex-1 h-16 rounded-2xl bg-white border border-[#DDD] items-center justify-center"
+                style={{
+                  borderColor:
+                    isFocused && otp.length === index
+                      ? "#BBA7FF"
+                      : "#E1E1E1",
+                }}
+              >
+                <Text className="text-3xl font-poppins-semibold text-[#111]">
+                  {otp[index] || ""}
+                </Text>
+
+                {/* Blinking Cursor */}
+                {isFocused && otp.length === index && otp.length < 6 && (
+                  <Animated.View
+                    style={{
+                      position: "absolute",
+                      width: 2,
+                      height: 32,
+                      backgroundColor: "#7454F6",
+                      opacity: blinkAnim,
+                      borderRadius: 1,
+                      bottom: 12,
+                    }}
+                  />
+                )}
+              </View>
+            ))}
+          </Pressable>
+
+          {/* Hidden input */}
+          <TextInput
+            className="absolute h-1 w-1 opacity-0"
+            ref={otpRef}
+            style={Platform.OS === "ios" ? { lineHeight: undefined } : undefined}
+            selectionColor={colors.black}
+            keyboardType="numeric"
+            textContentType="oneTimeCode"
+            autoFocus={true}
+            value={otp}
+            onChangeText={handleOtpChange}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            maxLength={6}
+          />
+
+          {/* Error */}
+          {isError && (
+            <Text className="text-red-500 text-sm text-center mt-4 font-poppins-regular">
+              {error.message}
             </Text>
-            <View className="h-28" />
-            <Pressable
-              onPress={() => {
-                // focus the hidden input to reopen keyboard
-                otpRef.current?.focus();
-              }}
-              className="flex-row gap-2 h-16"
-            >
-              {Array.from({ length: 6 }).map((_, index) => (
-                <View
-                  key={index}
-                  className="border-b flex-1 items-center justify-center"
-                >
-                  <Text className="text-4xl font-poppins-semibold">
-                    {otp[index] || ""}
-                  </Text>
-                  {isFocused && otp.length === index && otp.length < 6 && (
-                    <Animated.View
-                      style={{
-                        position: "absolute",
-                        left: "50%",
-                        top: "50%",
-                        width: 2,
-                        height: 36,
-                        backgroundColor: colors.black,
-                        opacity: blinkAnim,
-                        borderRadius: 1,
-                        transform: [{ translateX: -1 }, { translateY: -18 }],
-                      }}
-                    />
-                  )}
-                </View>
-              ))}
-            </Pressable>
-            <TextInput
-              // hidden but focusable input
-              className="absolute h-1 w-1 opacity-0"
-              ref={otpRef}
-              style={
-                Platform.OS === "ios" ? { lineHeight: undefined } : undefined
-              }
-              selectionColor={colors.black}
-              keyboardType="numeric"
-              textContentType="oneTimeCode"
-              autoFocus={true}
-              value={otp}
-              onChangeText={handleOtpChange}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
-              maxLength={6}
-            />
-            {isError && (
-              <Text className="text-red-500 text-sm text-center mt-4">
-                {error.message}
-              </Text>
-            )}
-          </View>
-          <View className="items-end">
+          )}
+
+          {/* FAB */}
+          <View className="items-end mt-10 pr-2">
             <Fab
               disabled={!isValid || isPending}
               onPress={handleSubmit}
