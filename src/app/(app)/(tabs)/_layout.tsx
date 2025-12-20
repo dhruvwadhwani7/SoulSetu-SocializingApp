@@ -1,22 +1,13 @@
 import { useMyProfile } from "@/api/my-profile";
 import { cn } from "@/utils/cn";
 import { Ionicons } from "@expo/vector-icons";
-import { useConnection } from "@sendbird/uikit-react-native";
 import { Image } from "expo-image";
 import { Tabs } from "expo-router";
-import { useEffect } from "react";
 import { View } from "react-native";
 import colors from "tailwindcss/colors";
 
 export default function Layout() {
   const { data: profile } = useMyProfile();
-  const { connect } = useConnection();
-
-  useEffect(() => {
-    if (profile) {
-      connect(profile.id, { nickname: profile.first_name || undefined });
-    }
-  }, [profile, connect]);
 
   return (
     <Tabs
