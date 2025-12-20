@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SendbirdUIKitContainer } from "@sendbird/uikit-react-native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Checkbox from "expo-checkbox";
+import { Checkbox } from "expo-checkbox";
 import { useFonts } from "expo-font";
 import { Image } from "expo-image";
 import { SplashScreen, Stack } from "expo-router";

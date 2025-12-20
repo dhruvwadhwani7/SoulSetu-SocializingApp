@@ -1,4 +1,4 @@
- import { PrivateProfile } from "@/api/my-profile/types";
+import { PrivateProfile } from "@/api/my-profile/types";
 import { PublicProfile } from "@/api/profiles/types";
 import { Profile } from "@/types/profile";
 import { age } from "./age";
@@ -90,12 +90,18 @@ export const transformPrivateProfile = (profile: PrivateProfile): Profile => {
   };
 };
 
-export const transformPublicProfile = (profile: PublicProfile): Profile => {
+export const transformPublicProfile = (
+  profile: PublicProfile | null | undefined
+): Profile => {
+  if (!profile || !profile.id) {
+    throw new Error("Invalid PublicProfile received");
+  }
+
   return {
     id: profile.id,
     first_name: profile.first_name,
-    photos: profile.photos,
-    answers: profile.answers,
+    photos: profile.photos ?? [],
+    answers: profile.answers ?? [],
     traits: traitsMapping.map((trait) => {
       const label = trait.publicLabel(profile);
       return {
@@ -106,5 +112,4 @@ export const transformPublicProfile = (profile: PublicProfile): Profile => {
     }),
   };
 };
-
 

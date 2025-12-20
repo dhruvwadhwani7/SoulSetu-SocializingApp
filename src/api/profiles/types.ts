@@ -3,8 +3,9 @@ export interface Like {
   photo_url: string | null;
   answer_text: string | null;
   question: string | null;
-  profile: PublicProfile;
+  profile: PublicProfile | null;
 }
+
 
 export interface PublicProfile {
   id: string;
