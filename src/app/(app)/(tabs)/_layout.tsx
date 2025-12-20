@@ -1,111 +1,84 @@
-import { Tabs } from "expo-router";
-import colors from "tailwindcss/colors";
-import { Ionicons } from "@expo/vector-icons";
 import { useMyProfile } from "@/api/my-profile";
-import { Image } from "expo-image";
-import { View } from "react-native";
 import { cn } from "@/utils/cn";
+import { Ionicons } from "@expo/vector-icons";
+import { useConnection } from "@sendbird/uikit-react-native";
+import { Image } from "expo-image";
+import { Tabs } from "expo-router";
+import { useEffect } from "react";
+import { View } from "react-native";
+import colors from "tailwindcss/colors";
 
 export default function Layout() {
   const { data: profile } = useMyProfile();
+  const { connect } = useConnection();
+
+  useEffect(() => {
+    if (profile) {
+      connect(profile.id, { nickname: profile.first_name || undefined });
+    }
+  }, [profile, connect]);
 
   return (
     <Tabs
       screenOptions={{
         tabBarStyle: {
-          backgroundColor: "#FFFFFF",
-          height: 72,
-          borderTopWidth: 0,
-          elevation: 10,
-          shadowColor: "#000",
-          shadowOpacity: 0.06,
-          shadowRadius: 12,
-          shadowOffset: { width: 0, height: -2 },
+          backgroundColor: colors.neutral[950],
         },
-        tabBarActiveTintColor: "#1A1A1A",
-        tabBarInactiveTintColor: "#9E9E9E",
+        tabBarActiveTintColor: colors.white,
+        tabBarInactiveTintColor: colors.neutral[500],
         tabBarShowLabel: false,
-        headerShown: false,
       }}
     >
-      {/* HOME */}
       <Tabs.Screen
         name="index"
         options={{
-          tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons
-              name={focused ? "home" : "home-outline"}
-              color={color}
-              size={size + 2}
-            />
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="home-outline" color={color} size={size} />
           ),
+          headerTitle: "",
+          headerShadowVisible: false,
         }}
       />
-
-      {/* LIKES */}
       <Tabs.Screen
         name="likes"
         options={{
-          tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons
-              name={focused ? "heart" : "heart-outline"}
-              color={color}
-              size={size + 2}
-            />
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="heart-outline" color={color} size={size} />
           ),
+          headerShown: false,
         }}
       />
-
-      {/* MATCHES */}
       <Tabs.Screen
         name="matches"
         options={{
-          tabBarIcon: ({ color, size, focused }) => (
-            <Ionicons
-              name={focused ? "chatbubbles" : "chatbubbles-outline"}
-              color={color}
-              size={size + 2}
-            />
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="chatbox-outline" color={color} size={size} />
           ),
+          headerShown: false,
         }}
       />
-
-      {/* PROFILE */}
       <Tabs.Screen
-        name="profile"
+        name="hinge"
         options={{
-          tabBarIcon: ({ color, size, focused }) => {
-            if (!profile?.avatar_url) {
-              return (
-                <Ionicons
-                  name={focused ? "person" : "person-outline"}
-                  color={color}
-                  size={size + 2}
-                />
-              );
-            }
-
-            return (
+          tabBarIcon: ({ color, size, focused }) =>
+            profile && profile.avatar_url ? (
               <View
                 style={{
-                  width: size + 6,
-                  height: size + 6,
-                  borderRadius: 999,
-                  padding: focused ? 2 : 0,
-                  backgroundColor: focused ? "#7454F6" : "transparent",
+                  width: size,
+                  height: size,
                 }}
+                className={cn(
+                  focused && "border border-white rounded-full p-0.5"
+                )}
               >
                 <Image
                   source={profile.avatar_url}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    borderRadius: 999,
-                  }}
+                  className="flex-1 aspect-square rounded-full bg-neutral-200"
                 />
               </View>
-            );
-          },
+            ) : (
+              <Ionicons name="person-circle" color={color} size={size} />
+            ),
         }}
       />
     </Tabs>

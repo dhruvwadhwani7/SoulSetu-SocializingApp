@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase";
+import { useConnection } from "@sendbird/uikit-react-native";
 import { Session } from "@supabase/supabase-js";
 import {
   PropsWithChildren,
@@ -21,6 +22,7 @@ const AuthContext = createContext<AuthContextType>({
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { disconnect } = useConnection();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -29,9 +31,12 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     });
 
     supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session) {
+        disconnect();
+      }
       setSession(session);
     });
-  }, []);
+  }, [disconnect]);
 
   return (
     <AuthContext.Provider value={{ session, isLoading }}>
