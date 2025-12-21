@@ -13,78 +13,121 @@ export default function Page() {
     <SafeAreaView className="flex-1 bg-white">
       <Stack.Screen options={{ headerShown: false }} />
 
-      {/* Soft minimal background accents */}
-      <View className="absolute top-[-40] right-[-40] w-48 h-48 bg-[#F4EFFF] rounded-full opacity-30 blur-3xl" />
-      <View className="absolute bottom-[-60] left-[-60] w-72 h-72 bg-[#F8FAFF] rounded-full opacity-30 blur-3xl" />
+      {/* Ambient background accents */}
+      <View className="absolute -top-20 -right-20 w-64 h-64 bg-[#EFEAFF] rounded-full opacity-40 blur-3xl" />
+      <View className="absolute bottom-[-80] left-[-80] w-80 h-80 bg-[#F8FAFF] rounded-full opacity-35 blur-3xl" />
 
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 60 }}
+        contentContainerStyle={{ paddingBottom: 80 }}
         showsVerticalScrollIndicator={false}
       >
-        {/* HEADER */}
-        <View className="px-6 py-5 border-b border-neutral-200 bg-white">
+        {/* ===== HEADER ===== */}
+        <View className="px-6 pt-6 pb-4 bg-white">
           <View className="flex-row items-center justify-between">
-            {/* SoulSetu Branding */}
             <View>
               <Text
-                className="text-[22px] font-poppins-semibold text-[#111]"
-                style={{ letterSpacing: 1 }}
+                className="text-[24px] font-poppins-semibold text-[#111]"
+                style={{ letterSpacing: 2 }}
               >
                 SoulSetu
               </Text>
-              <View className="mt-1 h-[2px] w-8 bg-[#D2CAF5] rounded-full" />
+              <Text className="text-[11px] text-neutral-400 tracking-widest mt-0.5">
+                YOUR SPACE
+              </Text>
             </View>
 
-            <View className="flex-row items-center gap-6">
-              <Link href={"/preferences"} suppressHighlighting>
-                <Ionicons name="options-outline" size={24} color="#6B6B6B" />
+            <View className="flex-row items-center gap-4">
+              <Link href="/preferences" suppressHighlighting>
+                <View
+                  className="
+        h-10 w-10 
+        rounded-full 
+        items-center 
+        justify-center 
+        bg-white/60 
+        border border-white/40
+        backdrop-blur-xl
+      "
+                  style={{
+                    shadowColor: "#7454F6",
+                    shadowOpacity: 0.15,
+                    shadowRadius: 6,
+                    elevation: 3,
+                  }}
+                >
+                  <Ionicons name="options-outline" size={18} color="#5A5A5A" />
+                </View>
               </Link>
-              <Link href={"/settings"} suppressHighlighting>
-                <Ionicons name="settings-outline" size={24} color="#6B6B6B" />
+
+              <Link href="/settings" suppressHighlighting>
+                <View
+                  className="
+        h-10 w-10 
+        rounded-full 
+        items-center 
+        justify-center 
+        bg-white/60 
+        border border-white/40
+        backdrop-blur-xl
+      "
+                  style={{
+                    shadowColor: "#7454F6",
+                    shadowOpacity: 0.15,
+                    shadowRadius: 6,
+                    elevation: 3,
+                  }}
+                >
+                  <Ionicons name="settings-outline" size={18} color="#5A5A5A" />
+                </View>
               </Link>
             </View>
           </View>
         </View>
 
-        {/* PROFILE IMAGE + NAME */}
-        <View className="items-center mt-10 mb-4">
-          {/* DARK PURPLE RING */}
+        {/* ===== PROFILE IMAGE + NAME ===== */}
+        <View className="items-center mt-12 mb-8">
           <Pressable
             onPress={() => router.push("/profile")}
-            className="h-40 aspect-square rounded-full items-center justify-center"
+            className="rounded-full"
             style={{
-              padding: 4,
-              backgroundColor: "#5A3FE3", // dark purple ring
+              padding: 6,
+              backgroundColor: "#EEE9FF",
               borderRadius: 9999,
             }}
           >
             <View
-              className="h-full w-full rounded-full bg-white p-[2px]"
-              style={{ borderRadius: 9999 }}
+              className="rounded-full bg-white"
+              style={{
+                padding: 3,
+                shadowColor: "#7454F6",
+                shadowOpacity: 0.25,
+                shadowRadius: 18,
+                elevation: 6,
+              }}
             >
               <Image
                 source={profile?.avatar_url}
-                className="flex-1 rounded-full bg-neutral-300"
+                className="h-36 w-36 rounded-full bg-neutral-200"
               />
             </View>
           </Pressable>
 
-          <Text className="text-2xl font-poppins-semibold mt-4 text-[#111]">
+          <Text className="text-[22px] font-poppins-semibold mt-5 text-[#111]">
             {profile?.first_name}
           </Text>
 
-          <Text className="text-neutral-500 mt-1 font-poppins-regular">
-            Tap to edit your profile
+          <Text className="text-[13px] text-neutral-400 mt-1 tracking-wide">
+            Tap on profile to view and edit 
           </Text>
         </View>
 
-        {/* PROFILE DETAILS */}
-        <View className="px-6 mt-2">
-          <Text className="text-[15px] font-poppins-semibold text-[#333] mb-2">
-            Profile Details
+        {/* ===== PROFILE DETAILS ===== */}
+        <View className="px-6">
+          <Text className="text-[14px] font-poppins-semibold text-neutral-500 mb-3 tracking-wide">
+            PERSONAL DETAILS
           </Text>
 
-          <View className="bg-white rounded-xl border border-neutral-200 overflow-hidden">
+          <View className="bg-white rounded-2xl px-2 py-1 shadow-sm shadow-black/5">
             <CompactRow
               icon="person-outline"
               label="Name"
@@ -133,62 +176,139 @@ export default function Page() {
           </View>
         </View>
 
-        {/* FEATURE CHIPS — purple glassmorphism */}
-        <View className="relative mt-8 px-6">
-          {/* Background floating glow */}
-          <View className="absolute -top-10 right-4 w-48 h-48 bg-[#EDE4FF] rounded-full opacity-30 blur-3xl" />
-          <View className="absolute bottom-0 left-0 w-40 h-40 bg-[#F7F1FF] rounded-full opacity-25 blur-2xl" />
-
-          <View className="flex-row flex-wrap justify-center gap-4">
-            {["Meaningful Matches", "New Friendships", "Real Connections"].map(
-              (label, index) => (
-                <View
-                  key={index}
-                  className="
-          px-5 py-2.5 
-          rounded-full 
-          border border-white/50 
-          bg-white/50 
-          backdrop-blur-2xl
-          shadow-lg
+        {/* ===== QUICK ACTIONS ===== */}
+        <View className="px-6 mt-6">
+          <View className="flex-row gap-4">
+            {/* Preferences */}
+            <Link href="/preferences" asChild>
+              <Pressable
+                className="
+          flex-1
+          rounded-2xl
+          px-4 py-4
+          bg-white
+          border border-neutral-200
         "
-                  style={{
-                    shadowColor: "#5A3FE3",
-                    shadowOpacity: 0.12,
-                    shadowRadius: 8,
-                    elevation: 3,
-                  }}
-                >
-                  <Text className="text-[13px] font-poppins-semibold text-[#5A3FE3] tracking-wide">
-                    {label}
-                  </Text>
+                style={{
+                  shadowColor: "#7454F6",
+                  shadowOpacity: 0.12,
+                  shadowRadius: 10,
+                  elevation: 3,
+                }}
+              >
+                <View className="flex-row items-center gap-3">
+                  <View className="h-10 w-10 rounded-full bg-[#F1EDFF] items-center justify-center">
+                    <Ionicons
+                      name="options-outline"
+                      size={20}
+                      color="#5A3FE3"
+                    />
+                  </View>
+
+                  <View className="flex-1">
+                    <Text className="text-[15px] font-poppins-semibold text-[#111]">
+                      Preferences
+                    </Text>
+                    <Text className="text-[12px] text-neutral-500 mt-0.5">
+                      Match filters & values
+                    </Text>
+                  </View>
                 </View>
-              )
-            )}
+              </Pressable>
+            </Link>
+
+            {/* Settings */}
+            <Link href="/settings" asChild>
+              <Pressable
+                className="
+          flex-1
+          rounded-2xl
+          px-4 py-4
+          bg-white
+          border border-neutral-200
+        "
+                style={{
+                  shadowColor: "#7454F6",
+                  shadowOpacity: 0.12,
+                  shadowRadius: 10,
+                  elevation: 3,
+                }}
+              >
+                <View className="flex-row items-center gap-3">
+                  <View className="h-10 w-10 rounded-full bg-[#F1EDFF] items-center justify-center">
+                    <Ionicons
+                      name="settings-outline"
+                      size={20}
+                      color="#5A3FE3"
+                    />
+                  </View>
+
+                  <View className="flex-1">
+                    <Text className="text-[15px] font-poppins-semibold text-[#111]">
+                      Settings
+                    </Text>
+                    <Text className="text-[12px] text-neutral-500 mt-0.5">
+                      Privacy & account
+                    </Text>
+                  </View>
+                </View>
+              </Pressable>
+            </Link>
           </View>
         </View>
 
-        {/* SETTINGS / SUPPORT CARDS */}
-        <View className="px-6 mt-8 mb-10 gap-3">
+        {/* ===== VALUES / PHILOSOPHY ===== */}
+        <View className="relative mt-10 px-6">
+          <View className="absolute -top-10 right-4 w-52 h-52 bg-[#EDE4FF] rounded-full opacity-30 blur-3xl" />
+
+          <View className="flex-row flex-wrap justify-center gap-4">
+            {[
+              "Intentional Connections",
+              "Emotional Clarity",
+              "Shared Values",
+            ].map((label, index) => (
+              <View
+                key={index}
+                className="
+                  px-5 py-2.5
+                  rounded-full
+                  bg-white/60
+                  backdrop-blur-2xl
+                  border border-white/40
+                "
+                style={{
+                  shadowColor: "#5A3FE3",
+                  shadowOpacity: 0.12,
+                  shadowRadius: 8,
+                  elevation: 3,
+                }}
+              >
+                <Text className="text-[12px] font-poppins-medium text-[#5A3FE3] tracking-wide">
+                  {label}
+                </Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* ===== SUPPORT / INFO CARDS ===== */}
+        <View className="px-6 mt-10 gap-3">
           <Card
-            key={"help"}
-            icon={<Ionicons name="help-outline" size={24} color="#4A4A4A" />}
+            icon={<Ionicons name="help-outline" size={22} color="#4A4A4A" />}
             title="Help Center"
             subtitle="Support & FAQs"
           />
 
           <Card
-            key={"tips"}
-            icon={<Ionicons name="bulb-outline" size={24} color="#4A4A4A" />}
+            icon={<Ionicons name="bulb-outline" size={22} color="#4A4A4A" />}
             title="SoulSetu Tips"
             subtitle="Improve your experience"
           />
 
           <Card
-            key={"guide"}
-            icon={<Ionicons name="heart-outline" size={24} color="#4A4A4A" />}
+            icon={<Ionicons name="heart-outline" size={22} color="#4A4A4A" />}
             title="Connection Guide"
-            subtitle="Learn what matters"
+            subtitle="Learn what truly matters"
           />
         </View>
       </ScrollView>
@@ -196,20 +316,23 @@ export default function Page() {
   );
 }
 
-/* Compact iOS-style profile row */
+/* ===== Compact Row Component ===== */
 function CompactRow({ icon, label, value }) {
   return (
-    <View className="flex-row items-center py-3 px-4 border-b border-neutral-200">
-      <Ionicons name={icon} size={18} color="#777" />
-      <Text className="ml-3 text-[14px] font-poppins-regular text-[#333]">
-        {label}:{" "}
-        <Text className="font-poppins-medium">{value || "Not added"}</Text>
+    <View className="flex-row items-center py-3 px-3">
+      <Ionicons name={icon} size={17} color="#8A8A8A" />
+      <Text className="ml-3 text-[14px] text-[#444]">
+        {label}
+        <Text className="text-neutral-400"> · </Text>
+        <Text className="font-poppins-medium text-[#111]">
+          {value || "Not added"}
+        </Text>
       </Text>
     </View>
   );
 }
 
-/* Helper: Calculates age */
+/* ===== Helper: Age Calculator ===== */
 function calculateAge(dateString) {
   const dob = new Date(dateString);
   const diff = Date.now() - dob.getTime();

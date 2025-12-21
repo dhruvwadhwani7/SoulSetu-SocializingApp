@@ -27,9 +27,7 @@ export default function Page() {
   } = useSignInWithOtp();
 
   const handlePhoneChange = (text: string) => {
-    if (isError) {
-      reset();
-    }
+    if (isError) reset();
     setPhone(text);
   };
 
@@ -53,16 +51,16 @@ export default function Page() {
 
   return (
     <KeyboardAvoidingView
-      className="flex-1 bg-white p-5"
+      className="flex-1 bg-white px-6"
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={100}
+      keyboardVerticalOffset={120}
     >
       <StackHeader />
 
-      {/* Floating doodles */}
-      <View className="absolute top-0 right-0 w-36 h-36 bg-[#FFE8F0] rounded-full opacity-40 blur-2xl" />
-      <View className="absolute -top-8 -left-8 w-40 h-40 bg-[#E8F5FF] rounded-full opacity-40 blur-xl" />
-      <View className="absolute bottom-20 -right-10 w-44 h-44 bg-[#F2FFE8] rounded-full opacity-40 blur-2xl" />
+      {/* ===== Background Wash ===== */}
+      <View className="absolute -top-20 -right-20 w-72 h-72 bg-[#EFE9FF] rounded-full blur-3xl opacity-40" />
+      <View className="absolute top-24 -left-24 w-80 h-80 bg-[#EAF2FF] rounded-full blur-3xl opacity-35" />
+      <View className="absolute bottom-24 right-[-80] w-96 h-96 bg-[#F3FFE8] rounded-full blur-3xl opacity-30" />
 
       <TouchableWithoutFeedback
         onPress={() => {
@@ -71,61 +69,63 @@ export default function Page() {
         }}
         accessible={false}
       >
-        <View className="flex-1 justify-center pt-20">
-
-          {/* Title */}
-          <Text className="text-[32px] font-poppins-semibold text-[#0A0A0A] text-center leading-tight">
-            Enter Your{" "}
-            <Text className="text-[#7454F6]">Phone</Text> Number
+        <View className="flex-1 justify-center">
+          {/* ===== Heading ===== */}
+          <Text className="text-[30px] font-poppins-semibold text-[#0A0A0A] text-center leading-tight">
+            Enter your <Text className="text-[#7454F6]">phone number</Text>
           </Text>
 
-          <Text className="text-center text-[#6B6B6B] mt-3 font-poppins-regular">
-            We'll send you a verification code
+          <Text className="text-center text-[#6A6A6A] mt-3 font-poppins-regular text-base">
+            We’ll send you a one-time verification code
           </Text>
 
-          <View className="h-20" />
+          <View className="h-14" />
 
-          {/* Phone Input */}
-          <View className="relative px-4">
+          {/* ===== Phone Input ===== */}
+          <View className="relative">
             <TextInput
-              className="rounded-2xl h-16 text-3xl font-poppins-semibold bg-[#EFEFEF] px-5"
+              ref={phoneRef}
+              className="h-[58px] rounded-xl bg-[#F3F3F3] px-5 text-[20px] font-poppins-semibold text-[#111]"
               style={
                 Platform.OS === "ios" ? { lineHeight: undefined } : undefined
               }
-              placeholder=""
-              selectionColor={colors.black}
               keyboardType="phone-pad"
               textContentType="telephoneNumber"
-              autoFocus={true}
+              selectionColor={colors.black}
               value={phone}
               onChangeText={handlePhoneChange}
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               maxLength={16}
-              ref={phoneRef}
             />
 
             {!phone && !isFocused && (
               <View
                 pointerEvents="none"
-                className="absolute left-7 top-0 bottom-0 justify-center"
+                className="absolute inset-y-0 left-5 justify-center"
               >
-                <Text className="text-base text-neutral-500 font-poppins-regular">
+                <Text className="text-[#474646] font-poppins-regular text-base">
                   +1 234 567 8900
                 </Text>
               </View>
             )}
           </View>
 
-          {/* Error message */}
+          {/* ===== Error ===== */}
           {isError && (
-            <Text className="text-red-500 text-sm text-center mt-4 font-poppins-regular">
-              {error.message}
-            </Text>
+            <View className="mt-4 px-4 py-3 rounded-xl bg-red-50 border border-red-100 flex-row items-start gap-3">
+              {/* Accent dot */}
+              <View className="w-2 h-2 rounded-full bg-red-400 mt-2" />
+
+              {/* Error text */}
+              <Text className="flex-1 text-red-600 text-sm font-poppins-regular leading-relaxed">
+                {error.message}
+              </Text>
+            </View>
           )}
 
-          {/* FAB Button */}
-          <View className="items-end mt-10 pr-2">
+          {/* ===== CTA ===== */}
+          <View className="items-end mt-10 pr-1">
             <Fab
               disabled={!isValid || isPending}
               onPress={handleSubmit}

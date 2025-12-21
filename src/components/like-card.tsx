@@ -11,28 +11,37 @@ export const LikeCard: FC<Props> = ({ like: { photo_url, profile } }) => {
   return (
     <View
       className="
-        bg-white flex-1 rounded-2xl overflow-hidden 
-        border border-neutral-200 
-        shadow-sm
+        flex-1
+        rounded-[28px]
+        bg-[#FAFAFF]
+        overflow-hidden
+        border border-[#ECEBFF]
       "
+      style={{
+        shadowColor: "#5A3FE3",
+        shadowOpacity: 0.14,
+        shadowRadius: 18,
+        elevation: 4,
+      }}
     >
-      {/* Text Section */}
-      <View className="p-4 gap-2">
-        <Text className="text-sm text-neutral-600 font-poppins-light">
-          {`Liked your ${photo_url ? "photo" : "answer"}`}
-        </Text>
-
-        <Text className="text-lg font-poppins-medium text-neutral-900">
-          {profile.first_name}
-        </Text>
+      {/* IMAGE */}
+      <View className="aspect-square w-full overflow-hidden">
+        <Image
+          source={profile.photos?.[0]?.photo_url}
+          className="flex-1"
+          contentFit="cover"
+        />
       </View>
 
-      {/* Photo */}
-      <View className="bg-neutral-200 aspect-square w-full overflow-hidden rounded-xl m-3">
-        <Image
-          source={profile.photos[0].photo_url}
-          className="flex-1 w-full"
-        />
+      {/* INFO */}
+      <View className="px-4 py-4">
+        <Text className="text-[18px] font-poppins-medium text-[#111]">
+          {profile.first_name}
+        </Text>
+
+        <Text className="text-[12px] text-neutral-500 mt-1">
+          Interested in your {photo_url ? "photo" : "answer"}
+        </Text>
       </View>
     </View>
   );

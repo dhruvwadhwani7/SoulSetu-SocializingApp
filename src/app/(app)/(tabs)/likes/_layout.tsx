@@ -7,6 +7,7 @@ export default function Layout() {
         name="index"
         options={{
           headerTitle: "",
+          headerShown : false,
           headerShadowVisible: false,
           animation: "none",
         }}

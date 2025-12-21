@@ -68,16 +68,16 @@ export default function Page() {
 
   return (
     <KeyboardAvoidingView
-      className="flex-1 bg-white p-5"
+      className="flex-1 bg-white px-6"
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 140 : 80}
     >
       <StackHeader />
 
-      {/* Soft doodles */}
-      <View className="absolute top-[-40] right-[-40] w-48 h-48 bg-[#F6EFFF] rounded-full opacity-40 blur-3xl" />
-      <View className="absolute top-[100] left-[-60] w-56 h-56 bg-[#EAF2FF] rounded-full opacity-35 blur-3xl" />
-      <View className="absolute bottom-[-40] right-[-50] w-64 h-64 bg-[#F3FFE8] rounded-full opacity-30 blur-3xl" />
+      {/* ===== Background Wash ===== */}
+      <View className="absolute -top-24 -right-24 w-72 h-72 bg-[#EFE9FF] rounded-full blur-3xl opacity-40" />
+      <View className="absolute top-32 -left-28 w-80 h-80 bg-[#EAF2FF] rounded-full blur-3xl opacity-35" />
+      <View className="absolute bottom-[-120] right-[-80] w-96 h-96 bg-[#F3FFE8] rounded-full blur-3xl opacity-30" />
 
       <TouchableWithoutFeedback
         onPress={() => {
@@ -87,38 +87,36 @@ export default function Page() {
         accessible={false}
       >
         <View className="flex-1 justify-start pt-10">
-
-          {/* Title */}
+          {/* ===== Title ===== */}
           <Text className="text-[28px] font-poppins-semibold text-[#0A0A0A] text-center leading-snug px-6">
-            Enter Your
-            <Text className="text-[#7454F6]"> Verification </Text>
-            Code
+            Enter your
+            <Text className="text-[#7454F6]"> verification </Text>
+            code
           </Text>
 
-          {/* Subtitle */}
-          <Text className="text-center text-[#6B6B6B] mt-2 font-poppins-regular italic tracking-wide px-8">
+          {/* ===== Subtitle ===== */}
+          <Text className="text-center text-[#6B6B6B] mt-2 font-poppins-regular px-8">
             Sent to <Text className="text-[#4A4A4A]">{phone}</Text>
           </Text>
 
-          <View className="h-14" />
+          <View className="h-12" />
 
-          {/* OTP Boxes */}
+          {/* ===== OTP Boxes ===== */}
           <Pressable
             onPress={() => otpRef.current?.focus()}
-            className="flex-row gap-3 justify-center h-16 px-4"
+            className="flex-row gap-3 justify-center px-2"
           >
             {Array.from({ length: 6 }).map((_, index) => (
               <View
                 key={index}
-                className="flex-1 h-16 rounded-2xl bg-white border border-[#DDD] items-center justify-center"
+                className="flex-1 h-[56px] rounded-xl bg-white items-center justify-center"
                 style={{
+                  borderWidth: 1,
                   borderColor:
-                    isFocused && otp.length === index
-                      ? "#BBA7FF"
-                      : "#E1E1E1",
+                    isFocused && otp.length === index ? "#BBA7FF" : "#E3E3E3",
                 }}
               >
-                <Text className="text-3xl font-poppins-semibold text-[#111]">
+                <Text className="text-[22px] font-poppins-semibold text-[#111]">
                   {otp[index] || ""}
                 </Text>
 
@@ -128,11 +126,11 @@ export default function Page() {
                     style={{
                       position: "absolute",
                       width: 2,
-                      height: 32,
+                      height: 28,
                       backgroundColor: "#7454F6",
                       opacity: blinkAnim,
                       borderRadius: 1,
-                      bottom: 12,
+                      bottom: 10,
                     }}
                   />
                 )}
@@ -140,15 +138,17 @@ export default function Page() {
             ))}
           </Pressable>
 
-          {/* Hidden input */}
+          {/* ===== Hidden Input ===== */}
           <TextInput
-            className="absolute h-1 w-1 opacity-0"
             ref={otpRef}
-            style={Platform.OS === "ios" ? { lineHeight: undefined } : undefined}
+            className="absolute h-1 w-1 opacity-0"
+            style={
+              Platform.OS === "ios" ? { lineHeight: undefined } : undefined
+            }
             selectionColor={colors.black}
             keyboardType="numeric"
             textContentType="oneTimeCode"
-            autoFocus={true}
+            autoFocus
             value={otp}
             onChangeText={handleOtpChange}
             onFocus={() => setIsFocused(true)}
@@ -156,15 +156,17 @@ export default function Page() {
             maxLength={6}
           />
 
-          {/* Error */}
+          {/* ===== Error Banner (Premium) ===== */}
           {isError && (
-            <Text className="text-red-500 text-sm text-center mt-4 font-poppins-regular">
-              {error.message}
-            </Text>
+            <View className="mt-6 px-4 py-3 rounded-xl bg-red-50 border border-red-100 mx-4">
+              <Text className="text-red-600 text-sm text-center font-poppins-regular leading-relaxed">
+                {error.message}
+              </Text>
+            </View>
           )}
 
-          {/* FAB */}
-          <View className="items-end mt-10 pr-2">
+          {/* ===== FAB ===== */}
+          <View className="items-end mt-10 pr-1">
             <Fab
               disabled={!isValid || isPending}
               onPress={handleSubmit}
