@@ -12,47 +12,40 @@ export default function Page() {
 
   const handlePress = () => {
     if (firstName) {
-      setEdits({
-        ...edits,
-        first_name: firstName,
-      } as PrivateProfile);
+      setEdits({ ...edits, first_name: firstName } as PrivateProfile);
     }
     router.back();
   };
 
   return (
-    <View className="flex-1 bg-white px-5 pt-6">
-      {/* Header */}
+    <View className="flex-1 bg-white px-6 pt-6">
       <StackHeaderV4 title="Name" onPressBack={handlePress} />
 
-      {/* Label */}
-      <Text className="text-[15px] text-neutral-500 font-poppins-regular mt-6 mb-2">
-        Your first name
+      {/* Section label */}
+      <Text className="text-[13px] tracking-wide text-neutral-400 mt-8 mb-3">
+        YOUR FIRST NAME
       </Text>
 
-      {/* iOS-style input box */}
+      {/* Input Card */}
       <View
-        className="rounded-2xl bg-[#F7F7F8] h-16 px-4 justify-center border border-neutral-200"
-        style={{
-          shadowColor: "#000",
-          shadowOpacity: 0.04,
-          shadowRadius: 4,
-        }}
+        className="rounded-3xl bg-[#FAFAFB] px-5 py-5 border border-neutral-200"
+        style={{ shadowColor: "#000", shadowOpacity: 0.04, shadowRadius: 6 }}
       >
         <TextInput
-          className="text-[28px] font-poppins-medium text-[#1A1A1A]"
+          className="text-[32px] font-poppins-semibold text-neutral-900"
+          placeholder="Enter your name"
+          placeholderTextColor="#B5B5B5"
           selectionColor={colors.black}
           cursorColor={colors.black}
-          placeholder="Enter name"
-          placeholderTextColor="#9b9b9b"
           value={firstName}
           onChangeText={setFirstName}
+          autoCapitalize="words"
         />
       </View>
 
-      {/* Subtle helper text */}
-      <Text className="text-neutral-400 font-poppins-light text-sm mt-3">
-        This will appear on your profile.
+      {/* Helper text */}
+      <Text className="text-[12px] text-neutral-400 mt-4 leading-relaxed">
+        This is how your name will appear on your profile.
       </Text>
     </View>
   );

@@ -20,13 +20,12 @@ interface Props {
   height?: number;
   slots?: number;
 }
-
 export const AnswerList: FC<Props> = ({
   profile,
   columns = 1,
-  spacing = 10,
-  margin = 10,
-  height = 120,
+  spacing = 12,
+  margin = 16,
+  height = 130,
   slots = 3,
 }) => {
   const width = Dimensions.get("window").width - margin * 2;
@@ -43,7 +42,7 @@ export const AnswerList: FC<Props> = ({
           const answer = profile?.answers[index] || null;
           return {
             key: index.toString(),
-            answer: answer,
+            answer,
             disabledDrag: answer === null,
             disabledReSorted: answer === null,
           };
@@ -54,62 +53,56 @@ export const AnswerList: FC<Props> = ({
         const answer = profile?.answers[index] || null;
         return {
           ...item,
-          answer: answer,
+          answer,
           disabledDrag: answer === null,
           disabledReSorted: answer === null,
         };
       });
       setData(newData);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
 
   const renderItem = (item: Item) => {
     return (
-      <View
-        style={{
-          width: size,
-          height: height,
-          paddingVertical: spacing / 2,
-        }}
-        key={item.key}
-      >
+      <View style={{ width: size, height, paddingVertical: spacing / 2 }} key={item.key}>
         {item.answer ? (
           <View
             style={{
               flex: 1,
-              padding: 16,
-              borderRadius: 18,
+              padding: 18,
+              borderRadius: 22,
               backgroundColor: "#FFFFFF",
               borderWidth: 1,
-              borderColor: "#E8E8E8",
+              borderColor: "#EEEAFD",
               shadowColor: "#000",
-              shadowOpacity: 0.05,
-              shadowRadius: 6,
-              shadowOffset: { width: 0, height: 4 },
-              elevation: 1,
+              shadowOpacity: 0.04,
+              shadowRadius: 12,
+              shadowOffset: { width: 0, height: 6 },
+              elevation: 2,
               justifyContent: "center",
             }}
           >
-            {/* PROMPT QUESTION */}
+            {/* Question */}
             <Text
               style={{
-                fontSize: 16,
-                fontWeight: "700",
+                fontSize: 15,
+                fontWeight: "600",
                 color: "#1A1A1A",
                 marginBottom: 6,
+                letterSpacing: 0.2,
               }}
+              numberOfLines={2}
             >
               {item.answer.question}
             </Text>
 
-            {/* USER ANSWER */}
+            {/* Answer */}
             <Text
               style={{
                 fontSize: 14,
                 fontWeight: "400",
-                color: "#6A6A6A",
-                lineHeight: 18,
+                color: "#6B6B6B",
+                lineHeight: 20,
               }}
               numberOfLines={3}
             >
@@ -120,10 +113,10 @@ export const AnswerList: FC<Props> = ({
           <View
             style={{
               flex: 1,
-              borderRadius: 18,
-              borderWidth: 1.25,
+              borderRadius: 22,
+              borderWidth: 1.5,
               borderStyle: "dashed",
-              borderColor: "#D7D0FF",
+              borderColor: "#D6CBFF",
               backgroundColor: "#FBFAFF",
               alignItems: "center",
               justifyContent: "center",
@@ -131,13 +124,14 @@ export const AnswerList: FC<Props> = ({
           >
             <Text
               style={{
-                color: "#7B61FF",
+                color: "#7454F6",
                 fontSize: 14,
                 fontWeight: "500",
-                opacity: 0.7,
+                opacity: 0.75,
+                letterSpacing: 0.3,
               }}
             >
-              Tap to add answer
+              Add an answer
             </Text>
           </View>
         )}
@@ -147,60 +141,38 @@ export const AnswerList: FC<Props> = ({
 
   const onDragRelease = (data: Item[]) => {
     const answers = data
-      .map((item, index) => {
-        return {
-          ...item.answer,
-          answer_order: index,
-        };
-      })
+      .map((item, index) => ({ ...item.answer, answer_order: index }))
       .filter((item) => item.answer_text != null);
 
-    setMyProfileChanges({
-      ...profile,
-      answers,
-    });
+    setMyProfileChanges({ ...profile, answers });
     setData(data);
     setGridActive(false);
   };
 
-  const onDragItemActive = () => {
-    setGridActive(true);
-  };
+  const onDragItemActive = () => setGridActive(true);
 
   const onItemPress = (item: Item) => {
     if (item.answer) {
       router.push({
         pathname: "/(app)/write-answer",
-        params: {
-          itemId: item.answer.id,
-          promptId: item.answer.prompt_id,
-        },
+        params: { itemId: item.answer.id, promptId: item.answer.prompt_id },
       });
     } else {
       router.push("/(app)/prompts");
     }
-    return;
   };
 
   return (
-  <View
-    style={{
-      width: width,
-      alignSelf: "center",
-      paddingTop: 4,       // small spacing for air
-      paddingBottom: 12,   // room under grid
-    }}
-  >
-    <DraggableGrid
-      numColumns={1}
-      renderItem={renderItem}
-      data={data}
-      onDragRelease={onDragRelease}
-      onDragItemActive={onDragItemActive}
-      onItemPress={onItemPress}
-      itemHeight={height}
-    />
-  </View>
-);
-
+    <View style={{ width, alignSelf: "center", paddingTop: 6, paddingBottom: 14 }}>
+      <DraggableGrid
+        numColumns={1}
+        renderItem={renderItem}
+        data={data}
+        onDragRelease={onDragRelease}
+        onDragItemActive={onDragItemActive}
+        onItemPress={onItemPress}
+        itemHeight={height}
+      />
+    </View>
+  );
 };

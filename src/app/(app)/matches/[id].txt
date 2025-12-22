@@ -100,16 +100,21 @@ export default function Page() {
   if (!channel) return null;
 
   return (
-    <GroupChannelFragment
-      channel={channel}
-      onChannelDeleted={() => {
-        router.navigate("/matches");
-      }}
-      onPressHeaderLeft={() => {
-        router.back();
-      }}
-      onPressHeaderRight={() => {}}
-      keyboardAvoidOffset={height}
-    />
+    <View className="flex-1 bg-[#FAFAFB]">
+      {/* Ambient glow */}
+      <View className="absolute -top-40 -right-40 w-[420px] h-[420px] bg-[#EFEAFF] opacity-30 blur-[160px]" />
+      <View className="absolute bottom-[-120] left-[-120] w-[380px] h-[380px] bg-[#F7F3FF] opacity-25 blur-[160px]" />
+      <GroupChannelFragment
+        channel={channel}
+        onChannelDeleted={() => {
+          router.navigate("/matches");
+        }}
+        onPressHeaderLeft={() => {
+          router.back();
+        }}
+        onPressHeaderRight={() => {}}
+        keyboardAvoidOffset={height}
+      />
+    </View>
   );
 }

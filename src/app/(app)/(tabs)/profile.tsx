@@ -85,95 +85,139 @@ export default function Page() {
         </View>
 
         {/* ===== PROFILE IMAGE + NAME ===== */}
-        <View className="items-center mt-12 mb-8">
-          <Pressable
-            onPress={() => router.push("/profile")}
-            className="rounded-full"
-            style={{
-              padding: 6,
-              backgroundColor: "#EEE9FF",
-              borderRadius: 9999,
-            }}
-          >
-            <View
-              className="rounded-full bg-white"
+        {/* ===== PROFILE HERO (BLURRED BACKGROUND) ===== */}
+        <View className="relative mb-10">
+          {/* Blurred background image */}
+          <Image
+            source={profile?.photos[1].photo_url}
+            className="absolute inset-0 w-full h-full"
+            contentFit="cover"
+            blurRadius={40}
+          />
+
+          {/* Dark + purple overlay */}
+          <View className="absolute inset-0 bg-black/35" />
+          <View className="absolute inset-0 bg-[#7454F6]/10" />
+
+          {/* Foreground content */}
+          <View className="items-center pt-14 pb-8">
+            <Pressable
+              onPress={() => router.push("/profile")}
+              className="rounded-full"
               style={{
-                padding: 3,
+                padding: 4,
+                borderRadius: 9999,
+                borderWidth: 2,
+                borderColor: "#7454F6",
                 shadowColor: "#7454F6",
                 shadowOpacity: 0.25,
-                shadowRadius: 18,
-                elevation: 6,
+                shadowRadius: 24,
+                elevation: 8,
               }}
             >
-              <Image
-                source={profile?.avatar_url}
-                className="h-36 w-36 rounded-full bg-neutral-200"
-              />
+              <View
+                className="rounded-full bg-white"
+                style={{
+                  padding: 3,
+                  borderRadius: 9999,
+                }}
+              >
+                <Image
+                  source={profile?.avatar_url}
+                  className="h-36 w-36 rounded-full bg-neutral-200"
+                  contentFit="cover"
+                />
+              </View>
+            </Pressable>
+
+            {/* Name */}
+            <Text className="text-[22px] font-poppins-semibold mt-5 text-white">
+              {profile?.first_name}
+            </Text>
+
+            {/* Subtitle */}
+            <Text className="text-[12px] text-white/80 tracking-wide mt-0.5">
+              Tap profile to view & edit details
+            </Text>
+
+            {/* Phone pill */}
+            <View className="mt-3 px-4 py-1.5 rounded-full bg-white/90">
+              <Text className="text-[15px] text-neutral-800 font-poppins-medium tracking-wide">
+                +{profile?.phone}
+              </Text>
             </View>
-          </Pressable>
-
-          <Text className="text-[22px] font-poppins-semibold mt-5 text-[#111]">
-            {profile?.first_name}
-          </Text>
-
-          <Text className="text-[13px] text-neutral-400 mt-1 tracking-wide">
-            Tap on profile to view and edit 
-          </Text>
+          </View>
         </View>
 
         {/* ===== PROFILE DETAILS ===== */}
-        <View className="px-6">
-          <Text className="text-[14px] font-poppins-semibold text-neutral-500 mb-3 tracking-wide">
-            PERSONAL DETAILS
-          </Text>
+        <View
+          className=" bg-white/80 rounded-3xl px-3 py-2 backdrop-blur-xl"
+          style={{
+            shadowColor: "#000",
+            shadowOpacity: 0.06,
+            shadowRadius: 20,
+            elevation: 4,
+          }}
+        >
+          {[
+            {
+              icon: "person-outline",
+              label: "Name",
+              value: profile?.first_name,
+            },
+            {
+              icon: "calendar-outline",
+              label: "Age",
+              value: profile?.dob ? calculateAge(profile.dob) + " yrs" : null,
+            },
+            {
+              icon: "male-female-outline",
+              label: "Gender",
+              value: profile?.gender?.name,
+            },
+            {
+              icon: "chatbubble-outline",
+              label: "Pronouns",
+              value: profile?.pronouns?.map((p) => p.name).join(", "),
+            },
+            {
+              icon: "heart-outline",
+              label: "Sexuality",
+              value: profile?.sexuality?.name,
+            },
+            {
+              icon: "body-outline",
+              label: "Height",
+              value: profile?.height_cm ? `${profile.height_cm} cm` : null,
+            },
+            {
+              icon: "happy-outline",
+              label: "Children",
+              value: profile?.children?.name,
+            },
+            {
+              icon: "sparkles-outline",
+              label: "Zodiac",
+              value: profile?.zodiac_sign?.name,
+            },
+            {
+              icon: "location-outline",
+              label: "Location",
+              value: profile?.neighborhood,
+            },
+          ].map((item, index, array) => (
+            <View key={item.label}>
+              <CompactRow
+                icon={item.icon}
+                label={item.label}
+                value={item.value}
+              />
 
-          <View className="bg-white rounded-2xl px-2 py-1 shadow-sm shadow-black/5">
-            <CompactRow
-              icon="person-outline"
-              label="Name"
-              value={profile?.first_name}
-            />
-            <CompactRow
-              icon="calendar-outline"
-              label="Age"
-              value={profile?.dob ? calculateAge(profile.dob) + " yrs" : null}
-            />
-            <CompactRow
-              icon="male-female-outline"
-              label="Gender"
-              value={profile?.gender?.name}
-            />
-            <CompactRow
-              icon="chatbubble-outline"
-              label="Pronouns"
-              value={profile?.pronouns?.map((p) => p.name).join(", ")}
-            />
-            <CompactRow
-              icon="heart-outline"
-              label="Sexuality"
-              value={profile?.sexuality?.name}
-            />
-            <CompactRow
-              icon="body-outline"
-              label="Height"
-              value={profile?.height_cm ? `${profile.height_cm} cm` : null}
-            />
-            <CompactRow
-              icon="people-outline"
-              label="Children"
-              value={profile?.children?.name}
-            />
-            <CompactRow
-              icon="sparkles-outline"
-              label="Zodiac"
-              value={profile?.zodiac_sign?.name}
-            />
-            <CompactRow
-              icon="location-outline"
-              label="Location"
-              value={profile?.neighborhood}
-            />
-          </View>
+              {index !== array.length - 1 && (
+                <View className="h-px bg-neutral-200/60 mx-3" />
+              )}
+            </View>
+          ))}
         </View>
 
         {/* ===== QUICK ACTIONS ===== */}
@@ -264,7 +308,7 @@ export default function Page() {
           <View className="flex-row flex-wrap justify-center gap-4">
             {[
               "Intentional Connections",
-              "Emotional Clarity",
+              "Emotional",
               "Shared Values",
             ].map((label, index) => (
               <View

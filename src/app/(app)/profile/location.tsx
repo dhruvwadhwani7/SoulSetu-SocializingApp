@@ -46,8 +46,13 @@ export default function Page() {
   return (
     <View className="flex-1 bg-white p-5">
       <StackHeaderV4 title="Location" onPressBack={handlePress} />
-      <Text className="text-base font-poppins-light mb-10">
-        Only the neighborhood name will appear on your profile.
+      <Text className="text-[13px] text-neutral-400 mt-4 leading-relaxed">
+        Only your neighborhood name will be visible on your profile — your exact
+        location stays private.
+      </Text>
+      {/* Instruction label */}
+      <Text className="text-[13px] tracking-wide text-[#7454F6] mt-8 mb-2">
+        SELECT YOUR AREA
       </Text>
       <Text className="text-[14px] font-poppins-medium text-[#7454F6] mb-1">
         Move the map to select your location.
@@ -56,8 +61,9 @@ export default function Page() {
         location={selectedLocation}
         onLocationChange={handleLocationChange}
       />
-      <Text className="text-[13px] font-poppins-light text-neutral-500 mb-6 mt-10">
-        Zoom and drag to adjust the area accurately.
+      {/* Helper text */}
+      <Text className="text-[12px] text-neutral-400 mt-4 leading-relaxed">
+        Drag or zoom the map to fine-tune your neighborhood selection.
       </Text>
     </View>
   );

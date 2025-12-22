@@ -45,6 +45,14 @@ export default function Layout() {
       appId={process.env.EXPO_PUBLIC_SENDBIRD_APP_ID!}
       chatOptions={{ localCacheStorage: AsyncStorage }}
       platformServices={platformServices}
+      uikitOptions={{
+        groupChannelList: { enableMessageReceiptStatus: true },
+        groupChannel: {
+          replyType : "thread",
+          threadReplySelectType : 'thread',
+          enableReactions : true,
+        },
+      }}
     >
       <QueryClientProvider client={queryClient}>
         <AuthProvider>

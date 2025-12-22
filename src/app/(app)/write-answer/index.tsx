@@ -33,76 +33,115 @@ export default function Page() {
   };
 
   const handlePressDone = () => {
-    if (!edits) return;
+    if (!edits || !prompt?.id || !prompt?.question) return;
 
     if (itemId) {
-      if (text) {
-        const updatedAnswers = edits?.answers?.map((item: Answer) => {
-          if (item.id === itemId) {
-            return {
-              ...item,
-              answer_text: text,
-              prompt_id: prompt?.id,
-              question: prompt?.question,
-            } as Answer;
-          }
-          return item;
-        });
-        setEdits({
-          ...edits,
-          answers: updatedAnswers,
-        });
-      }
+      const updatedAnswers: Answer[] = edits.answers.map((item) => {
+        if (item.id === itemId) {
+          return {
+            ...item,
+            answer_text: text,
+            prompt_id: prompt.id,
+            question: prompt.question,
+          };
+        }
+        return item;
+      });
+
+      setEdits({ ...edits, answers: updatedAnswers });
     } else {
-      const updatedAnswers = [
-        ...edits.answers,
-        {
-          id: "temp_" + Crypto.randomUUID(),
-          answer_text: text,
-          answer_order: edits.answers.length || 0,
-          prompt_id: prompt?.id,
-          question: prompt?.question,
-        } as Answer,
-      ].filter((item) => item.answer_text);
+      if (!text) return;
+
+      const newAnswer: Answer = {
+        id: "temp_" + Crypto.randomUUID(),
+        answer_text: text,
+        answer_order: edits.answers.length,
+        prompt_id: prompt.id,
+        question: prompt.question,
+      };
 
       setEdits({
         ...edits,
-        answers: updatedAnswers,
+        answers: [...edits.answers, newAnswer],
       });
     }
+
     router.dismissTo("/(app)/profile/(tabs)");
   };
+
   return (
-    <View className="flex-1 bg-white p-5">
+    <View className="flex-1 bg-[#FAFAFB] px-5">
       <StackHeaderV3
         title="Write answer"
         onPressCancel={handlePressCancel}
         onPressDone={handlePressDone}
       />
-      <View className="gap-5">
-        <Link
-          href={{
-            pathname: "/prompts",
-            params: {
-              itemId,
-            },
-          }}
-          asChild
-          suppressHighlighting
-        >
-          <Pressable className="border border-neutral-200 rounded-md px-5 py-6">
-            <Text className="text-base">{prompt?.question}</Text>
-          </Pressable>
-        </Link>
-        <TextInput
-          className="border border-neutral-200 rounded-md p-5 h-36"
-          multiline={true}
-          numberOfLines={6}
-          maxLength={255}
-          selectionColor={colors.black}
-          value={text}
-          onChangeText={setText}
-        />
+
+      <View className="gap-6 mt-4">
+        {/* ===== PROMPT ===== */}
+        <View>
+          <Text className="text-[11px] font-poppins-semibold text-neutral-400 tracking-widest mb-2">
+            PROMPT
+          </Text>
+
+          <Link
+            href={{ pathname: "/prompts", params: { itemId } }}
+            asChild
+            suppressHighlighting
+          >
+            <Pressable
+              className="bg-white rounded-2xl px-5 py-5 border border-neutral-200"
+              style={{
+                shadowColor: "#000",
+                shadowOpacity: 0.04,
+                shadowRadius: 10,
+                elevation: 2,
+              }}
+            >
+              <Text className="text-[16px] font-poppins-medium text-[#111] leading-snug">
+                {prompt?.question || "Choose a prompt"}
+              </Text>
+
+              <Text className="text-[12px] text-neutral-500 mt-3">
+                Tap to change prompt
+              </Text>
+            </Pressable>
+          </Link>
+        </View>
+
+        {/* ===== ANSWER ===== */}
+        <View>
+          <Text className="text-[11px] font-poppins-semibold text-neutral-400 tracking-widest mb-2">
+            YOUR ANSWER
+          </Text>
+
+          <View
+            className="bg-white rounded-2xl border border-neutral-200 px-5 py-4"
+            style={{
+              shadowColor: "#000",
+              shadowOpacity: 0.04,
+              shadowRadius: 10,
+              elevation: 2,
+            }}
+          >
+            <TextInput
+              className="text-[15px] text-[#111]"
+              placeholder="Write your answer here…"
+              placeholderTextColor={colors.neutral[400]}
+              multiline
+              numberOfLines={6}
+              maxLength={255}
+              selectionColor={colors.black}
+              value={text}
+              onChangeText={setText}
+              style={{ minHeight: 140, textAlignVertical: "top" }}
+            />
+
+            <Text className="text-[12px] text-neutral-400 mt-3 text-right">
+              {text.length}/255
+            </Text>
+          </View>
+        </View>
       </View>
     </View>
   );

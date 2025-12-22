@@ -11,8 +11,24 @@ export default function Page() {
 
   if (!edits) {
     return (
-      <View className="flex-1 bg-white items-center justify-center">
-        <Text>Something went wrong.</Text>
+      <View className="flex-1 bg-white items-center justify-center px-8">
+        <View
+          className="w-full rounded-2xl border border-red-200 bg-red-50/40 px-6 py-6"
+          style={{
+            shadowColor: "#000",
+            shadowOpacity: 0.04,
+            shadowRadius: 14,
+            elevation: 3,
+          }}
+        >
+          <Text className="text-[16px] font-poppins-semibold text-red-600 text-center">
+            Something went wrong
+          </Text>
+
+          <Text className="text-[13px] text-neutral-600 text-center mt-1 leading-relaxed">
+            We couldn’t load this section right now.
+          </Text>
+        </View>
       </View>
     );
   }
@@ -29,7 +45,6 @@ export default function Page() {
       <View className="absolute bottom-[-50] left-[-50] w-72 h-72 bg-[#F6F8FF] opacity-40 rounded-full blur-3xl" />
 
       <View className="px-6 pt-14">
-
         {/* Section Header: My Photos */}
         <Text
           style={{
@@ -41,6 +56,9 @@ export default function Page() {
           }}
         >
           My Photos
+        </Text>
+        <Text className="text-[12px] text-neutral-500 mb-3 tracking-wide">
+          Tip · Drag photos to reorder how they appear on your profile
         </Text>
 
         <PhotoGrid profile={edits} />
@@ -58,6 +76,10 @@ export default function Page() {
           }}
         >
           Answers
+        </Text>
+
+        <Text className="text-[12px] text-neutral-500 mb-3 tracking-wide">
+          Tip · Drag prompts to highlight what matters most
         </Text>
 
         <AnswerList profile={edits} />
