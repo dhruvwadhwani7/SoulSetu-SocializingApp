@@ -13,7 +13,7 @@ export default function Page() {
 
   /* ===== Empty / Error / Loading ===== */
   const renderEmpty = () => {
-    if (isFetching) return <Loader />;
+    if (isFetching) return <Loader width={120} height={120}/>;
 
     if (isError) {
       return (

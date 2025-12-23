@@ -9,6 +9,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function Page() {
   const { data: profile } = useMyProfile();
 
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <Stack.Screen options={{ headerShown: false }} />
@@ -23,7 +24,9 @@ export default function Page() {
       >
         {/* ===== HEADER ===== */}
         <View className="px-6 pt-6 pb-4 bg-white">
+          
           <View className="flex-row items-center justify-between">
+            
             <View>
               <Text
                 className="text-[24px] font-poppins-semibold text-[#111]"
@@ -34,6 +37,7 @@ export default function Page() {
               <Text className="text-[11px] text-neutral-400 tracking-widest mt-0.5">
                 YOUR SPACE
               </Text>
+              
             </View>
 
             <View className="flex-row items-center gap-4">
@@ -86,14 +90,15 @@ export default function Page() {
 
         {/* ===== PROFILE IMAGE + NAME ===== */}
         {/* ===== PROFILE HERO (BLURRED BACKGROUND) ===== */}
-        <View className="relative mb-10">
+        <View className="relative mb-0">
           {/* Blurred background image */}
           <Image
-            source={profile?.photos[1].photo_url}
+            source={profile?.photos[Math.floor(Math.random()* 6)].photo_url}
             className="absolute inset-0 w-full h-full"
             contentFit="cover"
             blurRadius={40}
           />
+          
 
           {/* Dark + purple overlay */}
           <View className="absolute inset-0 bg-black/35" />
@@ -361,7 +366,9 @@ export default function Page() {
 }
 
 /* ===== Compact Row Component ===== */
-function CompactRow({ icon, label, value }) {
+
+
+const CompactRow = ({ icon, label, value }) => {
   return (
     <View className="flex-row items-center py-3 px-3">
       <Ionicons name={icon} size={17} color="#8A8A8A" />

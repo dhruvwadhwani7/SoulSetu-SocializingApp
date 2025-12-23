@@ -2,12 +2,13 @@ import { Answer, PrivateProfile } from "@/api/my-profile/types";
 import { useEdit } from "@/store/edit";
 import { router } from "expo-router";
 import { FC, useEffect, useState } from "react";
-import { Dimensions, Text, View } from "react-native";
+import { Dimensions, Text, View, Pressable, Alert } from "react-native";
 import { DraggableGrid } from "react-native-draggable-grid";
+import { Ionicons } from "@expo/vector-icons";
 
 type Item = {
   key: string;
-  answer: Answer;
+  answer: Answer | null;
   disabledDrag?: boolean;
   disabledReSorted?: boolean;
 };
@@ -60,11 +61,59 @@ export const AnswerList: FC<Props> = ({
       });
       setData(newData);
     }
-  }, [profile]);
+  }, [profile, slots]);
+
+  const confirmDeleteAnswer = (item: Item) => {
+    Alert.alert(
+      "Remove Prompt",
+      "This prompt will be removed from the profile",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => deleteAnswer(item),
+        },
+      ]
+    );
+  };
+
+  const deleteAnswer = (item: Item) => {
+    const updatedData = data.map((i) =>
+      i.key === item.key
+        ? {
+            ...i,
+            answer: null,
+            disabledDrag: true,
+            disabledReSorted: true,
+          }
+        : i
+    );
+
+    const updatedAnswers = updatedData
+      .map((item, index) =>
+        item.answer
+          ? {
+              ...item.answer,
+              answer_order: index,
+            }
+          : null
+      )
+      .filter(Boolean) as Answer[];
+
+    setData(updatedData);
+    setMyProfileChanges({
+      ...profile,
+      answers: updatedAnswers,
+    });
+  };
 
   const renderItem = (item: Item) => {
     return (
-      <View style={{ width: size, height, paddingVertical: spacing / 2 }} key={item.key}>
+      <View
+        style={{ width: size, height, paddingVertical: spacing / 2 }}
+        key={item.key}
+      >
         {item.answer ? (
           <View
             style={{
@@ -82,6 +131,25 @@ export const AnswerList: FC<Props> = ({
               justifyContent: "center",
             }}
           >
+            <Pressable
+              onPress={() => confirmDeleteAnswer(item)}
+              style={{
+                position: "absolute",
+                top: 6,
+                right: 6,
+                height: 24,
+                width: 24,
+                borderRadius: 12,
+                backgroundColor: "rgba(0,0,0,0.7)",
+                alignItems: "center",
+                justifyContent: "center",
+                zIndex: 20,
+                elevation: 20,
+              }}
+              hitSlop={10}
+            >
+              <Ionicons name="close" size={14} color="#fff" />
+            </Pressable>
             {/* Question */}
             <Text
               style={{
@@ -141,8 +209,10 @@ export const AnswerList: FC<Props> = ({
 
   const onDragRelease = (data: Item[]) => {
     const answers = data
-      .map((item, index) => ({ ...item.answer, answer_order: index }))
-      .filter((item) => item.answer_text != null);
+      .map((item, index) =>
+        item.answer ? { ...item.answer, answer_order: index } : null
+      )
+      .filter(Boolean) as Answer[];
 
     setMyProfileChanges({ ...profile, answers });
     setData(data);
@@ -163,7 +233,9 @@ export const AnswerList: FC<Props> = ({
   };
 
   return (
-    <View style={{ width, alignSelf: "center", paddingTop: 6, paddingBottom: 14 }}>
+    <View
+      style={{ width, alignSelf: "center", paddingTop: 6, paddingBottom: 14 }}
+    >
       <DraggableGrid
         numColumns={1}
         renderItem={renderItem}

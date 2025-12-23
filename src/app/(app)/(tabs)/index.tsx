@@ -14,7 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, router } from "expo-router";
 import { useState } from "react";
-import { Alert, ScrollView, View,Text } from "react-native";
+import { Alert, ScrollView, View } from "react-native";
 
 export default function Page() {
   const { data, isFetching, error, refetch } = useProfiles();

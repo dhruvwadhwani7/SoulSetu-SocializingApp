@@ -57,9 +57,12 @@ export default function Page() {
         >
           My Photos
         </Text>
-        <Text className="text-[12px] text-neutral-500 mb-3 tracking-wide">
-          Tip · Drag photos to reorder how they appear on your profile
-        </Text>
+
+        <View className="mb-4 self-start rounded-full bg-[#F5F3FF] px-4">
+          <Text className="text-[12px] text-[#6B5CF6] tracking-wide">
+            Drag to reorder • Tap to change the photo
+          </Text>
+        </View>
 
         <PhotoGrid profile={edits} />
 
@@ -78,9 +81,11 @@ export default function Page() {
           Answers
         </Text>
 
-        <Text className="text-[12px] text-neutral-500 mb-3 tracking-wide">
-          Tip · Drag prompts to highlight what matters most
-        </Text>
+        <View className="mb-4 self-start rounded-full bg-[#F5F3FF] px-4">
+          <Text className="text-[12px] text-[#6B5CF6] tracking-wide">
+            Drag to reorder • Tap to change the prompt
+          </Text>
+        </View>
 
         <AnswerList profile={edits} />
       </View>
