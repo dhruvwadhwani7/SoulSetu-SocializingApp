@@ -95,83 +95,114 @@ export const PhotoGrid: FC<Props> = ({
   }
 
   /* ---------- GRID ITEM ---------- */
-  const renderItem = (item: Item) => {
-    return (
-      <View
-        key={item.key}
-        style={{
-          height: itemSize,
-          width: itemSize,
-          borderRadius: 14,
-          overflow: "hidden",
-          position: "relative", // ✅ REQUIRED
-          borderWidth: 2,
-          borderColor: item.photo ? "#B8A4FF" : "#D7CCFF",
-          backgroundColor: item.photo ? "#fff" : "#F7F3FF",
-          shadowColor: "#7444FF",
-          shadowOpacity: 0.12,
-          shadowRadius: 6,
-          elevation: 2,
-        }}
-      >
-        {/* DELETE BUTTON */}
-        {item.photo && (
-          <Pressable
-            onPress={() => confirmDeletePhoto(item)}
-            hitSlop={12}
+  const renderItem = (item: Item, index: number) => {
+  return (
+    <View
+      key={item.key}
+      style={{
+        height: itemSize,
+        width: itemSize,
+        borderRadius: 14,
+        overflow: "hidden",
+        position: "relative", // ✅ REQUIRED
+        borderWidth: 2,
+        borderColor: item.photo ? "#B8A4FF" : "#D7CCFF",
+        backgroundColor: item.photo ? "#fff" : "#F7F3FF",
+        shadowColor: "#7444FF",
+        shadowOpacity: 0.12,
+        shadowRadius: 6,
+        elevation: 2,
+      }}
+    >
+      {/* 🔢 ORDER NUMBER (only if photo exists) */}
+      {item.photo && (
+        <View
+          style={{
+            position: "absolute",
+            top: 6,
+            left: 6,
+            height: 24,
+            width: 24,
+            margin : -2,
+            borderRadius: 12,
+            backgroundColor: "#7454F6",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 20,
+            elevation: 20,
+          }}
+        >
+          <Text
             style={{
-              position: "absolute",
-              top: 6,
-              right: 6,
-              height: 24,
-              width: 24,
-              borderRadius: 12,
-              backgroundColor: "rgba(0,0,0,0.7)",
-              alignItems: "center",
-              justifyContent: "center",
-              zIndex: 20,
-              elevation: 20,
+              color: "#FFFFFF",
+              fontSize: 12,
+              fontWeight: "600",
             }}
           >
-            <Ionicons name="close" size={14} color="#fff" />
-          </Pressable>
-        )}
+            {index + 1}
+          </Text>
+        </View>
+      )}
 
-        {/* IMAGE OR EMPTY SLOT */}
-        {item.photo?.photo_url ? (
-          <Image
-            source={item.photo.photo_url}
-            style={{ flex: 1, borderRadius: 12 }}
-            contentFit="cover"
-          />
-        ) : (
-          <View
+      {/* ❌ DELETE BUTTON */}
+      {item.photo && (
+        <Pressable
+          onPress={() => confirmDeletePhoto(item)}
+          hitSlop={12}
+          style={{
+            position: "absolute",
+            top: 6,
+            right: 6,
+            height: 24,
+            width: 24,
+            borderRadius: 12,
+            backgroundColor: "rgba(0,0,0,0.7)",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 20,
+            elevation: 20,
+          }}
+        >
+          <Ionicons name="close" size={14} color="#fff" />
+        </Pressable>
+      )}
+
+      {/* 🖼 IMAGE OR EMPTY SLOT */}
+      {item.photo?.photo_url ? (
+        <Image
+          source={item.photo.photo_url}
+          style={{ flex: 1, borderRadius: 12 }}
+          contentFit="cover"
+        />
+      ) : (
+        <View
+          style={{
+            flex: 1,
+            borderStyle: "dashed",
+            borderColor: "#C8B5FF",
+            borderWidth: 2,
+            borderRadius: 12,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "rgba(240,230,255,0.4)",
+          }}
+        >
+          <Text
             style={{
-              flex: 1,
-              borderStyle: "dashed",
-              borderColor: "#C8B5FF",
-              borderWidth: 2,
-              borderRadius: 12,
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "rgba(240,230,255,0.4)",
+              color: "#7B61FF",
+              fontSize: 12,
+              fontWeight: "500",
+              opacity: 0.7,
             }}
           >
-            <Text
-              style={{
-                color: "#7B61FF",
-                fontSize: 12,
-                fontWeight: "500",
-                opacity: 0.7,
-              }}
-            >
-              Tap to upload
-            </Text>
-          </View>
-        )}
-      </View>
-    );
-  };
+            Tap to upload
+          </Text>
+        </View>
+      )}
+    </View>
+  );
+};
+
 
   /* ---------- DRAG EVENTS ---------- */
   const onDragRelease = (newData: Item[]) => {

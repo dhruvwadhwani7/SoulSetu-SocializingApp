@@ -9,7 +9,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function Page() {
   const { data: profile } = useMyProfile();
 
-
   return (
     <SafeAreaView className="flex-1 bg-white">
       <Stack.Screen options={{ headerShown: false }} />
@@ -24,9 +23,7 @@ export default function Page() {
       >
         {/* ===== HEADER ===== */}
         <View className="px-6 pt-6 pb-4 bg-white">
-          
           <View className="flex-row items-center justify-between">
-            
             <View>
               <Text
                 className="text-[24px] font-poppins-semibold text-[#111]"
@@ -37,7 +34,6 @@ export default function Page() {
               <Text className="text-[11px] text-neutral-400 tracking-widest mt-0.5">
                 YOUR SPACE
               </Text>
-              
             </View>
 
             <View className="flex-row items-center gap-4">
@@ -93,12 +89,11 @@ export default function Page() {
         <View className="relative mb-0">
           {/* Blurred background image */}
           <Image
-            source={profile?.photos[Math.floor(Math.random()* 6)].photo_url}
+            source={profile?.photos[Math.floor(Math.random() * 6)].photo_url}
             className="absolute inset-0 w-full h-full"
             contentFit="cover"
             blurRadius={40}
           />
-          
 
           {/* Dark + purple overlay */}
           <View className="absolute inset-0 bg-black/35" />
@@ -306,59 +301,118 @@ export default function Page() {
           </View>
         </View>
 
+
+        {/* ===== QUICK ACTIONS ===== */}
+        <View className="px-6 mt-6">
+          <View className="flex-row gap-4">
+            {/* Preferences */}
+            <Link href="/(app)/profile/(tabs)/view" asChild>
+              <Pressable
+                className="
+          flex-1
+          rounded-2xl
+          px-4 py-4
+          bg-white
+          border border-neutral-200
+        "
+                style={{
+                  shadowColor: "#7454F6",
+                  shadowOpacity: 0.12,
+                  shadowRadius: 10,
+                  elevation: 3,
+                }}
+              >
+                <View className="flex-row items-center gap-3">
+                  <View className="h-10 w-10 rounded-full bg-[#F1EDFF] items-center justify-center">
+                    <Ionicons
+                      name="eye-outline"
+                      size={20}
+                      color="#5A3FE3"
+                    />
+                  </View>
+
+                  <View className="flex-1">
+                    <Text className="text-[15px] font-poppins-semibold text-[#111]">
+                      View Profile
+                    </Text>
+                    <Text className="text-[12px] text-neutral-500 mt-0.5">
+                      See Your Profile
+                    </Text>
+                  </View>
+                </View>
+              </Pressable>
+            </Link>
+
+            {/* Edit profile */}
+            <Link href="/(app)/profile/(tabs)" asChild>
+              <Pressable
+                className="
+          flex-1
+          rounded-2xl
+          px-4 py-4
+          bg-white
+          border border-neutral-200
+        "
+                style={{
+                  shadowColor: "#7454F6",
+                  shadowOpacity: 0.12,
+                  shadowRadius: 10,
+                  elevation: 3,
+                }}
+              >
+                <View className="flex-row items-center gap-3">
+                  <View className="h-10 w-10 rounded-full bg-[#F1EDFF] items-center justify-center">
+                    <Ionicons
+                      name="build-outline"
+                      size={20}
+                      color="#5A3FE3"
+                    />
+                  </View>
+
+                  <View className="flex-1">
+                    <Text className="text-[15px] font-poppins-semibold text-[#111]">
+                      Edit Profile
+                    </Text>
+                    <Text className="text-[12px] text-neutral-500 mt-0.5">
+                     Edit and chnage your profile
+                    </Text>
+                  </View>
+                </View>
+              </Pressable>
+            </Link>
+          </View>
+        </View>
+
         {/* ===== VALUES / PHILOSOPHY ===== */}
         <View className="relative mt-10 px-6">
           <View className="absolute -top-10 right-4 w-52 h-52 bg-[#EDE4FF] rounded-full opacity-30 blur-3xl" />
 
           <View className="flex-row flex-wrap justify-center gap-4">
-            {[
-              "Intentional Connections",
-              "Emotional",
-              "Shared Values",
-            ].map((label, index) => (
-              <View
-                key={index}
-                className="
+            {["Intentional Connections", "Emotional", "Shared Values"].map(
+              (label, index) => (
+                <View
+                  key={index}
+                  className="
                   px-5 py-2.5
                   rounded-full
                   bg-white/60
                   backdrop-blur-2xl
                   border border-white/40
                 "
-                style={{
-                  shadowColor: "#5A3FE3",
-                  shadowOpacity: 0.12,
-                  shadowRadius: 8,
-                  elevation: 3,
-                }}
-              >
-                <Text className="text-[12px] font-poppins-medium text-[#5A3FE3] tracking-wide">
-                  {label}
-                </Text>
-              </View>
-            ))}
+                  style={{
+                    shadowColor: "#5A3FE3",
+                    shadowOpacity: 0.12,
+                    shadowRadius: 8,
+                    elevation: 3,
+                  }}
+                >
+                  <Text className="text-[12px] font-poppins-medium text-[#5A3FE3] tracking-wide">
+                    {label}
+                  </Text>
+                </View>
+              )
+            )}
           </View>
-        </View>
-
-        {/* ===== SUPPORT / INFO CARDS ===== */}
-        <View className="px-6 mt-10 gap-3">
-          <Card
-            icon={<Ionicons name="help-outline" size={22} color="#4A4A4A" />}
-            title="Help Center"
-            subtitle="Support & FAQs"
-          />
-
-          <Card
-            icon={<Ionicons name="bulb-outline" size={22} color="#4A4A4A" />}
-            title="SoulSetu Tips"
-            subtitle="Improve your experience"
-          />
-
-          <Card
-            icon={<Ionicons name="heart-outline" size={22} color="#4A4A4A" />}
-            title="Connection Guide"
-            subtitle="Learn what truly matters"
-          />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -366,7 +420,6 @@ export default function Page() {
 }
 
 /* ===== Compact Row Component ===== */
-
 
 const CompactRow = ({ icon, label, value }) => {
   return (
@@ -381,10 +434,10 @@ const CompactRow = ({ icon, label, value }) => {
       </Text>
     </View>
   );
-}
+};
 
 /* ===== Helper: Age Calculator ===== */
-function calculateAge(dateString) {
+function calculateAge(dateString: string | number | Date) {
   const dob = new Date(dateString);
   const diff = Date.now() - dob.getTime();
   return Math.abs(new Date(diff).getUTCFullYear() - 1970);
