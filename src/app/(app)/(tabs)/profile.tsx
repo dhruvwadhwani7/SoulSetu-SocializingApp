@@ -1,13 +1,22 @@
+import { useMemo } from "react";
 import { useMyProfile } from "@/api/my-profile";
-import { Card } from "@/components/card";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { Link, router, Stack } from "expo-router";
 import { Pressable, Text, View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+/* ================= PAGE ================= */
+
 export default function Page() {
   const { data: profile } = useMyProfile();
+
+  /** ✅ Stable random background image */
+  const heroBackground = useMemo(() => {
+    if (!profile?.photos?.length) return null;
+    const index = Math.floor(Math.random() * profile.photos.length);
+    return profile.photos[index]?.photo_url;
+  }, [profile?.photos]);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -38,72 +47,35 @@ export default function Page() {
 
             <View className="flex-row items-center gap-4">
               <Link href="/preferences" suppressHighlighting>
-                <View
-                  className="
-        h-10 w-10 
-        rounded-full 
-        items-center 
-        justify-center 
-        bg-white/60 
-        border border-white/40
-        backdrop-blur-xl
-      "
-                  style={{
-                    shadowColor: "#7454F6",
-                    shadowOpacity: 0.15,
-                    shadowRadius: 6,
-                    elevation: 3,
-                  }}
-                >
-                  <Ionicons name="options-outline" size={18} color="#5A5A5A" />
-                </View>
+                <HeaderIcon icon="options-outline" />
               </Link>
 
               <Link href="/settings" suppressHighlighting>
-                <View
-                  className="
-        h-10 w-10 
-        rounded-full 
-        items-center 
-        justify-center 
-        bg-white/60 
-        border border-white/40
-        backdrop-blur-xl
-      "
-                  style={{
-                    shadowColor: "#7454F6",
-                    shadowOpacity: 0.15,
-                    shadowRadius: 6,
-                    elevation: 3,
-                  }}
-                >
-                  <Ionicons name="settings-outline" size={18} color="#5A5A5A" />
-                </View>
+                <HeaderIcon icon="settings-outline" />
               </Link>
             </View>
           </View>
         </View>
 
-        {/* ===== PROFILE IMAGE + NAME ===== */}
-        {/* ===== PROFILE HERO (BLURRED BACKGROUND) ===== */}
-        <View className="relative mb-0">
-          {/* Blurred background image */}
-          <Image
-            source={profile?.photos[Math.floor(Math.random() * 6)].photo_url}
-            className="absolute inset-0 w-full h-full"
-            contentFit="cover"
-            blurRadius={40}
-          />
+        {/* ===== HERO PROFILE (FULLY PRESSABLE) ===== */}
+        <Pressable onPress={() => router.push("/profile")} className="relative">
+          {heroBackground && (
+            <Image
+              source={heroBackground}
+              className="absolute inset-0 w-full h-full"
+              contentFit="cover"
+              blurRadius={40}
+            />
+          )}
 
-          {/* Dark + purple overlay */}
+          {/* Overlays */}
           <View className="absolute inset-0 bg-black/35" />
           <View className="absolute inset-0 bg-[#7454F6]/10" />
 
-          {/* Foreground content */}
+          {/* Content */}
           <View className="items-center pt-14 pb-8">
-            <Pressable
-              onPress={() => router.push("/profile")}
-              className="rounded-full"
+            {/* Avatar */}
+            <View
               style={{
                 padding: 4,
                 borderRadius: 9999,
@@ -116,10 +88,10 @@ export default function Page() {
               }}
             >
               <View
-                className="rounded-full bg-white"
                 style={{
                   padding: 3,
                   borderRadius: 9999,
+                  backgroundColor: "#fff",
                 }}
               >
                 <Image
@@ -128,30 +100,29 @@ export default function Page() {
                   contentFit="cover"
                 />
               </View>
-            </Pressable>
+            </View>
 
-            {/* Name */}
             <Text className="text-[22px] font-poppins-semibold mt-5 text-white">
               {profile?.first_name}
             </Text>
 
-            {/* Subtitle */}
             <Text className="text-[12px] text-white/80 tracking-wide mt-0.5">
               Tap profile to view & edit details
             </Text>
 
-            {/* Phone pill */}
-            <View className="mt-3 px-4 py-1.5 rounded-full bg-white/90">
-              <Text className="text-[15px] text-neutral-800 font-poppins-medium tracking-wide">
-                +{profile?.phone}
-              </Text>
-            </View>
+            {profile?.phone && (
+              <View className="mt-3 px-4 py-1.5 rounded-full bg-white/90">
+                <Text className="text-[15px] text-neutral-800 font-poppins-medium tracking-wide">
+                  +{profile.phone}
+                </Text>
+              </View>
+            )}
           </View>
-        </View>
+        </Pressable>
 
         {/* ===== PROFILE DETAILS ===== */}
         <View
-          className=" bg-white/80 rounded-3xl px-3 py-2 backdrop-blur-xl"
+          className="bg-white/80 rounded-3xl px-3 py-2 backdrop-blur-xl"
           style={{
             shadowColor: "#000",
             shadowOpacity: 0.06,
@@ -168,7 +139,7 @@ export default function Page() {
             {
               icon: "calendar-outline",
               label: "Age",
-              value: profile?.dob ? calculateAge(profile.dob) + " yrs" : null,
+              value: profile?.dob ? `${calculateAge(profile.dob)} yrs` : null,
             },
             {
               icon: "male-female-outline",
@@ -207,12 +178,7 @@ export default function Page() {
             },
           ].map((item, index, array) => (
             <View key={item.label}>
-              <CompactRow
-                icon={item.icon}
-                label={item.label}
-                value={item.value}
-              />
-
+              <CompactRow {...item} />
               {index !== array.length - 1 && (
                 <View className="h-px bg-neutral-200/60 mx-3" />
               )}
@@ -301,7 +267,6 @@ export default function Page() {
           </View>
         </View>
 
-
         {/* ===== QUICK ACTIONS ===== */}
         <View className="px-6 mt-6">
           <View className="flex-row gap-4">
@@ -324,11 +289,7 @@ export default function Page() {
               >
                 <View className="flex-row items-center gap-3">
                   <View className="h-10 w-10 rounded-full bg-[#F1EDFF] items-center justify-center">
-                    <Ionicons
-                      name="eye-outline"
-                      size={20}
-                      color="#5A3FE3"
-                    />
+                    <Ionicons name="eye-outline" size={20} color="#5A3FE3" />
                   </View>
 
                   <View className="flex-1">
@@ -362,11 +323,7 @@ export default function Page() {
               >
                 <View className="flex-row items-center gap-3">
                   <View className="h-10 w-10 rounded-full bg-[#F1EDFF] items-center justify-center">
-                    <Ionicons
-                      name="build-outline"
-                      size={20}
-                      color="#5A3FE3"
-                    />
+                    <Ionicons name="build-outline" size={20} color="#5A3FE3" />
                   </View>
 
                   <View className="flex-1">
@@ -374,7 +331,7 @@ export default function Page() {
                       Edit Profile
                     </Text>
                     <Text className="text-[12px] text-neutral-500 mt-0.5">
-                     Edit and chnage your profile
+                      Edit and chnage your profile
                     </Text>
                   </View>
                 </View>
@@ -419,9 +376,29 @@ export default function Page() {
   );
 }
 
-/* ===== Compact Row Component ===== */
+/* ================= COMPONENTS ================= */
 
-const CompactRow = ({ icon, label, value }) => {
+const HeaderIcon = ({ icon }: { icon: keyof typeof Ionicons.glyphMap }) => (
+  <View
+    className="h-10 w-10 rounded-full items-center justify-center bg-white/60 border border-white/40"
+    style={{
+      shadowColor: "#7454F6",
+      shadowOpacity: 0.15,
+      shadowRadius: 6,
+      elevation: 3,
+    }}
+  >
+    <Ionicons name={icon} size={18} color="#5A5A5A" />
+  </View>
+);
+
+type CompactRowProps = {
+  icon: keyof typeof Ionicons.glyphMap;
+  label: string;
+  value?: string | null;
+};
+
+const CompactRow = ({ icon, label, value }: CompactRowProps) => {
   return (
     <View className="flex-row items-center py-3 px-3">
       <Ionicons name={icon} size={17} color="#8A8A8A" />
@@ -436,9 +413,10 @@ const CompactRow = ({ icon, label, value }) => {
   );
 };
 
-/* ===== Helper: Age Calculator ===== */
-function calculateAge(dateString: string | number | Date) {
-  const dob = new Date(dateString);
+/* ================= UTILS ================= */
+
+function calculateAge(date: string | Date) {
+  const dob = new Date(date);
   const diff = Date.now() - dob.getTime();
   return Math.abs(new Date(diff).getUTCFullYear() - 1970);
 }
