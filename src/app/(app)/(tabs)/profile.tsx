@@ -9,7 +9,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function Page() {
   const { data: profile } = useMyProfile();
 
-
   return (
     <SafeAreaView className="flex-1 bg-white">
       <Stack.Screen options={{ headerShown: false }} />
@@ -24,9 +23,7 @@ export default function Page() {
       >
         {/* ===== HEADER ===== */}
         <View className="px-6 pt-6 pb-4 bg-white">
-          
           <View className="flex-row items-center justify-between">
-            
             <View>
               <Text
                 className="text-[24px] font-poppins-semibold text-[#111]"
@@ -37,7 +34,6 @@ export default function Page() {
               <Text className="text-[11px] text-neutral-400 tracking-widest mt-0.5">
                 YOUR SPACE
               </Text>
-              
             </View>
 
             <View className="flex-row items-center gap-4">
@@ -93,12 +89,11 @@ export default function Page() {
         <View className="relative mb-0">
           {/* Blurred background image */}
           <Image
-            source={profile?.photos[Math.floor(Math.random()* 6)].photo_url}
+            source={profile?.photos[Math.floor(Math.random() * 6)].photo_url}
             className="absolute inset-0 w-full h-full"
             contentFit="cover"
             blurRadius={40}
           />
-          
 
           {/* Dark + purple overlay */}
           <View className="absolute inset-0 bg-black/35" />
@@ -152,6 +147,23 @@ export default function Page() {
               </Text>
             </View>
           </View>
+        </View>
+
+      {/* QR BUTTONS  */}
+        <View className="flex-row gap-4 mt-6 px-6">
+          <Pressable
+            onPress={() => router.push("/(app)/qr/scanqr")}
+            className="flex-1 py-4 rounded-2xl bg-[#7454F6] items-center"
+          >
+            <Text className="text-white font-poppins-semibold">Scan QR</Text>
+          </Pressable>
+
+          <Pressable
+            onPress={() => router.push("/(app)/qr/myqr")}
+            className="flex-1 py-4 rounded-2xl bg-white border border-neutral-200 items-center"
+          >
+            <Text className="text-[#7454F6] font-poppins-semibold">My QR</Text>
+          </Pressable>
         </View>
 
         {/* ===== PROFILE DETAILS ===== */}
@@ -311,32 +323,30 @@ export default function Page() {
           <View className="absolute -top-10 right-4 w-52 h-52 bg-[#EDE4FF] rounded-full opacity-30 blur-3xl" />
 
           <View className="flex-row flex-wrap justify-center gap-4">
-            {[
-              "Intentional Connections",
-              "Emotional",
-              "Shared Values",
-            ].map((label, index) => (
-              <View
-                key={index}
-                className="
+            {["Intentional Connections", "Emotional", "Shared Values"].map(
+              (label, index) => (
+                <View
+                  key={index}
+                  className="
                   px-5 py-2.5
                   rounded-full
                   bg-white/60
                   backdrop-blur-2xl
                   border border-white/40
                 "
-                style={{
-                  shadowColor: "#5A3FE3",
-                  shadowOpacity: 0.12,
-                  shadowRadius: 8,
-                  elevation: 3,
-                }}
-              >
-                <Text className="text-[12px] font-poppins-medium text-[#5A3FE3] tracking-wide">
-                  {label}
-                </Text>
-              </View>
-            ))}
+                  style={{
+                    shadowColor: "#5A3FE3",
+                    shadowOpacity: 0.12,
+                    shadowRadius: 8,
+                    elevation: 3,
+                  }}
+                >
+                  <Text className="text-[12px] font-poppins-medium text-[#5A3FE3] tracking-wide">
+                    {label}
+                  </Text>
+                </View>
+              )
+            )}
           </View>
         </View>
 
@@ -367,7 +377,6 @@ export default function Page() {
 
 /* ===== Compact Row Component ===== */
 
-
 const CompactRow = ({ icon, label, value }) => {
   return (
     <View className="flex-row items-center py-3 px-3">
@@ -381,7 +390,7 @@ const CompactRow = ({ icon, label, value }) => {
       </Text>
     </View>
   );
-}
+};
 
 /* ===== Helper: Age Calculator ===== */
 function calculateAge(dateString) {
