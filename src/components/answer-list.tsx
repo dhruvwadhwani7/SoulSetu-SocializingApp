@@ -108,104 +108,136 @@ export const AnswerList: FC<Props> = ({
     });
   };
 
-  const renderItem = (item: Item) => {
-    return (
-      <View
-        style={{ width: size, height, paddingVertical: spacing / 2 }}
-        key={item.key}
-      >
-        {item.answer ? (
+ const renderItem = (item: Item, index: number) => {
+  return (
+    <View
+      style={{ width: size, height, paddingVertical: spacing / 2 }}
+      key={item.key}
+    >
+      {item.answer ? (
+        <View
+          style={{
+            flex: 1,
+            padding: 18,
+            borderRadius: 22,
+            backgroundColor: "#FFFFFF",
+            borderWidth: 1,
+            borderColor: "#EEEAFD",
+            shadowColor: "#000",
+            shadowOpacity: 0.04,
+            shadowRadius: 12,
+            shadowOffset: { width: 0, height: 6 },
+            elevation: 2,
+            justifyContent: "center",
+          }}
+        >
+          {/* Order number */}
           <View
             style={{
-              flex: 1,
-              padding: 18,
-              borderRadius: 22,
-              backgroundColor: "#FFFFFF",
-              borderWidth: 1,
-              borderColor: "#EEEAFD",
-              shadowColor: "#000",
-              shadowOpacity: 0.04,
-              shadowRadius: 12,
-              shadowOffset: { width: 0, height: 6 },
-              elevation: 2,
-              justifyContent: "center",
-            }}
-          >
-            <Pressable
-              onPress={() => confirmDeleteAnswer(item)}
-              style={{
-                position: "absolute",
-                top: 6,
-                right: 6,
-                height: 24,
-                width: 24,
-                borderRadius: 12,
-                backgroundColor: "rgba(0,0,0,0.7)",
-                alignItems: "center",
-                justifyContent: "center",
-                zIndex: 20,
-                elevation: 20,
-              }}
-              hitSlop={10}
-            >
-              <Ionicons name="close" size={14} color="#fff" />
-            </Pressable>
-            {/* Question */}
-            <Text
-              style={{
-                fontSize: 15,
-                fontWeight: "600",
-                color: "#1A1A1A",
-                marginBottom: 6,
-                letterSpacing: 0.2,
-              }}
-              numberOfLines={2}
-            >
-              {item.answer.question}
-            </Text>
-
-            {/* Answer */}
-            <Text
-              style={{
-                fontSize: 14,
-                fontWeight: "400",
-                color: "#6B6B6B",
-                lineHeight: 20,
-              }}
-              numberOfLines={3}
-            >
-              {item.answer.answer_text}
-            </Text>
-          </View>
-        ) : (
-          <View
-            style={{
-              flex: 1,
-              borderRadius: 22,
-              borderWidth: 1.5,
-              borderStyle: "dashed",
-              borderColor: "#D6CBFF",
-              backgroundColor: "#FBFAFF",
+              position: "absolute",
+              top: 6,
+              left: 6,
+              height: 24,
+              width: 24,
+              margin : -12,
+              borderRadius: 12,
+              backgroundColor: "#7454F6",
               alignItems: "center",
               justifyContent: "center",
+              zIndex: 20,
+              elevation: 20,
             }}
           >
             <Text
               style={{
-                color: "#7454F6",
-                fontSize: 14,
-                fontWeight: "500",
-                opacity: 0.75,
-                letterSpacing: 0.3,
+                color: "#FFFFFF",
+                fontSize: 12,
+                fontWeight: "600",
               }}
             >
-              Add an answer
+              {index + 1}
             </Text>
           </View>
-        )}
-      </View>
-    );
-  };
+
+          {/* Delete */}
+          <Pressable
+            onPress={() => confirmDeleteAnswer(item)}
+            style={{
+              position: "absolute",
+              top: 6,
+              right: 6,
+              height: 24,
+              width: 24,
+              borderRadius: 12,
+              backgroundColor: "rgba(0,0,0,0.7)",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 20,
+              elevation: 20,
+            }}
+            hitSlop={10}
+          >
+            <Ionicons name="close" size={14} color="#fff" />
+          </Pressable>
+
+          {/* Question */}
+          <Text
+            style={{
+              fontSize: 15,
+              fontWeight: "600",
+              color: "#1A1A1A",
+              marginBottom: 6,
+              letterSpacing: 0.2,
+            }}
+            numberOfLines={2}
+          >
+            {item.answer.question}
+          </Text>
+
+          {/* Answer */}
+          <Text
+            style={{
+              fontSize: 14,
+              fontWeight: "400",
+              color: "#6B6B6B",
+              lineHeight: 20,
+            }}
+            numberOfLines={3}
+          >
+            {item.answer.answer_text}
+          </Text>
+        </View>
+      ) : (
+        // empty state unchanged
+        <View
+          style={{
+            flex: 1,
+            borderRadius: 22,
+            borderWidth: 1.5,
+            borderStyle: "dashed",
+            borderColor: "#D6CBFF",
+            backgroundColor: "#FBFAFF",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text
+            style={{
+              color: "#7454F6",
+              fontSize: 14,
+              fontWeight: "500",
+              opacity: 0.75,
+              letterSpacing: 0.3,
+            }}
+          >
+            Add an answer
+          </Text>
+        </View>
+      )}
+    </View>
+  );
+};
+
 
   const onDragRelease = (data: Item[]) => {
     const answers = data
