@@ -41,25 +41,43 @@ export default function ScanQRPage() {
   }
 
   return (
-    <View className="flex-1 bg-white">
-      <StackHeaderV2 title="scanqr"/>
-      <Stack.Screen options={{ title: "Scan QR" }} />
+    <View className="flex-1 bg-black">
+  <StackHeaderV2 title="Scan QR" />
+  <Stack.Screen options={{ title: "Scan QR" }} />
 
-      <CameraView
-        style={{ flex: 1 }}
-        facing="back"          // ✅ FIX HERE
-        onBarcodeScanned={handleBarcodeScanned}
-        barcodeScannerSettings={{
-          barcodeTypes: ["qr"],
-        }}
-      />
+  {/* Camera */}
+  <CameraView
+    style={{ flex: 1 }}
+    facing="back"
+    onBarcodeScanned={handleBarcodeScanned}
+    barcodeScannerSettings={{
+      barcodeTypes: ["qr"],
+    }}
+  />
 
-      <View className="absolute inset-0 items-center justify-center">
-        <View className="w-64 h-64 border-2 border-white/70 rounded-2xl" />
-        <Text className="text-white mt-4 text-sm">
-          Align QR within the frame
+  {/* Dark overlay */}
+  <View className="absolute inset-0">
+    <View className="flex-1 bg-black/50" />
+    <View className="flex-row">
+      <View className="flex-1 bg-black/50" />
+      <View className="w-64 h-64 rounded-2xl border-2 border-white/80" />
+
+      <View className="flex-1 bg-black/50" />
+    </View>
+
+    <View className="flex-1 bg-black/50 items-center pt-6">
+
+      <View className="bg-white/90 px-5 py-2 rounded-full">
+        <Text className="text-sm text-neutral-800">
+          Align QR inside the frame
         </Text>
       </View>
+      <Text className="text-xs text-white/70 mt-3">
+        Scans automatically
+      </Text>
     </View>
+  </View>
+</View>
+
   );
 }

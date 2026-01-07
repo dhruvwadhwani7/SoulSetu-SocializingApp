@@ -953,6 +953,14 @@ export type Database = {
           question: string
         }[]
       }
+      get_likes_with_time: {
+        Args: never
+        Returns: {
+          created_at: string
+          id: string
+          profile: Json
+        }[]
+      }
       get_profile: {
         Args: never
         Returns: {

@@ -120,20 +120,49 @@ export default function Page() {
           </View>
         </Pressable>
 
-        {/* QR BUTTONS  */}
-        <View className="flex-row gap-4 mt-6 px-6">
+        {/* QR ACTIONS */}
+
+        <View className="flex-row justify-center gap-10 mt-6 mb-6">
+          {/* Scan QR */}
           <Pressable
             onPress={() => router.push("/(app)/qr/scanqr")}
-            className="flex-1 py-4 rounded-2xl bg-[#7454F6] items-center"
+            className="items-center"
           >
-            <Text className="text-white font-poppins-semibold">Scan QR</Text>
+            <View
+              className="w-16 h-16 rounded-full bg-white items-center justify-center"
+              style={{
+                shadowColor: "#000",
+                shadowOpacity: 0.08,
+                shadowRadius: 8,
+                elevation: 4,
+              }}
+            >
+              <Ionicons name="scan-outline" size={26} color="#7454F6" />
+            </View>
+            <Text className="mt-2 text-sm text-neutral-700 font-poppins-medium">
+              Scan QR
+            </Text>
           </Pressable>
 
+          {/* My QR */}
           <Pressable
             onPress={() => router.push("/(app)/qr/myqr")}
-            className="flex-1 py-4 rounded-2xl bg-white border border-neutral-200 items-center"
+            className="items-center"
           >
-            <Text className="text-[#7454F6] font-poppins-semibold">My QR</Text>
+            <View
+              className="w-16 h-16 rounded-full bg-white items-center justify-center"
+              style={{
+                shadowColor: "#000",
+                shadowOpacity: 0.08,
+                shadowRadius: 8,
+                elevation: 4,
+              }}
+            >
+              <Ionicons name="qr-code-outline" size={26} color="#7454F6" />
+            </View>
+            <Text className="mt-2 text-sm text-neutral-700 font-poppins-medium">
+              My QR
+            </Text>
           </Pressable>
         </View>
 
