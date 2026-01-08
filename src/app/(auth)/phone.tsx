@@ -3,6 +3,7 @@ import { Fab } from "@/components/fab";
 import { StackHeader } from "@/components/stack-header";
 import { router, useFocusEffect } from "expo-router";
 import { useMemo, useRef, useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -13,11 +14,20 @@ import {
   View,
 } from "react-native";
 import colors from "tailwindcss/colors";
+import CountryPicker, {
+  Country,
+  CountryCode,
+} from "react-native-country-picker-modal";
 
 export default function Page() {
+  /* ================= STATE ================= */
+  const [countryCode, setCountryCode] = useState("+1");
+  const [country, setCountry] = useState<CountryCode>("US");
   const [phone, setPhone] = useState("");
   const [isFocused, setIsFocused] = useState(false);
+
   const phoneRef = useRef<TextInput>(null);
+
   const {
     mutate: signInWithOtp,
     isPending,
@@ -26,21 +36,26 @@ export default function Page() {
     reset,
   } = useSignInWithOtp();
 
-  const handlePhoneChange = (text: string) => {
-    if (isError) reset();
-    setPhone(text);
-  };
+  /* ================= DERIVED ================= */
+  const fullPhone = `${countryCode}${phone}`;
 
   const isValid = useMemo(() => {
-    return /^\+[1-9]\d{1,14}$/.test(phone);
-  }, [phone]);
+    // E.164 validation
+    return /^\+[1-9]\d{7,14}$/.test(fullPhone);
+  }, [fullPhone]);
+
+  /* ================= HANDLERS ================= */
+  const handlePhoneChange = (text: string) => {
+    if (isError) reset();
+    setPhone(text.replace(/\D/g, ""));
+  };
 
   const handleSubmit = () => {
-    signInWithOtp(phone, {
+    signInWithOtp(fullPhone, {
       onSuccess: () =>
         router.push({
           pathname: "/otp",
-          params: { phone },
+          params: { phone: fullPhone },
         }),
     });
   };
@@ -49,6 +64,7 @@ export default function Page() {
     phoneRef.current?.focus();
   });
 
+  /* ================= UI ================= */
   return (
     <KeyboardAvoidingView
       className="flex-1 bg-white px-6"
@@ -81,43 +97,58 @@ export default function Page() {
 
           <View className="h-14" />
 
-          {/* ===== Phone Input ===== */}
-          <View className="relative">
-            <TextInput
-              ref={phoneRef}
-              className="h-[58px] rounded-xl bg-[#F3F3F3] px-5 text-[20px] font-poppins-semibold text-[#111]"
-              style={
-                Platform.OS === "ios" ? { lineHeight: undefined } : undefined
-              }
-              keyboardType="phone-pad"
-              textContentType="telephoneNumber"
-              selectionColor={colors.black}
-              value={phone}
-              onChangeText={handlePhoneChange}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
-              maxLength={16}
-            />
-
-            {!phone && !isFocused && (
-              <View
-                pointerEvents="none"
-                className="absolute inset-y-0 left-5 justify-center"
-              >
-                <Text className="text-[#474646] font-poppins-regular text-base">
-                  +1 234 567 8900
-                </Text>
+          {/* ===== Phone Input with Country Picker ===== */}
+          <View>
+            <View className="flex-row items-center gap-2">
+              {/* Country Picker */}
+              <View className="h-[58px] px-2 rounded-xl bg-[#F3F3F3] flex-row items-center">
+                <CountryPicker
+                  countryCode={country}
+                  withFlag
+                  withCallingCode
+                  withFilter
+                  onSelect={(c: Country) => {
+                    setCountry(c.cca2 as CountryCode);
+                    setCountryCode(`+${c.callingCode[0]}`);
+                    phoneRef.current?.focus();
+                  }}
+                />
+                {/* Dropdown indicator */}
               </View>
-            )}
+              <Text className="ml-2 font-poppins-semibold text-base text-[#111]">
+                {countryCode}
+              </Text>
+
+              {/* Phone Input */}
+              <TextInput
+                ref={phoneRef}
+                className="flex-1 h-[58px] rounded-xl bg-[#F3F3F3] px-5 text-[20px] font-poppins-semibold text-[#111]"
+                style={
+                  Platform.OS === "ios" ? { lineHeight: undefined } : undefined
+                }
+                keyboardType="phone-pad"
+                textContentType="telephoneNumber"
+                selectionColor={colors.black}
+                value={phone}
+                onChangeText={handlePhoneChange}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+                maxLength={12}
+              />
+            </View>
+
+            {/* Helper text */}
+            <View className="mt-5 px-3 py-2 rounded-xl bg-[#F6F4FF] self-start">
+              <Text className="text-xs text-[#7454F6] font-poppins-medium">
+                Tap the country flag to change 
+              </Text>
+            </View>
           </View>
 
           {/* ===== Error ===== */}
           {isError && (
             <View className="mt-4 px-4 py-3 rounded-xl bg-red-50 border border-red-100 flex-row items-start gap-3">
-              {/* Accent dot */}
               <View className="w-2 h-2 rounded-full bg-red-400 mt-2" />
-
-              {/* Error text */}
               <Text className="flex-1 text-red-600 text-sm font-poppins-regular leading-relaxed">
                 {error.message}
               </Text>

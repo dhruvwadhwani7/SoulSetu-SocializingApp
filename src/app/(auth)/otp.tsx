@@ -15,14 +15,19 @@ import {
   View,
 } from "react-native";
 import colors from "tailwindcss/colors";
+import * as Haptics from "expo-haptics";
 
 export default function Page() {
   const [otp, setOtp] = useState("");
   const otpRef = useRef<TextInput>(null);
   const [isFocused, setIsFocused] = useState(false);
+  const [secondsLeft, setSecondsLeft] = useState(60);
+
   const blinkAnim = useRef(new Animated.Value(1)).current;
   const loopRef = useRef<Animated.CompositeAnimation | null>(null);
+
   const { phone } = useLocalSearchParams<{ phone: string }>();
+
   const {
     mutate: verifyOtp,
     isPending,
@@ -31,17 +36,51 @@ export default function Page() {
     reset,
   } = useVerifyOtp();
 
-  const handleOtpChange = (text: string) => {
-    if (isError) reset();
-    setOtp(text);
-  };
-
+  /* ================= VALIDATION ================= */
   const isValid = useMemo(() => otp.length === 6, [otp]);
 
-  const handleSubmit = () => {
-    verifyOtp({ phone, token: otp });
+  /* ================= HANDLERS ================= */
+  const handleOtpChange = (text: string) => {
+    if (isError) reset();
+
+    // digits only
+    const clean = text.replace(/\D/g, "");
+    setOtp(clean);
+
+    // Auto-submit on full OTP
+    if (clean.length === 6) {
+      Haptics.selectionAsync();
+      handleSubmit(clean);
+    }
   };
 
+  const handleSubmit = (token = otp) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
+    verifyOtp(
+      { phone, token },
+      {
+        onSuccess: () => {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        },
+        onError: () => {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+        },
+      }
+    );
+  };
+
+  useEffect(() => {
+    if (secondsLeft === 0) return;
+
+    const timer = setInterval(() => {
+      setSecondsLeft((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [secondsLeft]);
+
+  /* ================= BLINKING CURSOR ================= */
   useEffect(() => {
     if (isFocused && otp.length < 6) {
       loopRef.current = Animated.loop(
@@ -63,9 +102,11 @@ export default function Page() {
       loopRef.current?.stop();
       blinkAnim.setValue(1);
     }
+
     return () => loopRef.current?.stop();
   }, [isFocused, otp.length, blinkAnim]);
 
+  /* ================= UI ================= */
   return (
     <KeyboardAvoidingView
       className="flex-1 bg-white px-6"
@@ -98,6 +139,24 @@ export default function Page() {
           <Text className="text-center text-[#6B6B6B] mt-2 font-poppins-regular px-8">
             Sent to <Text className="text-[#4A4A4A]">{phone}</Text>
           </Text>
+
+          {/* ===== Expectation Clarity ===== */}
+          <View className="items-center mt-3">
+            {secondsLeft > 0 ? (
+              <Text className="text-xs text-neutral-500 font-poppins-regular">
+                You’ll receive a code within{" "}
+                <Text className="font-poppins-semibold text-neutral-700">
+                  {secondsLeft}s
+                </Text>
+              </Text>
+            ) : (
+              <View className="mt-1 px-4 py-2 rounded-full bg-[#F6F4FF]">
+                <Text className="text-xs text-[#7454F6] font-poppins-medium text-center">
+                  Didn’t receive the code? Try entering your phone number again
+                </Text>
+              </View>
+            )}
+          </View>
 
           <View className="h-12" />
 
@@ -142,9 +201,6 @@ export default function Page() {
           <TextInput
             ref={otpRef}
             className="absolute h-1 w-1 opacity-0"
-            style={
-              Platform.OS === "ios" ? { lineHeight: undefined } : undefined
-            }
             selectionColor={colors.black}
             keyboardType="numeric"
             textContentType="oneTimeCode"
@@ -156,7 +212,7 @@ export default function Page() {
             maxLength={6}
           />
 
-          {/* ===== Error Banner (Premium) ===== */}
+          {/* ===== Error Banner ===== */}
           {isError && (
             <View className="mt-6 px-4 py-3 rounded-xl bg-red-50 border border-red-100 mx-4">
               <Text className="text-red-600 text-sm text-center font-poppins-regular leading-relaxed">
@@ -169,7 +225,7 @@ export default function Page() {
           <View className="items-end mt-10 pr-1">
             <Fab
               disabled={!isValid || isPending}
-              onPress={handleSubmit}
+              onPress={() => handleSubmit()}
               loading={isPending}
             />
           </View>

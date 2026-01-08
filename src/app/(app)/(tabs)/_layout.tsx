@@ -14,7 +14,6 @@ export default function Layout() {
         headerShown: false,
         tabBarShowLabel: false,
 
-        // 🌤 Premium white tab bar
         tabBarStyle: {
           backgroundColor: "#FFFFFF",
           borderTopWidth: 0,
