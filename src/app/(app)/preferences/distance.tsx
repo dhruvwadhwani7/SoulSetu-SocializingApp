@@ -14,11 +14,9 @@ const Page = () => {
 
   const handlePress = () => {
     mutate(
-      { distance: distance },
+      { distance },
       {
-        onSuccess: () => {
-          router.back();
-        },
+        onSuccess: () => router.back(),
         onError: () => {
           Alert.alert("Error", "Something went wrong, please try again later.");
           reset();
@@ -29,23 +27,82 @@ const Page = () => {
   };
 
   return (
-    <View className="bg-white flex-1 px-5 py-20 ">
+    <View className="flex-1 bg-white px-5 pt-10">
       <StackHeaderV4 title="Maximum distance" onPressBack={handlePress} />
-      <Slider
-        minimumValue={1}
-        maximumValue={160}
-        step={1}
-        value={distance}
-        onValueChange={(value) => setDistance(value[0])}
-        renderAboveThumbComponent={() => {
-          return (
-            <View className="items-center justify-center w-16 -left-8">
-              <Text className="text-center ">{distance} km</Text>
-            </View>
-          );
+
+      {/* Instructions */}
+      <Text className="text-[15px] font-poppins-light text-neutral-600 mt-3">
+        Set how far away you're open to meeting people.
+      </Text>
+
+      <Text className="text-[14px] font-poppins-medium text-neutral-800 mt-1">
+        Drag the slider to adjust your distance preference.
+      </Text>
+
+      {/* Selected Value */}
+      <View className="mt-10 mb-6 flex-row justify-center">
+        <Text className="text-3xl font-poppins-semibold text-neutral-700">
+          {distance} km
+        </Text>
+      </View>
+
+      {/* Slider Container */}
+      <View
+        style={{
+          paddingVertical: 30,
+          paddingHorizontal: 16,
+          borderRadius: 20,
+          backgroundColor: "#F7F8FA",
+          borderWidth: 1,
+          borderColor: "#E5E6EB",
+          shadowColor: "#000",
+          shadowOpacity: 0.05,
+          shadowRadius: 8,
+          shadowOffset: { width: 0, height: 3 },
         }}
-      />
+      >
+        <Slider
+          minimumValue={1}
+          maximumValue={160}
+          step={1}
+          value={distance}
+          onValueChange={(value) => setDistance(value[0])}
+          
+          minimumTrackTintColor="#444"
+          maximumTrackTintColor="#D1D1D6"
+
+          thumbStyle={{
+            height: 28,
+            width: 28,
+            borderRadius: 14,
+            backgroundColor: "#FFF",
+            borderWidth: 1,
+            borderColor: "#D0D0D5",
+            shadowColor: "#000",
+            shadowOpacity: 0.12,
+            shadowRadius: 6,
+            shadowOffset: { width: 0, height: 2 },
+          }}
+
+          renderAboveThumbComponent={() => (
+            <View
+              style={{
+                marginBottom: 10,
+                paddingHorizontal: 6,
+                paddingVertical: 2,
+                borderRadius: 8,
+                backgroundColor: "rgba(0,0,0,0.05)",
+              }}
+            >
+              <Text className="text-[13px] text-neutral-700 font-poppins-medium">
+                {distance} km
+              </Text>
+            </View>
+          )}
+        />
+      </View>
     </View>
   );
 };
+
 export default Page;

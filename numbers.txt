@@ -13,3 +13,18 @@ expo-blur
 
 lodash
 @react-native-picker/picker
+
+<View className="w-full flex-row items-center justify-between mt-10 mb-4">
+      <Text className="text-2xl font-poppins-semibold text-neutral-900">
+        Discover
+      </Text>
+
+      <Link href="/preferences" asChild suppressHighlighting>
+        <View
+          className="h-11 w-11 rounded-full bg-white border border-neutral-200 shadow-sm 
+                     items-center justify-center"
+        >
+          <Ionicons name="options-outline" size={24} color="#7454F6" />
+        </View>
+      </Link>
+    </View>

@@ -22,6 +22,26 @@ export const useProfiles = (page_size: number = 10) => {
   });
 };
 
+export const useProfileById = (profileId?: string) => {
+  return useQuery<PublicProfile | null>({
+    queryKey: ["profile", profileId],
+    enabled: !!profileId,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .rpc("get_profile_by_id" as any , { profile_id: profileId });
+
+      if (error) throw error;
+
+      // 👇 RPC always returns array
+      if (!data || data.length === 0) return null;
+
+      return data[0] as PublicProfile;
+    },
+  });
+};
+
+
+
 export const useSkipProfile = () => {
   return useMutation({
     mutationFn: async (profile: string) => {

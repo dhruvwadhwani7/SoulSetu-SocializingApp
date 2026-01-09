@@ -1,0 +1,115 @@
+import { useUnmatch } from "@/api/profiles";
+import { Ionicons } from "@expo/vector-icons";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { useGroupChannel } from "@sendbird/uikit-chat-hooks";
+import {
+  createGroupChannelFragment,
+  GroupChannelContexts,
+  useSendbirdChat,
+} from "@sendbird/uikit-react-native";
+import { router, Stack, useLocalSearchParams } from "expo-router";
+import { useContext } from "react";
+import { Alert, Pressable, Text, View } from "react-native";
+
+const CustomHeader = () => {
+  const { headerTitle } = useContext(GroupChannelContexts.Fragment);
+  const { mutate } = useUnmatch();
+  const { id } = useLocalSearchParams<{ id: string }>();
+
+  return (
+    <Stack.Screen
+      options={{
+        headerLeft: () => (
+          <View className="flex-row items-center gap-3">
+            <Pressable
+              onPressOut={() => router.back()}
+              className="h-10 w-10 rounded-full bg-neutral-100 items-center justify-center"
+              style={{
+                shadowColor: "#000",
+                shadowOpacity: 0.08,
+                shadowRadius: 6,
+              }}
+            >
+              <Ionicons name="chevron-back" size={24} color="#111" />
+            </Pressable>
+
+            <Text
+              className="text-[17px] font-poppins-semibold text-[#111]"
+              numberOfLines={1}
+            >
+              {headerTitle}
+            </Text>
+          </View>
+        ),
+        title: "",
+        headerRight: () => (
+          <Pressable
+            onPress={() => {
+              Alert.alert(
+                "Unmatch?",
+                `This will remove the connection between you and ${headerTitle}. You won’t be able to chat again.`,
+                [
+                  { text: "Keep Match", style: "cancel" },
+                  {
+                    text: "Unmatch",
+                    style: "destructive",
+                    onPress: () => {
+                      mutate(id, {
+                        onSuccess: () => router.navigate("/matches/"),
+                        onError: () =>
+                          Alert.alert(
+                            "Something went wrong",
+                            "Please try again later."
+                          ),
+                      });
+                    },
+                  },
+                ]
+              );
+            }}
+            className="px-4 py-2 rounded-full bg-white"
+            style={{
+              borderWidth: 1,
+              borderColor: "rgba(239,68,68,0.35)", // soft red border
+              shadowColor: "#7454F6", // purple glow
+              shadowOpacity: 0.15,
+              shadowRadius: 10,
+              elevation: 4,
+            }}
+          >
+            <Text className="text-[14px] font-poppins-semibold tracking-wide text-red-600">
+              Unmatch
+            </Text>
+          </Pressable>
+        ),
+      }}
+    />
+  );
+};
+
+const GroupChannelFragment = createGroupChannelFragment({
+  Header: CustomHeader,
+});
+
+export default function Page() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const height = useHeaderHeight();
+
+  const { sdk } = useSendbirdChat();
+  const { channel } = useGroupChannel(sdk, id);
+  if (!channel) return null;
+
+  return (
+    <GroupChannelFragment
+      channel={channel}
+      onChannelDeleted={() => {
+        router.navigate("/matches");
+      }}
+      onPressHeaderLeft={() => {
+        router.back();
+      }}
+      onPressHeaderRight={() => {}}
+      keyboardAvoidOffset={height}
+    />
+  );
+}

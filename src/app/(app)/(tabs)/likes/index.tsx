@@ -3,60 +3,23 @@ import { Empty } from "@/components/empty";
 import { LikeCard } from "@/components/like-card";
 import { Loader } from "@/components/loader";
 import { useRefreshOnFocus } from "@/hooks/refetch";
-import { Image } from "expo-image";
 import { Link } from "expo-router";
 import { FlatList, Pressable, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Page() {
   const { data, isFetching, isError, refetch } = useLikes();
   useRefreshOnFocus(refetch);
 
-  const renderHeader = () => {
-    return (
-      <View className="gap-5 bg-white ">
-        <Text className="text-3xl font-poppins-semibold">Likes You</Text>
-        {data.length > 0 && (
-          <>
-            <Link href={`/likes/${data[0].id}`} asChild>
-              <Pressable className="bg-white flex-1 rounded-lg overflow-hidden border border-neutral-200">
-                <View className="p-4 gap-5">
-                  <Text className="text-base font-poppins-light">{`Liked your ${
-                    data[0].photo_url ? "photo" : "answer"
-                  }`}</Text>
-                  <Text className="text-xl font-poppins-medium">
-                    {data[0].profile.first_name}
-                  </Text>
-                </View>
-                <View className="p-4">
-                  <View className="rounded-lg flex-1 bg-neutral-200 aspect-square w-full overflow-hidden">
-                    <Image
-                      source={data[0].profile.photos[0].photo_url}
-                      className="flex-1"
-                    />
-                  </View>
-                </View>
-              </Pressable>
-            </Link>
-          </>
-        )}
-      </View>
-    );
-  };
-
+  /* ===== Empty / Error / Loading ===== */
   const renderEmpty = () => {
-    if (data.length === 1) {
-      return null;
-    }
-
-    if (isFetching) {
-      return <Loader />;
-    }
+    if (isFetching) return <Loader width={120} height={120}/>;
 
     if (isError) {
       return (
         <Empty
           title="Something went wrong"
-          subTitle=" We ran into a problem loading your likes, sorry about that!"
+          subTitle="We couldn’t load your likes right now."
           primaryText="Try again"
           onPrimaryPress={() => refetch()}
         />
@@ -66,30 +29,46 @@ export default function Page() {
     return (
       <Empty
         title="No likes yet"
-        subTitle="We can help you get your first one sooner."
+        subTitle="Meaningful connections take time."
       />
     );
   };
 
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1 bg-[#FAFAFB]">
+      {/* Ambient background glow */}
+      <View className="absolute -top-32 -right-32 w-[420px] h-[420px] bg-[#EFEAFF] opacity-35 blur-[160px]" />
+
+      {/* ===== SAFE HEADER (same as Matches) ===== */}
+      <SafeAreaView edges={["top"]}>
+        <View className="px-6 pt-4 pb-4">
+          <Text className="text-[28px] font-poppins-semibold text-[#111]">
+            Likes You
+          </Text>
+
+          <Text className="text-[13px] text-neutral-500 mt-1">
+            People interested in connecting with you
+          </Text>
+
+          <View className="mt-4 h-px bg-neutral-200/70" />
+        </View>
+      </SafeAreaView>
+
+      {/* ===== LIKES GRID ===== */}
       <FlatList
-        data={data.length > 1 ? data.slice(1) : []}
-        renderItem={({ item, index }) => {
-          return (
-            <>
-              <LikeCard like={item} />
-              {data.length % 2 === 0 && index === data.length - 2 && (
-                <View className="flex-1" />
-              )}
-            </>
-          );
-        }}
+        data={data}
+        keyExtractor={(item) => item.id}
         numColumns={2}
-        contentContainerClassName="gap-4 px-5 pb-20 grow justify-content"
-        columnWrapperClassName="gap-4"
+        renderItem={({ item }) => (
+          <Link href={`/likes/${item.id}`} asChild>
+            <Pressable className="flex-1">
+              <LikeCard like={item} />
+            </Pressable>
+          </Link>
+        )}
+        contentContainerClassName="px-5 pb-28 gap-6"
+        columnWrapperClassName="gap-6"
         showsVerticalScrollIndicator={false}
-        ListHeaderComponent={renderHeader}
         ListEmptyComponent={renderEmpty}
       />
     </View>

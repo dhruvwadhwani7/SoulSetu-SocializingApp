@@ -3,7 +3,7 @@ import { StackHeaderV4 } from "@/components/stack-header-v4";
 import { useEdit } from "@/store/edit";
 import { Picker } from "@react-native-picker/picker";
 import { router } from "expo-router";
-import range from "lodash/range";       // FIXED import
+import range from "lodash/range";
 import { useState } from "react";
 import { View, Text } from "react-native";
 
@@ -15,61 +15,44 @@ export default function Page() {
 
   const handlePress = () => {
     if (selectedHeight) {
-      setEdits({
-        ...edits,
-        height_cm: selectedHeight,
-      } as PrivateProfile);
+      setEdits({ ...edits, height_cm: selectedHeight } as PrivateProfile);
     }
     router.back();
   };
 
   return (
-    <View className="flex-1 bg-white p-5">
+    <View className="flex-1 bg-white px-6 pt-6">
       <StackHeaderV4 title="Height" onPressBack={handlePress} />
 
-      {/* Beautiful center card UI */}
+      {/* Section label */}
+      <Text className="text-[13px] tracking-wide text-neutral-400 mt-8 mb-3">
+        SELECT YOUR HEIGHT (cm)
+      </Text>
+
+      {/* Picker Card */}
       <View
-        style={{
-          marginTop: 40,
-          backgroundColor: "#f9fafb",
-          padding: 20,
-          borderRadius: 14,
-          shadowColor: "#000",
-          shadowOpacity: 0.08,
-          shadowRadius: 4,
-          elevation: 3,
-        }}
+        className="rounded-3xl bg-[#FAFAFB] border border-neutral-200 px-4 py-5"
+        style={{ shadowColor: "#000", shadowOpacity: 0.04, shadowRadius: 6 }}
       >
-        <Text
-          style={{
-            textAlign: "center",
-            fontSize: 20,
-            fontWeight: "600",
-            marginBottom: 12,
-            color: "#333",
-          }}
-        >
-          Select Your Height
+        {/* Value preview */}
+        <Text className="text-center text-[28px] font-poppins-semibold text-neutral-900 mb-2">
+          {selectedHeight ? `${selectedHeight} cm` : "—"}
         </Text>
 
-        <View
-          style={{
-            borderRadius: 12,
-            overflow: "hidden",
-            backgroundColor: "#fff",
-            borderWidth: 1,
-            borderColor: "#e5e7eb",
-          }}
-        >
+        <Text className="text-center text-[12px] text-neutral-400 mb-4">
+          Scroll to adjust
+        </Text>
+
+        {/* Picker */}
+        <View className="rounded-2xl overflow-hidden bg-white border border-neutral-200">
           <Picker
             selectedValue={selectedHeight}
-            onValueChange={(itemValue) => setSelectedHeight(itemValue)}
-            style={{
-              height: 160,
-            }}
+            onValueChange={(value) => setSelectedHeight(value)}
+            style={{ height: 180 }}
             itemStyle={{
               fontSize: 20,
-              color: "#111",
+              fontFamily: "Poppins-Medium",
+              color: "#1A1A1A",
             }}
           >
             {range(92, 214).map((height) => (
@@ -77,22 +60,7 @@ export default function Page() {
             ))}
           </Picker>
         </View>
-      </View>
-
-      {/* Display selected value nicely */}
-      {selectedHeight && (
-        <Text
-          style={{
-            textAlign: "center",
-            marginTop: 25,
-            fontSize: 22,
-            color: "#444",
-            fontWeight: "500",
-          }}
-        >
-          Selected: {selectedHeight} cm
-        </Text>
-      )}
+      </View>     
     </View>
   );
 }

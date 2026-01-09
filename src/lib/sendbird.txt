@@ -1,0 +1,86 @@
+import SendbirdChat, { SendbirdChatSDK } from '@sendbird/chat';
+import { GroupChannelModule } from '@sendbird/chat/groupChannel';
+
+/**
+ * Validate that the Sendbird App ID is available at runtime.
+ * Fail fast if missing to prevent silent failures in production.
+ */
+function getRequiredAppId(): string {
+  const appId = process.env.EXPO_PUBLIC_SENDBIRD_APP_ID;
+
+  if (!appId || appId.trim() === '') {
+    throw new Error(
+      'EXPO_PUBLIC_SENDBIRD_APP_ID environment variable is missing or empty. ' +
+        'Please add it to your .env file or Expo build configuration.'
+    );
+  }
+
+  return appId;
+}
+
+/**
+ * Singleton Sendbird Chat SDK instance.
+ * Initialized once per app lifecycle and reused across all hooks and screens.
+ * The SDK maintains internal connection state and session management.
+ */
+let sendbirdInstance: ReturnType<typeof SendbirdChat.init> | null = null;
+
+/**
+ * Initialize or retrieve the singleton Sendbird Chat SDK instance.
+ * 
+ * This function:
+ * - Validates the App ID environment variable
+ * - Creates a new SDK instance only once (lazy initialization)
+ * - Adds the GroupChannel module for group-based messaging
+ * - Returns the initialized instance for downstream use
+ * 
+ * The SDK is NOT connected to any user at this stage.
+ * User connection happens separately in auth/connection layers.
+ * 
+ * @returns Initialized Sendbird Chat SDK instance with GroupChannel module
+ * @throws Error if EXPO_PUBLIC_SENDBIRD_APP_ID is missing
+ */
+export function initializeSendbird(): ReturnType<typeof SendbirdChat.init> {
+  // Return cached instance if already initialized
+  if (sendbirdInstance !== null) {
+    return sendbirdInstance;
+  }
+
+  const appId = getRequiredAppId();
+
+  // Initialize the SDK with modular architecture
+  sendbirdInstance = SendbirdChat.init({
+    appId,
+    // Modules are explicitly declared; unused modules are excluded (tree-shakable)
+    modules: [new GroupChannelModule()],
+  });
+
+  return sendbirdInstance;
+}
+
+/**
+ * Get the singleton Sendbird Chat SDK instance.
+ * Must be called AFTER initializeSendbird() to ensure initialization.
+ * 
+ * Use this in hooks and screens that need the SDK but don't need to initialize.
+ * 
+ * @returns The initialized Sendbird Chat SDK instance
+ * @throws Error if called before initializeSendbird()
+ */
+export function getSendbird(): ReturnType<typeof SendbirdChat.init> {
+  if (sendbirdInstance === null) {
+    throw new Error(
+      'Sendbird SDK not initialized. Call initializeSendbird() during app startup.'
+    );
+  }
+
+  return sendbirdInstance;
+}
+
+/**
+ * Reset the Sendbird instance (for testing or cleanup).
+ * In production, this is rarely needed; typically used for test isolation.
+ */
+export function resetSendbird(): void {
+  sendbirdInstance = null;
+}
