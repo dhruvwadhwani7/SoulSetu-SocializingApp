@@ -1,5 +1,4 @@
 import { useMyProfile } from "@/api/my-profile";
-import { cn } from "@/utils/cn";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { Tabs } from "expo-router";
@@ -53,6 +52,16 @@ export default function Layout() {
         options={{
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="chatbubble-outline" color={color} size={size} />
+          ),
+        }}
+      />
+
+      {/* ===== BLUETOOTH ===== */}
+      <Tabs.Screen
+        name="bluetooth"
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="bluetooth-outline" color={color} size={size} />
           ),
         }}
       />
