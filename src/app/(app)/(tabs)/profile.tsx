@@ -164,6 +164,26 @@ export default function Page() {
               My QR
             </Text>
           </Pressable>
+
+          <Pressable
+            onPress={() => router.push("/(app)/settings")}
+            className="items-center"
+          >
+            <View
+              className="w-16 h-16 rounded-full bg-white items-center justify-center"
+              style={{
+                shadowColor: "#000",
+                shadowOpacity: 0.08,
+                shadowRadius: 8,
+                elevation: 4,
+              }}
+            >
+              <Ionicons name="settings-sharp" size={26} color="#7454F6" />
+            </View>
+            <Text className="mt-2 text-sm text-neutral-700 font-poppins-medium">
+              Settings
+            </Text>
+          </Pressable>
         </View>
 
         {/* ===== PROFILE DETAILS ===== */}
@@ -233,33 +253,14 @@ export default function Page() {
         </View>
 
         {/* ===== QUICK ACTIONS ===== */}
-        <View className="px-6 mt-6">
-          <View className="flex-row gap-4">
+        {/* ===== PROFILE ACTIONS ===== */}
+        <View className="px-6 mt-4">
+          <View className="bg-white rounded-2xl border border-neutral-200 overflow-hidden">
             {/* Preferences */}
             <Link href="/preferences" asChild>
-              <Pressable
-                className="
-          flex-1
-          rounded-2xl
-          px-4 py-4
-          bg-white
-          border border-neutral-200
-        "
-                style={{
-                  shadowColor: "#7454F6",
-                  shadowOpacity: 0.12,
-                  shadowRadius: 10,
-                  elevation: 3,
-                }}
-              >
-                <View className="flex-row items-center gap-3">
-                  <View className="h-10 w-10 rounded-full bg-[#F1EDFF] items-center justify-center">
-                    <Ionicons
-                      name="options-outline"
-                      size={20}
-                      color="#5A3FE3"
-                    />
-                  </View>
+              <Pressable className="px-5 py-4">
+                <View className="flex-row items-center gap-4">
+                  <Ionicons name="options-outline" size={20} color="#111" />
 
                   <View className="flex-1">
                     <Text className="text-[15px] font-poppins-semibold text-[#111]">
@@ -269,117 +270,49 @@ export default function Page() {
                       Match filters & values
                     </Text>
                   </View>
+
+                  <Ionicons name="chevron-forward" size={18} color="#9CA3AF" />
                 </View>
               </Pressable>
             </Link>
-
-            {/* Settings */}
-            <Link href="/settings" asChild>
-              <Pressable
-                className="
-          flex-1
-          rounded-2xl
-          px-4 py-4
-          bg-white
-          border border-neutral-200
-        "
-                style={{
-                  shadowColor: "#7454F6",
-                  shadowOpacity: 0.12,
-                  shadowRadius: 10,
-                  elevation: 3,
-                }}
-              >
-                <View className="flex-row items-center gap-3">
-                  <View className="h-10 w-10 rounded-full bg-[#F1EDFF] items-center justify-center">
-                    <Ionicons
-                      name="settings-outline"
-                      size={20}
-                      color="#5A3FE3"
-                    />
-                  </View>
-
-                  <View className="flex-1">
-                    <Text className="text-[15px] font-poppins-semibold text-[#111]">
-                      Settings
-                    </Text>
-                    <Text className="text-[12px] text-neutral-500 mt-0.5">
-                      Privacy & account
-                    </Text>
-                  </View>
-                </View>
-              </Pressable>
-            </Link>
-          </View>
-        </View>
-
-        {/* ===== QUICK ACTIONS ===== */}
-        <View className="px-6 mt-6">
-          <View className="flex-row gap-4">
-            {/* Preferences */}
+            {/* View Profile */}
             <Link href="/(app)/profile/(tabs)/view" asChild>
-              <Pressable
-                className="
-          flex-1
-          rounded-2xl
-          px-4 py-4
-          bg-white
-          border border-neutral-200
-        "
-                style={{
-                  shadowColor: "#7454F6",
-                  shadowOpacity: 0.12,
-                  shadowRadius: 10,
-                  elevation: 3,
-                }}
-              >
-                <View className="flex-row items-center gap-3">
-                  <View className="h-10 w-10 rounded-full bg-[#F1EDFF] items-center justify-center">
-                    <Ionicons name="eye-outline" size={20} color="#5A3FE3" />
-                  </View>
+              <Pressable className="px-5 py-4">
+                <View className="flex-row items-center gap-4">
+                  <Ionicons name="eye-outline" size={20} color="#111" />
 
                   <View className="flex-1">
                     <Text className="text-[15px] font-poppins-semibold text-[#111]">
                       View Profile
                     </Text>
                     <Text className="text-[12px] text-neutral-500 mt-0.5">
-                      See Your Profile
+                      See how others view you
                     </Text>
                   </View>
+
+                  <Ionicons name="chevron-forward" size={18} color="#9CA3AF" />
                 </View>
               </Pressable>
             </Link>
 
-            {/* Edit profile */}
+            <View className="h-px bg-neutral-200/60 ml-12" />
+
+            {/* Edit Profile */}
             <Link href="/(app)/profile/(tabs)" asChild>
-              <Pressable
-                className="
-          flex-1
-          rounded-2xl
-          px-4 py-4
-          bg-white
-          border border-neutral-200
-        "
-                style={{
-                  shadowColor: "#7454F6",
-                  shadowOpacity: 0.12,
-                  shadowRadius: 10,
-                  elevation: 3,
-                }}
-              >
-                <View className="flex-row items-center gap-3">
-                  <View className="h-10 w-10 rounded-full bg-[#F1EDFF] items-center justify-center">
-                    <Ionicons name="build-outline" size={20} color="#5A3FE3" />
-                  </View>
+              <Pressable className="px-5 py-4">
+                <View className="flex-row items-center gap-4">
+                  <Ionicons name="create-outline" size={20} color="#111" />
 
                   <View className="flex-1">
                     <Text className="text-[15px] font-poppins-semibold text-[#111]">
                       Edit Profile
                     </Text>
                     <Text className="text-[12px] text-neutral-500 mt-0.5">
-                      Edit and chnage your profile
+                      Update your details
                     </Text>
                   </View>
+
+                  <Ionicons name="chevron-forward" size={18} color="#9CA3AF" />
                 </View>
               </Pressable>
             </Link>
@@ -391,7 +324,7 @@ export default function Page() {
           <View className="absolute -top-10 right-4 w-52 h-52 bg-[#EDE4FF] rounded-full opacity-30 blur-3xl" />
 
           <View className="flex-row flex-wrap justify-center gap-4">
-            {["Intentional Connections", "Emotional", "Shared Values"].map(
+            {["Connections", "Friendships", "Shared Values"].map(
               (label, index) => (
                 <View
                   key={index}

@@ -64,7 +64,7 @@ const Page = () => {
               </Text>
 
               <Text className="text-[12px] text-neutral-400 mt-1 tracking-wide">
-                {profile?.gender?.name}
+                My Profile
               </Text>
             </View>
 
@@ -91,36 +91,8 @@ const Page = () => {
           </View>
         </Pressable>
 
-        <View
-          className="rounded-full px-6 py-4 bg-[#FFF1F1]"
-          style={{
-            shadowColor: "#EF4444",
-            shadowOpacity: 0.25,
-            shadowRadius: 14,
-            elevation: 6,
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => setShowLogoutModal(true)}
-            className="flex-row items-center justify-between"
-            activeOpacity={0.85}
-          >
-            <View>
-              <Text className="text-[16px] font-poppins-semibold text-red-600">
-                Log out
-              </Text>
-              <Text className="text-[12px] text-red-400 mt-0.5 tracking-wide">
-                Sign out safely
-              </Text>
-            </View>
-
-            {/* subtle dot indicator */}
-            <View className="h-3 w-3 rounded-full bg-red-400/60" />
-          </TouchableOpacity>
-        </View>
-
         {/* ===== LEGAL ===== */}
-        <Text className="text-[11px] font-poppins-semibold text-neutral-400 tracking-[2px] mb-4 mt-12">
+        <Text className="text-[11px] font-poppins-semibold text-neutral-400 tracking-[2px] mb-4 mt-5">
           LEGAL & POLICIES
         </Text>
 
@@ -157,6 +129,34 @@ const Page = () => {
             onPress={() => router.push("/settings/other/guidelines")}
             noBorder
           />
+        </View>
+
+         <View
+          className="rounded-full mt-20 px-6 py-4 bg-[#FFF1F1]"
+          style={{
+            shadowColor: "#EF4444",
+            shadowOpacity: 0.25,
+            shadowRadius: 14,
+            elevation: 6,
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => setShowLogoutModal(true)}
+            className="flex-row items-center justify-between"
+            activeOpacity={0.85}
+          >
+            <View>
+              <Text className="text-[16px] font-poppins-semibold text-red-600">
+                Log out
+              </Text>
+              <Text className="text-[12px] text-red-400 mt-0.5 tracking-wide">
+                Sign out safely
+              </Text>
+            </View>
+
+            {/* subtle dot indicator */}
+            <View className="h-3 w-3 rounded-full bg-red-400/60" />
+          </TouchableOpacity>
         </View>
 
         {/* ===== DANGER ZONE ===== */}
