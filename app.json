@@ -14,6 +14,11 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
+        "NSBluetoothAlwaysUsageDescription": "We use Bluetooth to discover nearby users.",
+        "UIBackgroundModes": [
+          "bluetooth-central",
+          "bluetooth-peripheral"
+        ],
         "NSLocationWhenInUseUsageDescription": "We need your location to show your neighborhood on the map."
       },
       "bundleIdentifier": "com.anonymous.SoulSetuSocializingApp"
@@ -21,9 +26,7 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "foregroundImage": "./assets/images/android-icon-foreground.png"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
@@ -60,7 +63,18 @@
       ],
       "expo-video",
       "expo-font",
-      "expo-sqlite"
+      "expo-sqlite",
+      [
+        "react-native-ble-plx",
+        {
+          "isBackgroundEnable": true,
+          "modes": [
+            "central"
+          ],
+          "neverForLocation": false,
+          "bluetoothAlwaysPermission": "Allow SoulSetu to discover nearby devices"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

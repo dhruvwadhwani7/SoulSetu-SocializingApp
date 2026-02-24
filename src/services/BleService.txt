@@ -1,0 +1,105 @@
+import { APP_BLE_NAME_PREFIX } from "@/constants/ble";
+import { BleManager, Device, State } from "react-native-ble-plx";
+
+class BleService {
+  private manager: BleManager;
+  private scanning = false;
+  private discovered = new Map<string, Device>();
+
+  constructor() {
+    this.manager = new BleManager();
+  }
+
+  // -----------------------
+  // BLUETOOTH STATE CHECK
+  // -----------------------
+  async ensureBluetoothOn(): Promise<boolean> {
+    const state = await this.manager.state();
+
+    if (state === State.PoweredOn) {
+      return true;
+    }
+
+    console.warn("⚠️ Bluetooth is OFF. Current state:", state);
+    return false;
+  }
+
+  // -----------------------
+  // ADVERTISING (Foreground)
+  // -----------------------
+  async startAdvertising(userToken: string) {
+    const deviceName = `${APP_BLE_NAME_PREFIX}${userToken}`;
+    console.log("📡 Advertising as:", deviceName);
+  }
+
+  stopAdvertising() {
+    console.log("🛑 Advertising stopped");
+  }
+
+  // -----------------------
+  // SCANNING
+  // -----------------------
+  async startScan(onDeviceFound: (device: Device, token: string) => void) {
+    if (this.scanning) return;
+
+    const bluetoothReady = await this.ensureBluetoothOn();
+    if (!bluetoothReady) {
+      throw new Error("BLUETOOTH_OFF");
+    }
+
+    this.scanning = true;
+
+    this.manager.startDeviceScan(
+      null,
+      { allowDuplicates: false },
+      (error, device) => {
+        if (error) {
+          console.error("BLE Scan Error:", error);
+          return;
+        }
+
+        if (!device?.name) return;
+        // if (!device.name.startsWith(APP_BLE_NAME_PREFIX)) return;
+        if (this.discovered.has(device.id)) return;
+
+        const token = device.name.replace(APP_BLE_NAME_PREFIX, "");
+
+        this.discovered.set(device.id, device);
+        onDeviceFound(device, token);
+      }
+    );
+
+    console.log("🔍 Scanning started");
+  }
+
+  stopScan() {
+    if (!this.scanning) return;
+
+    this.manager.stopDeviceScan();
+    this.scanning = false;
+    this.discovered.clear();
+    console.log("🛑 Scanning stopped");
+  }
+
+  // -----------------------
+  // TOGGLE CONTROL
+  // -----------------------
+  async enable(
+    userToken: string,
+    onDeviceFound: (device: Device, token: string) => void
+  ) {
+    await this.startAdvertising(userToken);
+    await this.startScan(onDeviceFound);
+  }
+
+  disable() {
+    this.stopScan();
+    this.stopAdvertising();
+  }
+
+  destroy() {
+    this.manager.destroy();
+  }
+}
+
+export const bleService = new BleService();
