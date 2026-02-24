@@ -1,5 +1,18 @@
+import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Alert, FlatList, Switch, Text, View } from "react-native";
+import {
+  Alert,
+  Animated,
+  Easing,
+  FlatList,
+  Switch,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import {
@@ -18,6 +31,7 @@ type NearbyProfile = {
 };
 
 export default function Page() {
+  const router = useRouter();
   const [isEnabled, setIsEnabled] = useState(false);
   const [nearbyUsers, setNearbyUsers] = useState<NearbyProfile[]>([]);
   const sessionTokenRef = useRef<string | null>(null);
@@ -173,14 +187,14 @@ export default function Page() {
               useNativeDriver: true,
             }),
           ]),
-        ])
+        ]),
       ).start();
     } else {
       pulseAnim.stopAnimation();
       pulseAnim.setValue(1);
       fadeAnim.setValue(0.5);
     }
-  }, [isEnabled, nearbyUsers.length]);
+  }, [isEnabled, nearbyUsers.length, pulseAnim, fadeAnim]);
 
   const renderEmptyState = () => {
     if (!isEnabled) {
@@ -204,11 +218,11 @@ export default function Page() {
         <View className="items-center justify-center h-48 w-48 relative">
           <Animated.View
             style={{
-              position: 'absolute',
+              position: "absolute",
               width: 100,
               height: 100,
               borderRadius: 50,
-              backgroundColor: '#6366f1',
+              backgroundColor: "#6366f1",
               opacity: fadeAnim,
               transform: [{ scale: pulseAnim }],
             }}
@@ -236,7 +250,14 @@ export default function Page() {
         <View className="px-6 pt-6 pb-2">
           <View className="flex-row justify-between items-center">
             <View>
-              <Text style={{ fontSize: 28, fontWeight: '700', color: '#111827', letterSpacing: -0.5 }}>
+              <Text
+                style={{
+                  fontSize: 28,
+                  fontWeight: "700",
+                  color: "#111827",
+                  letterSpacing: -0.5,
+                }}
+              >
                 Discover
               </Text>
               <Text className="text-[14px] text-neutral-500 mt-1">
@@ -250,14 +271,22 @@ export default function Page() {
         </View>
       </SafeAreaView>
 
-      <View 
+      <View
         className="mx-6 mt-4 p-1 rounded-2xl bg-white border border-neutral-100 flex-row items-center justify-between"
-        style={{ elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 8 }}
+        style={{
+          elevation: 2,
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.05,
+          shadowRadius: 8,
+        }}
       >
         <View className="flex-row items-center pl-4 py-3 flex-1">
-          <View className={`w-2 h-2 rounded-full ${isEnabled ? 'bg-green-500' : 'bg-neutral-300'} mr-3`} />
+          <View
+            className={`w-2 h-2 rounded-full ${isEnabled ? "bg-green-500" : "bg-neutral-300"} mr-3`}
+          />
           <View>
-            <Text style={{ fontSize: 15, fontWeight: '600', color: '#111827' }}>
+            <Text style={{ fontSize: 15, fontWeight: "600", color: "#111827" }}>
               Radar Status
             </Text>
             <Text className="text-[12px] text-neutral-500">
@@ -266,11 +295,11 @@ export default function Page() {
           </View>
         </View>
         <View className="pr-4">
-          <Switch 
-            value={isEnabled} 
-            onValueChange={handleToggle} 
-            trackColor={{ false: '#e5e5e5', true: '#c7d2fe' }}
-            thumbColor={isEnabled ? '#4f46e5' : '#f4f3f4'}
+          <Switch
+            value={isEnabled}
+            onValueChange={handleToggle}
+            trackColor={{ false: "#e5e5e5", true: "#c7d2fe" }}
+            thumbColor={isEnabled ? "#4f46e5" : "#f4f3f4"}
           />
         </View>
       </View>
@@ -283,22 +312,28 @@ export default function Page() {
           contentContainerStyle={{ paddingBottom: 40, flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
-            <TouchableOpacity 
+            <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => router.push(`/bluetooth/${item.profileId}`)}
               className="mb-4"
             >
               <LinearGradient
-                colors={['#ffffff', '#f8fafc']}
+                colors={["#ffffff", "#f8fafc"]}
                 className="p-4 rounded-2xl flex-row items-center justify-between border border-neutral-100 shadow-sm"
-                style={{ elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 8 }}
+                style={{
+                  elevation: 2,
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.05,
+                  shadowRadius: 8,
+                }}
               >
                 <View className="flex-row items-center flex-1">
                   <View className="w-16 h-16 rounded-full overflow-hidden border-2 border-indigo-50 relative bg-indigo-50 items-center justify-center">
                     {item.photoUrl ? (
-                      <Image 
-                        source={{ uri: item.photoUrl }} 
-                        style={{ width: '100%', height: '100%' }}
+                      <Image
+                        source={{ uri: item.photoUrl }}
+                        style={{ width: "100%", height: "100%" }}
                         contentFit="cover"
                         transition={200}
                       />
@@ -308,13 +343,31 @@ export default function Page() {
                     <View className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-green-500 border-2 border-white" />
                   </View>
                   <View className="ml-4 flex-1">
-                    <Text style={{ fontSize: 18, fontWeight: '600', color: '#111827', marginBottom: 2 }}>
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        fontWeight: "600",
+                        color: "#111827",
+                        marginBottom: 2,
+                      }}
+                    >
                       {item.firstName}
                     </Text>
                     <View className="flex-row items-center mt-1">
                       <View className="bg-indigo-50 px-2 py-0.5 rounded-md flex-row items-center">
-                        <Ionicons name="body-outline" size={12} color="#4f46e5" />
-                        <Text style={{ fontSize: 12, fontWeight: '500', color: '#4f46e5', marginLeft: 4 }}>
+                        <Ionicons
+                          name="body-outline"
+                          size={12}
+                          color="#4f46e5"
+                        />
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            fontWeight: "500",
+                            color: "#4f46e5",
+                            marginLeft: 4,
+                          }}
+                        >
                           {item.age} yrs
                         </Text>
                       </View>
@@ -324,7 +377,7 @@ export default function Page() {
                     </View>
                   </View>
                 </View>
-                
+
                 <View className="w-10 h-10 rounded-full bg-indigo-50 items-center justify-center">
                   <Ionicons name="chevron-forward" size={20} color="#4f46e5" />
                 </View>
