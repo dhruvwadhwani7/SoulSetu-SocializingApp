@@ -1,5 +1,4 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
@@ -8,6 +7,7 @@ import {
   Animated,
   Easing,
   FlatList,
+  Image as RNImage,
   Switch,
   Text,
   TouchableOpacity,
@@ -309,80 +309,86 @@ export default function Page() {
           data={nearbyUsers}
           keyExtractor={(item) => item.profileId}
           ListEmptyComponent={renderEmptyState}
-          contentContainerStyle={{ paddingBottom: 40, flexGrow: 1 }}
+          contentContainerStyle={{ paddingBottom: 60, flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => router.push(`/bluetooth/${item.profileId}`)}
-              className="mb-4"
+          renderItem={({ item, index }) => (
+            <Animated.View 
+              style={{
+                opacity: fadeAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0.8, 1] // subtle pulse on the cards too
+                }),
+                transform: [{ translateY: index % 2 === 0 ? 0 : 20 }], // stagger effect
+                marginBottom: 24
+              }}
             >
-              <LinearGradient
-                colors={["#ffffff", "#f8fafc"]}
-                className="p-4 rounded-2xl flex-row items-center justify-between border border-neutral-100 shadow-sm"
-                style={{
-                  elevation: 2,
-                  shadowColor: "#000",
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.05,
-                  shadowRadius: 8,
-                }}
+              <TouchableOpacity
+                activeOpacity={0.9}
+                onPress={() => router.push(`/bluetooth/${item.profileId}`)}
               >
-                <View className="flex-row items-center flex-1">
-                  <View className="w-16 h-16 rounded-full overflow-hidden border-2 border-indigo-50 relative bg-indigo-50 items-center justify-center">
+                <View 
+                  className="rounded-[32px] bg-white overflow-hidden"
+                  style={{
+                    elevation: 8,
+                    shadowColor: "#4f46e5",
+                    shadowOffset: { width: 0, height: 10 },
+                    shadowOpacity: 0.1,
+                    shadowRadius: 20,
+                  }}
+                >
+                  <View className="h-44 w-full relative bg-neutral-100">
                     {item.photoUrl ? (
-                      <Image
+                      <RNImage
                         source={{ uri: item.photoUrl }}
-                        style={{ width: "100%", height: "100%" }}
-                        contentFit="cover"
-                        transition={200}
+                        style={{ width: "100%", height: "100%", resizeMode: "cover" }}
                       />
                     ) : (
-                      <Ionicons name="person" size={24} color="#6366f1" />
+                      <View className="flex-1 items-center justify-center bg-indigo-50">
+                        <Ionicons name="person" size={50} color="#c7d2fe" />
+                      </View>
                     )}
-                    <View className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-green-500 border-2 border-white" />
-                  </View>
-                  <View className="ml-4 flex-1">
-                    <Text
-                      style={{
-                        fontSize: 18,
-                        fontWeight: "600",
-                        color: "#111827",
-                        marginBottom: 2,
-                      }}
-                    >
-                      {item.firstName}
-                    </Text>
-                    <View className="flex-row items-center mt-1">
-                      <View className="bg-indigo-50 px-2 py-0.5 rounded-md flex-row items-center">
-                        <Ionicons
-                          name="body-outline"
-                          size={12}
-                          color="#4f46e5"
-                        />
-                        <Text
-                          style={{
-                            fontSize: 12,
-                            fontWeight: "500",
-                            color: "#4f46e5",
-                            marginLeft: 4,
-                          }}
-                        >
-                          {item.age} yrs
+                    
+                    <LinearGradient
+                      colors={["transparent", "rgba(0,0,0,0.8)"]}
+                      style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '60%' }}
+                    />
+
+                    {/* Live Badge */}
+                    <View className="absolute top-4 left-4 flex-row items-center bg-black/40 px-3 py-1.5 rounded-full border border-white/20">
+                      <View className="w-2 h-2 rounded-full bg-green-400 mr-2" />
+                      <Text className="text-white text-[11px] font-poppins-semibold tracking-wider">NEARBY SECS AGO</Text>
+                    </View>
+
+                    {/* Name & Age Overlay */}
+                    <View className="absolute bottom-4 left-5 right-5 flex-row justify-between items-end">
+                      <View>
+                        <Text className="text-white text-[24px] font-poppins-bold tracking-tight shadow-sm">
+                          {item.firstName}
+                        </Text>
+                        <Text className="text-neutral-300 text-[14px] font-medium mt-0.5">
+                          {item.age} years old
                         </Text>
                       </View>
-                      <Text className="text-[12px] text-neutral-400 ml-3">
-                        Nearby now
-                      </Text>
+                      
+                      <View className="w-12 h-12 rounded-full bg-indigo-500 items-center justify-center flex-row">
+                        <Ionicons name="arrow-forward" size={20} color="white" />
+                      </View>
                     </View>
                   </View>
-                </View>
 
-                <View className="w-10 h-10 rounded-full bg-indigo-50 items-center justify-center">
-                  <Ionicons name="chevron-forward" size={20} color="#4f46e5" />
+                  {/* Fun Bottom Bar */}
+                  <View className="px-5 py-4 bg-white flex-row items-center justify-between">
+                    <View className="flex-row items-center">
+                      <View className="w-8 h-8 rounded-full bg-orange-50 items-center justify-center mr-3">
+                        <Text className="text-[14px]">👋</Text>
+                      </View>
+                      <Text className="text-[#111827] text-[13px] font-medium">Say Hi via Bluetooth!</Text>
+                    </View>
+                    <Ionicons name="bluetooth" size={16} color="#6366f1" />
+                  </View>
                 </View>
-              </LinearGradient>
-            </TouchableOpacity>
+              </TouchableOpacity>
+            </Animated.View>
           )}
         />
       </View>
