@@ -49,14 +49,13 @@ export default function Page() {
 
   // -----------------------------
   // PRESENCE CLEANUP LOOP
-  // Removes users not seen recently
   // -----------------------------
   useEffect(() => {
     if (!isEnabled) return;
 
     const interval = setInterval(() => {
-      setNearbyUsers(
-        (prev) => prev.filter((u) => Date.now() - u.lastSeen < 15000), // 15s timeout
+      setNearbyUsers((prev) =>
+        prev.filter((u) => Date.now() - u.lastSeen < 35000),
       );
     }, 3000);
 
@@ -65,15 +64,14 @@ export default function Page() {
 
   // -----------------------------
   // RESOLVE WITH RETRY
-  // Handles timing issues
   // -----------------------------
   const resolveWithRetry = async (prefix: string) => {
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 2; i++) {
       try {
         const res = await resolveProximitySession(prefix);
         if (res) return res;
       } catch {}
-      await new Promise((r) => setTimeout(r, 600));
+      await new Promise((r) => setTimeout(r, 500));
     }
     return null;
   };
@@ -92,7 +90,6 @@ export default function Page() {
     }
 
     try {
-      // Start session
       const session = await startProximitySession();
       sessionTokenRef.current = session.session_token;
 
@@ -101,19 +98,28 @@ export default function Page() {
         async (_device, tokenPrefix) => {
           console.log("📲 Token detected:", tokenPrefix);
 
-          const resolved = await resolveWithRetry(tokenPrefix);
-          if (!resolved) return;
-
-          console.log("👤 Resolved:", resolved);
-
           const now = Date.now();
+
+          const resolved = await resolveWithRetry(tokenPrefix);
+
+          // 🟢 IMPORTANT FIX
+          // Even if resolve fails (cooldown), refresh lastSeen
+          if (!resolved) {
+            setNearbyUsers((prev) =>
+              prev.map((u) =>
+                tokenPrefix.startsWith(u.profileId.slice(0, 4))
+                  ? { ...u, lastSeen: now }
+                  : u,
+              ),
+            );
+            return;
+          }
 
           setNearbyUsers((prev) => {
             const existing = prev.find(
               (u) => u.profileId === resolved.profile_id,
             );
 
-            // update lastSeen if already exists
             if (existing) {
               return prev.map((u) =>
                 u.profileId === resolved.profile_id
@@ -122,7 +128,6 @@ export default function Page() {
               );
             }
 
-            // add new
             return [
               ...prev,
               {
@@ -312,21 +317,21 @@ export default function Page() {
           contentContainerStyle={{ paddingBottom: 60, flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
           renderItem={({ item, index }) => (
-            <Animated.View 
+            <Animated.View
               style={{
                 opacity: fadeAnim.interpolate({
                   inputRange: [0, 1],
-                  outputRange: [0.8, 1] // subtle pulse on the cards too
+                  outputRange: [0.8, 1], // subtle pulse on the cards too
                 }),
                 transform: [{ translateY: index % 2 === 0 ? 0 : 20 }], // stagger effect
-                marginBottom: 24
+                marginBottom: 24,
               }}
             >
               <TouchableOpacity
                 activeOpacity={0.9}
                 onPress={() => router.push(`/bluetooth/${item.profileId}`)}
               >
-                <View 
+                <View
                   className="rounded-[32px] bg-white overflow-hidden"
                   style={{
                     elevation: 8,
@@ -340,23 +345,35 @@ export default function Page() {
                     {item.photoUrl ? (
                       <RNImage
                         source={{ uri: item.photoUrl }}
-                        style={{ width: "100%", height: "100%", resizeMode: "cover" }}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          resizeMode: "cover",
+                        }}
                       />
                     ) : (
                       <View className="flex-1 items-center justify-center bg-indigo-50">
                         <Ionicons name="person" size={50} color="#c7d2fe" />
                       </View>
                     )}
-                    
+
                     <LinearGradient
                       colors={["transparent", "rgba(0,0,0,0.8)"]}
-                      style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '60%' }}
+                      style={{
+                        position: "absolute",
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        height: "60%",
+                      }}
                     />
 
                     {/* Live Badge */}
                     <View className="absolute top-4 left-4 flex-row items-center bg-black/40 px-3 py-1.5 rounded-full border border-white/20">
                       <View className="w-2 h-2 rounded-full bg-green-400 mr-2" />
-                      <Text className="text-white text-[11px] font-poppins-semibold tracking-wider">NEARBY SECS AGO</Text>
+                      <Text className="text-white text-[11px] font-poppins-semibold tracking-wider">
+                        NEARBY SECS AGO
+                      </Text>
                     </View>
 
                     {/* Name & Age Overlay */}
@@ -369,9 +386,13 @@ export default function Page() {
                           {item.age} years old
                         </Text>
                       </View>
-                      
+
                       <View className="w-12 h-12 rounded-full bg-indigo-500 items-center justify-center flex-row">
-                        <Ionicons name="arrow-forward" size={20} color="white" />
+                        <Ionicons
+                          name="arrow-forward"
+                          size={20}
+                          color="white"
+                        />
                       </View>
                     </View>
                   </View>
@@ -382,7 +403,9 @@ export default function Page() {
                       <View className="w-8 h-8 rounded-full bg-orange-50 items-center justify-center mr-3">
                         <Text className="text-[14px]">👋</Text>
                       </View>
-                      <Text className="text-[#111827] text-[13px] font-medium">Say Hi via Bluetooth!</Text>
+                      <Text className="text-[#111827] text-[13px] font-medium">
+                        Say Hi via Bluetooth!
+                      </Text>
                     </View>
                     <Ionicons name="bluetooth" size={16} color="#6366f1" />
                   </View>

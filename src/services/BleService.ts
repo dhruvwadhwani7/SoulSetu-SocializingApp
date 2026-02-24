@@ -32,10 +32,10 @@ class BleService {
   constructor() {
     this.manager = new BleManager();
 
-    // clear discovered every 20s so device can reappear
+    // Allow rediscovery every 10s
     setInterval(() => {
       this.discovered.clear();
-    }, 20000);
+    }, 10000);
   }
 
   // -----------------------
