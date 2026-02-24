@@ -14,6 +14,7 @@ type NearbyProfile = {
   firstName: string;
   age: number;
   photoUrl: string | null;
+  lastSeen: number;
 };
 
 export default function Page() {
@@ -22,12 +23,10 @@ export default function Page() {
   const sessionTokenRef = useRef<string | null>(null);
 
   // -----------------------------
-  // Ask permissions on page entry
+  // PERMISSIONS
   // -----------------------------
   useEffect(() => {
-    requestBlePermissions().catch((err) =>
-      console.error("BLE permission error:", err),
-    );
+    requestBlePermissions().catch(console.error);
 
     return () => {
       bleService.disable();
@@ -35,7 +34,38 @@ export default function Page() {
   }, []);
 
   // -----------------------------
-  // Toggle handler
+  // PRESENCE CLEANUP LOOP
+  // Removes users not seen recently
+  // -----------------------------
+  useEffect(() => {
+    if (!isEnabled) return;
+
+    const interval = setInterval(() => {
+      setNearbyUsers(
+        (prev) => prev.filter((u) => Date.now() - u.lastSeen < 15000), // 15s timeout
+      );
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [isEnabled]);
+
+  // -----------------------------
+  // RESOLVE WITH RETRY
+  // Handles timing issues
+  // -----------------------------
+  const resolveWithRetry = async (prefix: string) => {
+    for (let i = 0; i < 3; i++) {
+      try {
+        const res = await resolveProximitySession(prefix);
+        if (res) return res;
+      } catch {}
+      await new Promise((r) => setTimeout(r, 600));
+    }
+    return null;
+  };
+
+  // -----------------------------
+  // TOGGLE HANDLER
   // -----------------------------
   const handleToggle = async (enabled: boolean) => {
     setIsEnabled(enabled);
@@ -48,29 +78,37 @@ export default function Page() {
     }
 
     try {
-      // 1️⃣ Start proximity session (RPC)
+      // Start session
       const session = await startProximitySession();
       sessionTokenRef.current = session.session_token;
 
-      // 2️⃣ Enable BLE with token
       await bleService.enable(
         session.session_token,
         async (_device, tokenPrefix) => {
-          console.log("📲 UI received token prefix:", tokenPrefix);
-          // 3️⃣ Resolve discovered token via backend
-          const resolved = await resolveProximitySession(tokenPrefix);
-          if (!resolved) {
-            console.log("⚠️ Resolution returned null");
-            return;
-          }
+          console.log("📲 Token detected:", tokenPrefix);
 
-          console.log("👤 Profile resolved:", resolved);
+          const resolved = await resolveWithRetry(tokenPrefix);
+          if (!resolved) return;
+
+          console.log("👤 Resolved:", resolved);
+
+          const now = Date.now();
 
           setNearbyUsers((prev) => {
-            if (prev.some((u) => u.profileId === resolved.profile_id)) {
-              return prev;
+            const existing = prev.find(
+              (u) => u.profileId === resolved.profile_id,
+            );
+
+            // update lastSeen if already exists
+            if (existing) {
+              return prev.map((u) =>
+                u.profileId === resolved.profile_id
+                  ? { ...u, lastSeen: now }
+                  : u,
+              );
             }
 
+            // add new
             return [
               ...prev,
               {
@@ -78,28 +116,23 @@ export default function Page() {
                 firstName: resolved.first_name,
                 age: resolved.age,
                 photoUrl: resolved.photo_url,
+                lastSeen: now,
               },
             ];
           });
         },
       );
     } catch (err: any) {
-      console.error("Failed to enable proximity:", err);
+      console.error("Enable error:", err);
 
       bleService.disable();
       sessionTokenRef.current = null;
       setIsEnabled(false);
 
       if (err.message === "BLUETOOTH_OFF") {
-        Alert.alert(
-          "Bluetooth Off",
-          "Please turn on Bluetooth to discover nearby users.",
-        );
+        Alert.alert("Bluetooth Off", "Turn on Bluetooth");
       } else {
-        Alert.alert(
-          "Nearby Discovery Error",
-          "Unable to start nearby discovery.",
-        );
+        Alert.alert("Error", "Unable to start discovery");
       }
     }
   };

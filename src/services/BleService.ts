@@ -31,6 +31,11 @@ class BleService {
 
   constructor() {
     this.manager = new BleManager();
+
+    // clear discovered every 20s so device can reappear
+    setInterval(() => {
+      this.discovered.clear();
+    }, 20000);
   }
 
   // -----------------------
@@ -138,7 +143,7 @@ class BleService {
 
     this.manager.startDeviceScan(
       null,
-      { allowDuplicates: false },
+      { allowDuplicates: true },
       (error, device) => {
         if (error) {
           console.error("❌ Scan error:", error);
