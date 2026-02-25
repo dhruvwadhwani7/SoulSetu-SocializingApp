@@ -1,6 +1,6 @@
 import { Place } from "../types/places";
 
-const API_KEY = process.env.EXPO_PUBLIC_FSQ_API_KEY;;
+const API_KEY = process.env.EXPO_PUBLIC_FOURSQUARE_API_KEY;
 
 export async function fetchPlaces(
   lat: number,
@@ -18,8 +18,6 @@ export async function fetchPlaces(
   });
 
   const data = await res.json();
-
-  console.log("FSQ RESPONSE", data);
 
   if (!res.ok) throw new Error("Foursquare error");
 
