@@ -41,6 +41,6 @@ export const memberPreferences = [
           .join(", ") || "Open to all"
       );
     },
-    route: "/preferences/ethnicity",
+    route: "/preferences/preferTypes/ethnicity",
   },
 ];

@@ -4,10 +4,10 @@ import {
   useReviewProfiles,
   useSkipProfile,
 } from "@/api/profiles";
-import { Empty } from "@/components/empty";
-import { Fab } from "@/components/fab";
-import { Loader } from "@/components/loader";
-import { ProfileView } from "@/components/profile-view";
+import { ProfileView } from "@/components/profileView/profile-view";
+import { Empty } from "@/components/shared/empty";
+import { Fab } from "@/components/shared/fab";
+import { Loader } from "@/components/shared/loader";
 import { useRefreshOnFocus } from "@/hooks/refetch";
 import { transformPublicProfile } from "@/utils/profile";
 import { Ionicons } from "@expo/vector-icons";
@@ -87,10 +87,10 @@ export default function Page() {
           onError: () => {
             Alert.alert(
               "Error",
-              "Something went wrong, please try again later"
+              "Something went wrong, please try again later",
             );
           },
-        }
+        },
       );
     }
   };
@@ -126,8 +126,12 @@ export default function Page() {
   return (
     <View className="flex-1 bg-white">
       <ScrollView className="flex-1 px-5">
-        <Link href={"/preferences"} suppressHighlighting className="w-full flex-row items-center justify-between mt-20 mb-2">
-          <Ionicons name="options-outline" size={38} color="#7454F6"/>
+        <Link
+          href={"/preferences"}
+          suppressHighlighting
+          className="w-full flex-row items-center justify-between mt-20 mb-2"
+        >
+          <Ionicons name="options-outline" size={38} color="#7454F6" />
         </Link>
         {profile && <ProfileView profile={profile} onLike={handleLike} />}
       </ScrollView>

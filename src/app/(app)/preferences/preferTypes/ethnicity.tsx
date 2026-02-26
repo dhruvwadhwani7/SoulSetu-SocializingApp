@@ -1,24 +1,19 @@
 import { useUpdateEthnicityPreferences } from "@/api/my-profile";
 import { Option, PrivateProfile } from "@/api/my-profile/types";
 import { useEthnicities } from "@/api/options";
-import { CheckboxList } from "@/components/checkbox-list";
-import { StackHeaderV4 } from "@/components/stack-header-v4";
+import { CheckboxList } from "@/components/shared/checkbox-list";
+import { StackHeaderV4 } from "@/components/shared/stack-header-v4";
 import { useEdit } from "@/store/edit";
 import { router } from "expo-router";
 import { useState } from "react";
-import {
-  Alert,
-  View,
-  Text,
-  FlatList,
-} from "react-native";
+import { Alert, FlatList, Text, View } from "react-native";
 
 const Page = () => {
   const { edits, setEdits } = useEdit();
   const { data } = useEthnicities();
 
   const [selected, setSelected] = useState<Option[]>(
-    edits?.ethnicity_preferences || []
+    edits?.ethnicity_preferences || [],
   );
 
   const { mutate, reset } = useUpdateEthnicityPreferences();
@@ -35,7 +30,7 @@ const Page = () => {
           reset();
           router.back();
         },
-      }
+      },
     );
   };
 

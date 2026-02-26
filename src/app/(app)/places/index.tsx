@@ -3,7 +3,7 @@
 import { useMyProfile } from "@/api/my-profile";
 import PlaceCard from "@/components/foursqaure/PlaceCard";
 import PlaceDetailsModal from "@/components/foursqaure/PlaceDetailsModal";
-import { StackHeaderV2 } from "@/components/stack-header-v2";
+import { StackHeaderV2 } from "@/components/shared/stack-header-v2";
 import {
   fetchNearbyPlaces,
   fetchPlaceDetails,
@@ -68,10 +68,7 @@ export default function PlacesPage() {
         data={places}
         keyExtractor={(i) => i.id}
         renderItem={({ item }) => (
-          <PlaceCard
-            place={item}
-            onPress={() => setSelectedId(item.id)}
-          />
+          <PlaceCard place={item} onPress={() => setSelectedId(item.id)} />
         )}
         contentContainerStyle={{ paddingBottom: 120 }}
         showsVerticalScrollIndicator={false}

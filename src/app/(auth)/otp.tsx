@@ -1,6 +1,7 @@
 import { useVerifyOtp } from "@/api/auth";
-import { Fab } from "@/components/fab";
-import { StackHeader } from "@/components/stack-header";
+import { Fab } from "@/components/shared/fab";
+import { StackHeader } from "@/components/shared/stack-header";
+import * as Haptics from "expo-haptics";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -15,7 +16,6 @@ import {
   View,
 } from "react-native";
 import colors from "tailwindcss/colors";
-import * as Haptics from "expo-haptics";
 
 export default function Page() {
   const [otp, setOtp] = useState("");
@@ -66,7 +66,7 @@ export default function Page() {
         onError: () => {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
         },
-      }
+      },
     );
   };
 
@@ -95,7 +95,7 @@ export default function Page() {
             duration: 450,
             useNativeDriver: true,
           }),
-        ])
+        ]),
       );
       loopRef.current.start();
     } else {

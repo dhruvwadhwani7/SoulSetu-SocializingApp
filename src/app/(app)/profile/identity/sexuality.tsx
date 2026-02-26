@@ -1,22 +1,22 @@
 import { PrivateProfile } from "@/api/my-profile/types";
-import { usePronouns } from "@/api/options";
-import { CheckboxList } from "@/components/checkbox-list";
-import { StackHeaderV4 } from "@/components/stack-header-v4";
+import { useSexualities } from "@/api/options";
+import { RadioList } from "@/components/shared/radio-list";
+import { StackHeaderV4 } from "@/components/shared/stack-header-v4";
 import { useEdit } from "@/store/edit";
 import { router } from "expo-router";
 import { useState } from "react";
-import { View, Text, FlatList } from "react-native";
+import { FlatList, Text, View } from "react-native";
 
 export default function Page() {
   const { edits, setEdits } = useEdit();
-  const { data } = usePronouns();
-  const [selected, setSelected] = useState(edits?.pronouns || []);
+  const { data } = useSexualities();
+  const [selected, setSelected] = useState(edits?.sexuality || null);
 
   const handlePress = () => {
     if (selected) {
       setEdits({
         ...edits,
-        pronouns: selected,
+        sexuality: selected,
       } as PrivateProfile);
     }
     router.back();
@@ -24,34 +24,34 @@ export default function Page() {
 
   return (
     <View className="flex-1 bg-white">
-      <StackHeaderV4 title="Pronouns" onPressBack={handlePress} />
+      {/* iOS-style header */}
+      <StackHeaderV4 title="Sexuality" onPressBack={handlePress} />
 
-      {/* FlatList wrapper to avoid nested virtualized lists */}
+      {/* FlatList wrapper to avoid virtualized list nesting */}
       <FlatList
-        data={[]} // UI rendered via ListHeaderComponent
+        data={[]} // empty data — UI comes through ListHeaderComponent
         keyExtractor={() => "header"}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40 }}
         ListHeaderComponent={
           <View>
-
-            {/* Instructional Text */}
+            {/* Instructions */}
             <Text className="text-[15px] font-poppins-light text-neutral-700 mb-1">
-              Choose the pronouns that represent you.
+              Select the sexuality that best describes you.
             </Text>
 
             <Text className="text-[14px] font-poppins-medium text-[#7454F6] mb-1">
-              You may select more than one option.
+              This helps personalize your match experience.
             </Text>
 
             <Text className="text-[13px] font-poppins-light text-neutral-500 mb-4">
-              Adding pronouns helps others understand how to address you.
+              You can choose only one option.
             </Text>
 
-            {/* Glassmorphic container */}
+            {/* Glassy Card Wrapper */}
             <View
               style={{
-                paddingVertical: 10,
+                paddingVertical: 12,
                 paddingHorizontal: 14,
                 borderRadius: 20,
                 backgroundColor: "rgba(250,250,255,0.7)",
@@ -63,7 +63,7 @@ export default function Page() {
                 shadowOffset: { width: 0, height: 3 },
               }}
             >
-              <CheckboxList
+              <RadioList
                 options={data}
                 onChange={setSelected}
                 initialSelection={selected}

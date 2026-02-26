@@ -1,22 +1,22 @@
 import { PrivateProfile } from "@/api/my-profile/types";
-import { useGenders } from "@/api/options";
-import { CheckboxList } from "@/components/checkbox-list";
-import { StackHeaderV4 } from "@/components/stack-header-v4";
+import { usePronouns } from "@/api/options";
+import { CheckboxList } from "@/components/shared/checkbox-list";
+import { StackHeaderV4 } from "@/components/shared/stack-header-v4";
 import { useEdit } from "@/store/edit";
 import { router } from "expo-router";
 import { useState } from "react";
-import { View, Text, FlatList } from "react-native";
+import { FlatList, Text, View } from "react-native";
 
 export default function Page() {
   const { edits, setEdits } = useEdit();
-  const { data } = useGenders();
-  const [selected, setSelected] = useState(edits?.gender_preferences || []);
+  const { data } = usePronouns();
+  const [selected, setSelected] = useState(edits?.pronouns || []);
 
   const handlePress = () => {
     if (selected) {
       setEdits({
         ...edits,
-        gender_preferences: selected,
+        pronouns: selected,
       } as PrivateProfile);
     }
     router.back();
@@ -24,31 +24,30 @@ export default function Page() {
 
   return (
     <View className="flex-1 bg-white">
-      <StackHeaderV4 title="I'm interested in" onPressBack={handlePress} />
+      <StackHeaderV4 title="Pronouns" onPressBack={handlePress} />
 
-      {/* FIX: use FlatList as parent to avoid nested virtualized lists */}
+      {/* FlatList wrapper to avoid nested virtualized lists */}
       <FlatList
-        data={[]}   // no list items — everything is inside header
+        data={[]} // UI rendered via ListHeaderComponent
         keyExtractor={() => "header"}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40 }}
-        
         ListHeaderComponent={
           <View>
-            {/* Instruction Texts */}
+            {/* Instructional Text */}
             <Text className="text-[15px] font-poppins-light text-neutral-700 mb-1">
-              Select the genders you’re interested in connecting with.
+              Choose the pronouns that represent you.
             </Text>
 
             <Text className="text-[14px] font-poppins-medium text-[#7454F6] mb-1">
-              You can pick more than one option.
+              You may select more than one option.
             </Text>
 
             <Text className="text-[13px] font-poppins-light text-neutral-500 mb-4">
-              Your choices help personalize your matches.
+              Adding pronouns helps others understand how to address you.
             </Text>
 
-            {/* Glassmorphism card */}
+            {/* Glassmorphic container */}
             <View
               style={{
                 paddingVertical: 10,
@@ -64,10 +63,7 @@ export default function Page() {
               }}
             >
               <CheckboxList
-                options={data.map((item) => ({
-                  id: item.id,
-                  name: item.plural_name || item.name,
-                }))}
+                options={data}
                 onChange={setSelected}
                 initialSelection={selected}
               />

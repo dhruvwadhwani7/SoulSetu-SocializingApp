@@ -1,11 +1,11 @@
 import { PrivateProfile } from "@/api/my-profile/types";
 import { useCovidVaccine } from "@/api/options";
-import { RadioList } from "@/components/radio-list";
-import { StackHeaderV4 } from "@/components/stack-header-v4";
+import { RadioList } from "@/components/shared/radio-list";
+import { StackHeaderV4 } from "@/components/shared/stack-header-v4";
 import { useEdit } from "@/store/edit";
 import { router } from "expo-router";
 import { useState } from "react";
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 
 export default function Page() {
   const { edits, setEdits } = useEdit();

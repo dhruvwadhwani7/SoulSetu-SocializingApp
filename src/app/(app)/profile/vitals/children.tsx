@@ -1,16 +1,16 @@
 import { PrivateProfile } from "@/api/my-profile/types";
 import { useChildren } from "@/api/options";
-import { StackHeaderV4 } from "@/components/stack-header-v4";
+import { StackHeaderV4 } from "@/components/shared/stack-header-v4";
 import { useEdit } from "@/store/edit";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
-  View,
-  Text,
-  Pressable,
   Animated,
   Easing,
+  Pressable,
   StyleSheet,
+  Text,
+  View,
 } from "react-native";
 
 interface OptionType {
@@ -22,7 +22,7 @@ export default function Page() {
   const { edits, setEdits } = useEdit();
   const { data } = useChildren(); // returns OptionType[]
   const [selected, setSelected] = useState<OptionType | null>(
-    edits?.children || null
+    edits?.children || null,
   );
 
   const handlePress = () => {
@@ -110,12 +110,7 @@ interface RadioItemProps {
   isLast: boolean;
 }
 
-const RadioItem = ({
-  option,
-  selected,
-  onPress,
-  isLast,
-}: RadioItemProps) => {
+const RadioItem = ({ option, selected, onPress, isLast }: RadioItemProps) => {
   const scaleAnim = new Animated.Value(1);
 
   const animatePressIn = () => {
@@ -146,12 +141,7 @@ const RadioItem = ({
       >
         <Text style={styles.label}>{option.name}</Text>
 
-        <View
-          style={[
-            styles.outerRing,
-            selected && styles.outerRingSelected,
-          ]}
-        >
+        <View style={[styles.outerRing, selected && styles.outerRingSelected]}>
           {selected && <View style={styles.innerDot} />}
         </View>
       </Pressable>

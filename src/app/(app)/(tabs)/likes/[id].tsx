@@ -1,11 +1,11 @@
 import { useLikes, useMatch, useRemoveLike } from "@/api/profiles";
-import { Fab } from "@/components/fab";
-import { ProfileView } from "@/components/profile-view";
+import { ProfileView } from "@/components/profileView/profile-view";
+import { Fab } from "@/components/shared/fab";
 import { transformPublicProfile } from "@/utils/profile";
 import { Image } from "expo-image";
 import { Redirect, Stack, router, useLocalSearchParams } from "expo-router";
-import { Alert, Modal, Pressable, ScrollView, Text, View } from "react-native";
 import { useState } from "react";
+import { Alert, Modal, Pressable, ScrollView, Text, View } from "react-native";
 
 const Page = () => {
   const { id } = useLocalSearchParams<{ id: string }>();

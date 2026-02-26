@@ -1,5 +1,5 @@
-import { useUpdateDistance } from "@/api/my-profile";
-import { StackHeaderV4 } from "@/components/stack-header-v4";
+import { useUpdateAgeRange } from "@/api/my-profile";
+import { StackHeaderV4 } from "@/components/shared/stack-header-v4";
 import { useEdit } from "@/store/edit";
 import { Slider } from "@miblanchard/react-native-slider";
 import { router } from "expo-router";
@@ -8,13 +8,16 @@ import { Alert, Text, View } from "react-native";
 
 const Page = () => {
   const { edits } = useEdit();
-  const [distance, setDistance] = useState(edits?.max_distance_km || 160);
+  const [ageRange, setAgeRange] = useState([
+    edits?.min_age || 18,
+    edits?.max_age || 100,
+  ]);
 
-  const { mutate, reset } = useUpdateDistance();
+  const { mutate, reset } = useUpdateAgeRange();
 
   const handlePress = () => {
     mutate(
-      { distance },
+      { min_age: ageRange[0], max_age: ageRange[1] },
       {
         onSuccess: () => router.back(),
         onError: () => {
@@ -22,27 +25,29 @@ const Page = () => {
           reset();
           router.back();
         },
-      }
+      },
     );
   };
 
   return (
     <View className="flex-1 bg-white px-5 pt-10">
-      <StackHeaderV4 title="Maximum distance" onPressBack={handlePress} />
+      <StackHeaderV4 title="Age range" onPressBack={handlePress} />
 
-      {/* Instructions */}
+      {/* Instruction Section */}
       <Text className="text-[15px] font-poppins-light text-neutral-600 mt-3">
-        Set how far away you're open to meeting people.
+        Choose the age range of people you're interested in.
       </Text>
-
       <Text className="text-[14px] font-poppins-medium text-neutral-800 mt-1">
-        Drag the slider to adjust your distance preference.
+        Adjust the slider below.
       </Text>
 
-      {/* Selected Value */}
-      <View className="mt-10 mb-6 flex-row justify-center">
-        <Text className="text-3xl font-poppins-semibold text-neutral-700">
-          {distance} km
+      {/* Display selected values */}
+      <View className="mt-10 mb-6 flex-row justify-between px-1">
+        <Text className="text-2xl font-poppins-semibold text-neutral-700">
+          {ageRange[0]}
+        </Text>
+        <Text className="text-2xl font-poppins-semibold text-neutral-700">
+          {ageRange[1]}
         </Text>
       </View>
 
@@ -62,15 +67,15 @@ const Page = () => {
         }}
       >
         <Slider
-          minimumValue={1}
-          maximumValue={160}
+          minimumValue={18}
+          maximumValue={100}
           step={1}
-          value={distance}
-          onValueChange={(value) => setDistance(value[0])}
-          
+          value={ageRange}
+          onValueChange={(value) => setAgeRange(value)}
+          // Lower track
           minimumTrackTintColor="#444"
           maximumTrackTintColor="#D1D1D6"
-
+          // Thumb Styling
           thumbStyle={{
             height: 28,
             width: 28,
@@ -83,8 +88,7 @@ const Page = () => {
             shadowRadius: 6,
             shadowOffset: { width: 0, height: 2 },
           }}
-
-          renderAboveThumbComponent={() => (
+          renderAboveThumbComponent={(_index, value) => (
             <View
               style={{
                 marginBottom: 10,
@@ -95,7 +99,7 @@ const Page = () => {
               }}
             >
               <Text className="text-[13px] text-neutral-700 font-poppins-medium">
-                {distance} km
+                {value}
               </Text>
             </View>
           )}

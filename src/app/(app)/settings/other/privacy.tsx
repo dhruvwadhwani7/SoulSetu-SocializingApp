@@ -1,5 +1,5 @@
+import { StackHeaderV2 } from "@/components/shared/stack-header-v2";
 import { PRIVACY_POLICY } from "@/constants/other";
-import { StackHeaderV2 } from "@/components/stack-header-v2";
 import { ScrollView, Text, View } from "react-native";
 
 export default function Page() {
@@ -9,10 +9,7 @@ export default function Page() {
     <View className="flex-1 bg-white">
       <StackHeaderV2 title="Privacy Policy" />
 
-      <ScrollView
-        className="px-5 pt-4"
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView className="px-5 pt-4" showsVerticalScrollIndicator={false}>
         {lines.map((line, index) => {
           if (line.startsWith("##")) {
             return (

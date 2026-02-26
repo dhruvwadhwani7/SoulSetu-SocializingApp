@@ -1,5 +1,5 @@
+import { StackHeaderV2 } from "@/components/shared/stack-header-v2";
 import { TERMS_AND_CONDITIONS } from "@/constants/other";
-import { StackHeaderV2 } from "@/components/stack-header-v2";
 import { ScrollView, Text, View } from "react-native";
 
 export default function Page() {
@@ -9,10 +9,7 @@ export default function Page() {
     <View className="flex-1 bg-white">
       <StackHeaderV2 title="Terms & Conditions" />
 
-      <ScrollView
-        className="px-5 pt-4"
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView className="px-5 pt-4" showsVerticalScrollIndicator={false}>
         {lines.map((line, index) => {
           if (line.startsWith("##")) {
             return (

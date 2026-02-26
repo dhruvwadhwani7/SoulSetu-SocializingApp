@@ -1,68 +1,59 @@
-import { useUpdateGenderPreferences } from "@/api/my-profile";
+import { PrivateProfile } from "@/api/my-profile/types";
 import { useGenders } from "@/api/options";
-import { CheckboxList } from "@/components/checkbox-list";
-import { StackHeaderV4 } from "@/components/stack-header-v4";
+import { CheckboxList } from "@/components/shared/checkbox-list";
+import { StackHeaderV4 } from "@/components/shared/stack-header-v4";
 import { useEdit } from "@/store/edit";
 import { router } from "expo-router";
 import { useState } from "react";
-import { Alert, View, Text, FlatList } from "react-native";
+import { FlatList, Text, View } from "react-native";
 
 export default function Page() {
-  const { edits } = useEdit();
+  const { edits, setEdits } = useEdit();
   const { data } = useGenders();
-
   const [selected, setSelected] = useState(edits?.gender_preferences || []);
-
-  const { mutate, reset } = useUpdateGenderPreferences();
 
   const handlePress = () => {
     if (selected) {
-      mutate(
-        { genders: selected.map((i) => i.id) },
-        {
-          onSuccess: () => router.back(),
-          onError: () => {
-            Alert.alert("Error", "Something went wrong, please try again later.");
-            reset();
-            router.back();
-          },
-        }
-      );
+      setEdits({
+        ...edits,
+        gender_preferences: selected,
+      } as PrivateProfile);
     }
+    router.back();
   };
 
   return (
     <View className="flex-1 bg-white">
       <StackHeaderV4 title="I'm interested in" onPressBack={handlePress} />
 
-      {/* FIX: no nested lists → FlatList wrapper */}
+      {/* FIX: use FlatList as parent to avoid nested virtualized lists */}
       <FlatList
-        data={[]} // header-only list
+        data={[]} // no list items — everything is inside header
         keyExtractor={() => "header"}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ padding: 20, paddingBottom: 40 }}
+        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 40 }}
         ListHeaderComponent={
           <View>
-            {/* Instruction text */}
+            {/* Instruction Texts */}
             <Text className="text-[15px] font-poppins-light text-neutral-700 mb-1">
-              Choose the genders you are interested in.
+              Select the genders you’re interested in connecting with.
             </Text>
 
             <Text className="text-[14px] font-poppins-medium text-[#7454F6] mb-1">
-              You may select more than one.
+              You can pick more than one option.
             </Text>
 
             <Text className="text-[13px] font-poppins-light text-neutral-500 mb-4">
-              Your preferences help improve your matches.
+              Your choices help personalize your matches.
             </Text>
 
             {/* Glassmorphism card */}
             <View
               style={{
-                paddingVertical: 12,
+                paddingVertical: 10,
                 paddingHorizontal: 14,
                 borderRadius: 20,
-                backgroundColor: "rgba(250,250,255,0.65)",
+                backgroundColor: "rgba(250,250,255,0.7)",
                 borderWidth: 1,
                 borderColor: "rgba(200,180,255,0.35)",
                 shadowColor: "#7454F6",
@@ -81,7 +72,7 @@ export default function Page() {
               />
             </View>
 
-            <View style={{ height: 30 }} />
+            <View style={{ height: 40 }} />
           </View>
         }
       />

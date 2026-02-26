@@ -1,22 +1,22 @@
 import { PrivateProfile } from "@/api/my-profile/types";
-import { useFamilyPlans } from "@/api/options";
-import { RadioList } from "@/components/radio-list";
-import { StackHeaderV4 } from "@/components/stack-header-v4";
+import { usePets } from "@/api/options";
+import { CheckboxList } from "@/components/shared/checkbox-list";
+import { StackHeaderV4 } from "@/components/shared/stack-header-v4";
 import { useEdit } from "@/store/edit";
 import { router } from "expo-router";
 import { useState } from "react";
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 
 export default function Page() {
   const { edits, setEdits } = useEdit();
-  const { data } = useFamilyPlans();
-  const [selected, setSelected] = useState(edits?.family_plan || null);
+  const { data } = usePets();
+  const [selected, setSelected] = useState(edits?.pets || []);
 
   const handlePress = () => {
     if (selected) {
       setEdits({
         ...edits,
-        family_plan: selected,
+        pets: selected,
       } as PrivateProfile);
     }
     router.back();
@@ -24,22 +24,22 @@ export default function Page() {
 
   return (
     <View className="flex-1 bg-white px-5 pt-6">
-      <StackHeaderV4 title="Family Plans" onPressBack={handlePress} />
+      <StackHeaderV4 title="Pets" onPressBack={handlePress} />
 
-      {/* Instruction Texts */}
-      <Text className="text-[15px] font-poppins-regular text-neutral-700 mt-2">
-        Choose your stance on family plans.
+      {/* Instruction Text */}
+      <Text className="text-[15px] font-poppins-light text-neutral-700 mt-2">
+        Select the pets that you own or are comfortable with.
       </Text>
 
       <Text className="text-[14px] font-poppins-medium text-[#7454F6] mt-1">
-        Select the option that represents you.
+        You can choose multiple options.
       </Text>
 
       <Text className="text-[13px] font-poppins-light text-neutral-500 mb-5 mt-1">
-        This helps us better tailor match suggestions.
+        This helps us curate better matches for you.
       </Text>
 
-      {/* Glass Card Style */}
+      {/* Glass Card Styling */}
       <View
         style={{
           paddingVertical: 10,
@@ -55,7 +55,7 @@ export default function Page() {
         }}
       >
         <View style={{ width: "100%" }}>
-          <RadioList
+          <CheckboxList
             options={data}
             onChange={setSelected}
             initialSelection={selected}

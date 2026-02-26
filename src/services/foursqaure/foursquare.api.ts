@@ -14,7 +14,7 @@ export async function fsqSearch(lat: number, lng: number) {
   );
 
   const data = await res.json();
-  console.log("FSQ SEARCH:", data);
+  // console.log("FSQ SEARCH:", data);
 
   if (!res.ok) throw new Error("Foursquare search error");
   return data;
@@ -28,7 +28,7 @@ export async function fsqDetails(id: string) {
   );
 
   const data = await res.json();
-  console.log("FSQ DETAILS:", data);
+  // console.log("FSQ DETAILS:", data);
 
   if (!res.ok) throw new Error("Foursquare details error");
   return data;
@@ -42,7 +42,7 @@ export async function fsqGeotagCandidates(lat: number, lng: number) {
   );
 
   const data = await res.json();
-  console.log("FSQ GEOTAG:", data);
+  // console.log("FSQ GEOTAG:", data);
 
   if (!res.ok) throw new Error("Foursquare geotag error");
   return data;

@@ -1,7 +1,7 @@
 import { Answer, Photo } from "@/types/profile";
 import { FC, ReactNode } from "react";
 import { View } from "react-native";
-import { Fab } from "./fab";
+import { Fab } from "../shared/fab";
 
 interface Props {
   children: ReactNode;

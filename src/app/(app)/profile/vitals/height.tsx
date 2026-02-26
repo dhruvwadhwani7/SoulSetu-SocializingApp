@@ -1,16 +1,16 @@
 import { PrivateProfile } from "@/api/my-profile/types";
-import { StackHeaderV4 } from "@/components/stack-header-v4";
+import { StackHeaderV4 } from "@/components/shared/stack-header-v4";
 import { useEdit } from "@/store/edit";
 import { Picker } from "@react-native-picker/picker";
 import { router } from "expo-router";
 import range from "lodash/range";
 import { useState } from "react";
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 
 export default function Page() {
   const { edits, setEdits } = useEdit();
   const [selectedHeight, setSelectedHeight] = useState(
-    edits?.height_cm || undefined
+    edits?.height_cm || undefined,
   );
 
   const handlePress = () => {
@@ -60,7 +60,7 @@ export default function Page() {
             ))}
           </Picker>
         </View>
-      </View>     
+      </View>
     </View>
   );
 }

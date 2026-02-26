@@ -1,9 +1,8 @@
 import { useSignInWithOtp } from "@/api/auth";
-import { Fab } from "@/components/fab";
-import { StackHeader } from "@/components/stack-header";
+import { Fab } from "@/components/shared/fab";
+import { StackHeader } from "@/components/shared/stack-header";
 import { router, useFocusEffect } from "expo-router";
 import { useMemo, useRef, useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -13,11 +12,11 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import colors from "tailwindcss/colors";
 import CountryPicker, {
   Country,
   CountryCode,
 } from "react-native-country-picker-modal";
+import colors from "tailwindcss/colors";
 
 export default function Page() {
   /* ================= STATE ================= */
@@ -140,7 +139,7 @@ export default function Page() {
             {/* Helper text */}
             <View className="mt-5 px-3 py-2 rounded-xl bg-[#F6F4FF] self-start">
               <Text className="text-xs text-[#7454F6] font-poppins-medium">
-                Tap the country flag to change 
+                Tap the country flag to change
               </Text>
             </View>
           </View>

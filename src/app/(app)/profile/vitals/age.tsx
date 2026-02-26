@@ -1,12 +1,14 @@
 import { PrivateProfile } from "@/api/my-profile/types";
-import { StackHeaderV4 } from "@/components/stack-header-v4";
+import { StackHeaderV4 } from "@/components/shared/stack-header-v4";
 import { useEdit } from "@/store/edit";
 import { age } from "@/utils/age";
-import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
 import { subYears } from "date-fns";
 import { router } from "expo-router";
 import { useState } from "react";
-import { Platform, Text, View, Pressable } from "react-native";
+import { Platform, Pressable, Text, View } from "react-native";
 
 export default function Page() {
   const { edits, setEdits } = useEdit();
@@ -41,9 +43,7 @@ export default function Page() {
         <Text className="text-[44px] font-poppins-semibold text-neutral-900">
           {age(date.toString())}
         </Text>
-        <Text className="text-[13px] text-neutral-500 mt-1">
-          years old
-        </Text>
+        <Text className="text-[13px] text-neutral-500 mt-1">years old</Text>
       </Pressable>
 
       {/* Helper text */}
@@ -55,7 +55,11 @@ export default function Page() {
       {(show || Platform.OS === "ios") && (
         <View
           className="mt-8 rounded-3xl bg-white border border-neutral-200 overflow-hidden"
-          style={{ shadowColor: "#7454F6", shadowOpacity: 0.05, shadowRadius: 8 }}
+          style={{
+            shadowColor: "#7454F6",
+            shadowOpacity: 0.05,
+            shadowRadius: 8,
+          }}
         >
           <DateTimePicker
             value={new Date(date)}
