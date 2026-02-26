@@ -39,6 +39,5 @@ yarn-error.*
 
 app-example
 
-# Ios bundles
 /ios
-
+/android
