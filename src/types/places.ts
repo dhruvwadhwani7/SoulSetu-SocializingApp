@@ -4,4 +4,5 @@ export type Place = {
   category?: string;
   address?: string;
   distance?: number;
+  website?: string;
 };

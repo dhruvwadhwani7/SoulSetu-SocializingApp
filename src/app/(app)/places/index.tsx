@@ -1,11 +1,18 @@
-import { StackHeaderV2 } from "@/components/stack-header-v2";
-import { Ionicons } from "@expo/vector-icons";
-import { View, Text, ScrollView, Pressable } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useMyProfile } from "@/api/my-profile";
-import { useQuery } from "@tanstack/react-query";
-import { fetchPlaces } from "../../../services/places";
+import { StackHeaderV2 } from "@/components/stack-header-v2";
 import { Place } from "@/types/places";
+import { Ionicons } from "@expo/vector-icons";
+import { useQuery } from "@tanstack/react-query";
+import * as WebBrowser from "expo-web-browser";
+import React, { memo, useCallback } from "react";
+import { FlatList, Pressable, Text, View } from "react-native";
+import Animated, {
+  FadeInDown,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from "react-native-reanimated";
+import { fetchPlaces } from "../../../services/places";
 
 export default function PlacesPage() {
   const { data: profile } = useMyProfile();
@@ -17,166 +24,276 @@ export default function PlacesPage() {
     data: places,
     isLoading,
     isError,
+    refetch,
   } = useQuery<Place[]>({
     queryKey: ["places", lat, lng],
     queryFn: () => fetchPlaces(lat!, lng!),
     enabled: !!lat && !!lng,
   });
 
-  return (
-    <View className="flex-1 bg-[#FAFAFA]">
-      <StackHeaderV2 title="Places" />
+  const renderItem = useCallback(
+    ({ item, index }: { item: Place; index: number }) => (
+      <PlaceCard place={item} index={index} />
+    ),
+    [],
+  );
 
-      <View className="absolute -top-20 -right-20 w-72 h-72 bg-[#F1EDFF] opacity-40 blur-3xl" />
-      <View className="absolute bottom-[-80] left-[-80] w-80 h-80 bg-[#F8FAFF] opacity-40 blur-3xl" />
-
-      <ScrollView
-        className="flex-1 px-5 pt-4"
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 120 }}
+  const ListHeader = useCallback(
+    () => (
+      <Animated.View
+        entering={FadeInDown.duration(400)}
+        className="mb-8 px-5 pt-6"
       >
-        <View className="mb-5 mt-1">
-          <Text className="text-[22px] font-poppins-semibold text-[#111]">
-            Perfect Meet Spots
+        <View className="flex-row items-center justify-between mb-1">
+          <Text className="text-[28px] font-poppins-bold text-[#1A1A1A] leading-tight">
+            Perfect Spots
           </Text>
-
-          <View
-            className="mt-3 self-start rounded-full px-4 py-2 flex-row items-center"
-            style={{
-              backgroundColor: "#F5F3FF",
-              shadowColor: "#7454F6",
-              shadowOpacity: 0.15,
-              shadowRadius: 8,
-              elevation: 2,
-            }}
-          >
-            <Ionicons name="location-outline" size={14} color="#6B5CF6" />
-
-            <Text className="ml-1.5 text-[12px] font-poppins-medium text-[#6B5CF6] tracking-wide">
-              {profile?.neighborhood ?? "Your area"}
+          <View className="bg-[#7454F6]/10 px-3 py-1.5 rounded-2xl flex-row items-center">
+            <View className="w-1.5 h-1.5 rounded-full bg-[#7454F6] mr-2" />
+            <Text className="text-[11px] font-poppins-bold text-[#7454F6] uppercase tracking-[0.5px]">
+              LIVE
             </Text>
           </View>
         </View>
+        <Text className="text-[14px] font-poppins-medium text-neutral-400">
+          Handpicked locations near you
+        </Text>
 
-        {isLoading && (
-          <CenteredState
-            icon="location-outline"
-            title="Finding places"
-            subtitle="Looking for great spots around you…"
-          />
-        )}
+        <LocationTag neighborhood={profile?.neighborhood} />
+      </Animated.View>
+    ),
+    [profile?.neighborhood],
+  );
 
-        {isError && (
-          <CenteredState
-            icon="alert-circle-outline"
-            title="Couldn’t load places"
-            subtitle="Please try again in a moment."
-          />
-        )}
+  return (
+    <View className="flex-1 bg-[#FDFDFF]">
+      <StackHeaderV2 title="Explore Spots" />
 
-        {!isLoading && !isError && places?.length === 0 && (
-          <CenteredState
-            icon="location-outline"
-            title="No places nearby"
-            subtitle="Try exploring a different area."
-          />
-        )}
+      {/* Optimized Decorative Background Elements (Removed Blur Filter) */}
+      <View
+        className="absolute -top-10 -right-20 w-80 h-80 bg-[#7454F6] opacity-[0.05]"
+        style={{ borderRadius: 160 }}
+      />
+      <View
+        className="absolute top-1/3 -left-20 w-72 h-72 bg-[#439CFF] opacity-[0.03]"
+        style={{ borderRadius: 144 }}
+      />
+      <View
+        className="absolute bottom-[-10] right-[-10] w-64 h-64 bg-[#FF6B6B] opacity-[0.03]"
+        style={{ borderRadius: 128 }}
+      />
 
-
-        {!isLoading &&
-          !isError &&
-          places?.map((place) => (
-            <Pressable
-              key={place.id}
-              className="mb-4"
-              style={({ pressed }) => ({
-                transform: [{ scale: pressed ? 0.98 : 1 }],
-                opacity: pressed ? 0.95 : 1,
-              })}
-            >
-              <View
-                className="
-                  bg-white
-                  rounded-3xl
-                  border border-neutral-200
-                  px-5 py-5
-                "
-                style={{
-                  shadowColor: "#000",
-                  shadowOpacity: 0.05,
-                  shadowRadius: 14,
-                  elevation: 3,
-                }}
-              >
-                {/* Top row */}
-                <View className="flex-row items-start justify-between">
-                  <View className="flex-1 pr-3">
-                    <Text className="text-[16px] font-poppins-semibold text-[#111]">
-                      {place.name}
-                    </Text>
-
-                    {place.category && (
-                      <Text className="text-[12px] text-[#7454F6] mt-1 tracking-wide">
-                        {place.category}
-                      </Text>
-                    )}
-                  </View>
-
-                  <View className="h-10 w-10 rounded-full bg-[#F1EDFF] items-center justify-center">
-                    <Ionicons
-                      name="location-outline"
-                      size={18}
-                      color="#5A3FE3"
-                    />
-                  </View>
-                </View>
-
-                {/* Address */}
-                {place.address && (
-                  <Text className="text-[13px] text-neutral-500 mt-3 leading-relaxed">
-                    {place.address}
-                  </Text>
-                )}
-
-                {/* Distance */}
-                {place.distance && (
-                  <View className="mt-4 self-start rounded-full bg-[#F5F3FF] px-3 py-1">
-                    <Text className="text-[12px] text-[#6B5CF6] tracking-wide">
-                      {(place.distance / 1000).toFixed(1)} km away
-                    </Text>
-                  </View>
-                )}
-              </View>
-            </Pressable>
-          ))}
-      </ScrollView>
+      <FlatList
+        data={places}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+        ListHeaderComponent={ListHeader}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 100 }}
+        ListEmptyComponent={
+          isLoading ? (
+            <CenteredState
+              icon="location-outline"
+              title="Finding places"
+              subtitle="Curating the best spots around you…"
+            />
+          ) : isError ? (
+            <CenteredState
+              icon="alert-circle-outline"
+              title="Couldn’t load places"
+              subtitle="We encountered a minor glitch. Please try again."
+              onRetry={refetch}
+            />
+          ) : (
+            <CenteredState
+              icon="map-outline"
+              title="No places nearby"
+              subtitle="We couldn't find any spots in this specific area yet."
+            />
+          )
+        }
+      />
     </View>
   );
 }
 
+function LocationTag({ neighborhood }: { neighborhood?: string }) {
+  return (
+    <View className="mt-4 flex-row items-center">
+      <Ionicons name="location" size={16} color="#7454F6" />
+      <Text className="text-[15px] font-poppins-semibold text-[#1A1A1A] ml-2">
+        {neighborhood ?? "Discovery Mode"}
+      </Text>
+    </View>
+  );
+}
+
+const PlaceCard = memo(function PlaceCard({
+  place,
+  index,
+}: {
+  place: Place;
+  index: number;
+}) {
+  const pressed = useSharedValue(0);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        scale: withSpring(pressed.value ? 0.98 : 1, {
+          damping: 15,
+          stiffness: 150,
+        }),
+      },
+    ],
+    backgroundColor: withSpring(pressed.value ? "#FDFDFF" : "#FFFFFF"),
+  }));
+
+  const handlePress = async () => {
+    if (place.website) {
+      await WebBrowser.openBrowserAsync(place.website, {
+        readerMode: false,
+        dismissButtonStyle: "close",
+        enableBarCollapsing: true,
+      });
+    }
+  };
+
+  return (
+    <Animated.View
+      entering={FadeInDown.delay(index * 60).duration(400)}
+      className="mb-5 px-5"
+    >
+      <Pressable
+        onPressIn={() => (pressed.value = 1)}
+        onPressOut={() => (pressed.value = 0)}
+        onPress={handlePress}
+      >
+        <Animated.View
+          style={[
+            animatedStyle,
+            {
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 8 },
+              shadowOpacity: 0.04,
+              shadowRadius: 16,
+              elevation: 4,
+            },
+          ]}
+          className="rounded-[32px] border border-[#F0F0F5] overflow-hidden"
+        >
+          <View className="px-6 pt-6 pb-5">
+            <View className="flex-row justify-between items-start mb-4">
+              <View className="flex-1">
+                {place.category && (
+                  <View className="bg-[#7454F6]/10 self-start px-2 py-0.5 rounded-lg mb-2">
+                    <Text className="text-[10px] font-poppins-bold text-[#7454F6] uppercase tracking-[0.5px]">
+                      {place.category}
+                    </Text>
+                  </View>
+                )}
+                <Text className="text-[18px] font-poppins-bold text-[#1A1A1A] leading-tight">
+                  {place.name}
+                </Text>
+              </View>
+
+              <View className="h-10 w-10 rounded-xl bg-[#F8F7FF] items-center justify-center border border-[#EEEBFF]">
+                <Ionicons
+                  name={place.website ? "globe-outline" : "chevron-forward"}
+                  size={18}
+                  color="#7454F6"
+                />
+              </View>
+            </View>
+
+            {place.address && (
+              <View className="flex-row items-start mb-5">
+                <Ionicons
+                  name="map-outline"
+                  size={12}
+                  color="#A0A0A0"
+                  style={{ marginTop: 2 }}
+                />
+                <Text
+                  className="text-[12px] font-poppins-medium text-neutral-400 flex-1 ml-2 leading-[18px]"
+                  numberOfLines={2}
+                >
+                  {place.address}
+                </Text>
+              </View>
+            )}
+
+            <View className="flex-row items-center justify-between">
+              <View className="flex-row items-center">
+                <View className="bg-[#10B981] w-1.5 h-1.5 rounded-full mr-2" />
+                <Text className="text-[11px] font-poppins-bold text-neutral-500">
+                  Highly Rated
+                </Text>
+              </View>
+
+              {place.distance && (
+                <View className="flex-row items-center bg-[#F8F7FF] px-2.5 py-1 rounded-lg">
+                  <Ionicons name="navigate-outline" size={10} color="#7454F6" />
+                  <Text className="text-[11px] font-poppins-bold text-[#7454F6] ml-1.5">
+                    {(place.distance / 1000).toFixed(1)} km
+                  </Text>
+                </View>
+              )}
+            </View>
+          </View>
+
+          {place.website && (
+            <View className="bg-[#7454F6] py-2.5 items-center flex-row justify-center">
+              <Text className="text-white text-[11px] font-poppins-bold tracking-wide mr-2">
+                VISIT WEBSITE
+              </Text>
+              <Ionicons name="arrow-forward" size={10} color="white" />
+            </View>
+          )}
+        </Animated.View>
+      </Pressable>
+    </Animated.View>
+  );
+});
 
 function CenteredState({
   icon,
   title,
   subtitle,
+  onRetry,
 }: {
   icon: keyof typeof Ionicons.glyphMap;
   title: string;
   subtitle: string;
+  onRetry?: () => void;
 }) {
   return (
-    <View className="items-center justify-center mt-24 px-8">
-      <View className="w-16 h-16 rounded-full bg-[#F1EDFF] items-center justify-center">
-        <Ionicons name={icon} size={26} color="#7454F6" />
+    <Animated.View
+      entering={FadeInDown.duration(600)}
+      className="items-center justify-center mt-20 px-10"
+    >
+      <View className="w-20 h-20 rounded-[32px] bg-[#F8F7FF] items-center justify-center mb-5 border border-[#EEEBFF]">
+        <Ionicons name={icon} size={32} color="#7454F6" />
       </View>
 
-      <Text className="text-[16px] font-poppins-semibold text-[#111] mt-5 text-center">
+      <Text className="text-[18px] font-poppins-bold text-[#1A1A1A] mb-1.5 text-center">
         {title}
       </Text>
 
-      <Text className="text-[13px] text-neutral-500 mt-1 text-center leading-relaxed">
+      <Text className="text-[13px] font-poppins-medium text-neutral-400 text-center leading-[20px] mb-6">
         {subtitle}
       </Text>
-    </View>
+
+      {onRetry && (
+        <Pressable
+          onPress={onRetry}
+          className="bg-[#7454F6] px-6 py-3 rounded-xl shadow-lg shadow-[#7454F6]/20"
+        >
+          <Text className="text-white font-poppins-bold text-[14px]">
+            Try Again
+          </Text>
+        </Pressable>
+      )}
+    </Animated.View>
   );
 }
