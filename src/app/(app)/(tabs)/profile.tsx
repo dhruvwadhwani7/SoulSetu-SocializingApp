@@ -164,6 +164,24 @@ export default function Page() {
               My QR
             </Text>
           </Pressable>
+
+          <Pressable
+            onPress={() => router.push("/(app)/places")}
+            className="items-center"
+          >
+            <View className="w-16 h-16 rounded-full bg-white items-center justify-center shadow"
+            style={{
+                shadowColor: "#000",
+                shadowOpacity: 0.08,
+                shadowRadius: 8,
+                elevation: 4,
+              }}>
+              <Ionicons name="location-outline" size={26} color="#7454F6" />
+            </View>
+            <Text className="mt-2 text-sm text-neutral-700 font-poppins-medium">
+              Places
+            </Text>
+          </Pressable>
         </View>
 
         {/* ===== PROFILE DETAILS ===== */}
@@ -413,7 +431,7 @@ export default function Page() {
                     {label}
                   </Text>
                 </View>
-              )
+              ),
             )}
           </View>
         </View>
