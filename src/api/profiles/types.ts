@@ -24,6 +24,13 @@ export interface PublicProfile {
   zodiac_sign: string;
   neighborhood: string;
   covid_vaccine: string;
+  spotify_show_on_profile?: boolean;
+  spotify_top_artists?: {
+    id: string;
+    name: string;
+    image?: string;
+  }[];
+  spotify_genres?: string[];
 }
 
 export interface Answer {

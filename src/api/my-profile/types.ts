@@ -25,6 +25,15 @@ export interface PrivateProfile {
   answers: Answer[];
   photos: Photo[];
   avatar_url: string;
+  spotify_connected?: boolean;
+  spotify_show_on_profile?: boolean;
+  spotify_user_id?: string;
+  spotify_top_artists?: {
+    id: string;
+    name: string;
+    image?: string;
+  }[];
+  spotify_genres?: string[];
 }
 
 export interface Photo {

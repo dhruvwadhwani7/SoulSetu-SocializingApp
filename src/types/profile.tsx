@@ -4,6 +4,17 @@ export interface Profile {
   photos: Photo[];
   answers: Answer[];
   traits: Trait[];
+
+  /** Spotify */
+  spotify_connected?: boolean;
+  spotify_show_on_profile?: boolean;
+  spotify_top_artists?: SpotifyArtist[];
+}
+
+export interface SpotifyArtist {
+  id: string;
+  name: string;
+  image?: string;
 }
 
 export interface Trait {

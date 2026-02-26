@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { useState } from "react";
 import { router } from "expo-router";
+import { toggleSpotifyVisibility } from "@/services/spotify/spotify.supabase";
 
 const Page = () => {
   const { data: profile } = useMyProfile();
@@ -20,12 +21,35 @@ const Page = () => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+  const [spotifyVisible, setSpotifyVisible] = useState(
+    profile?.spotify_show_on_profile ?? false,
+  );
+
+  const toggleSpotify = async () => {
+    const newValue = !spotifyVisible;
+    setSpotifyVisible(newValue);
+    await toggleSpotifyVisibility(profile!.id, newValue);
+  };
+
   return (
     <View className="flex-1 bg-[#FAFAFA]">
       <StackHeaderV2 title="Settings" />
 
       {/* Ambient glow */}
       <View className="absolute -top-20 -right-20 w-72 h-72 bg-[#F1EDFF] opacity-40 blur-3xl" />
+
+      <Pressable
+        onPress={toggleSpotify}
+        className="flex-row items-center justify-between py-4"
+      >
+        <Text className="text-[15px]">Show Spotify on profile</Text>
+
+        <View
+          className={`w-12 h-7 rounded-full ${
+            spotifyVisible ? "bg-[#1DB954]" : "bg-neutral-300"
+          }`}
+        />
+      </Pressable>
 
       <ScrollView
         className="flex-1 px-5 pt-4"

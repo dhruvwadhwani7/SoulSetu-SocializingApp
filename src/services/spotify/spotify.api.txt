@@ -1,0 +1,78 @@
+const SPOTIFY_CLIENT_ID = process.env.EXPO_PUBLIC_SPOTIFY_CLIENT_ID!;
+const REDIRECT_URI = process.env.EXPO_PUBLIC_SPOTIFY_REDIRECT_URI!;
+
+console.log("Spotify file loaded");
+
+/** Spotify auth URL */
+export function getSpotifyAuthUrl(state: string) {
+  const scope = [
+    "user-read-email",
+    "user-top-read",
+  ].join(" ");
+   console.log("getSpotifyAuthUrl called");
+  console.log("REDIRECT_URI:", REDIRECT_URI);
+
+  const params = new URLSearchParams({
+    response_type: "code",
+    client_id: SPOTIFY_CLIENT_ID,
+    scope,
+    redirect_uri: REDIRECT_URI,
+    state,
+  });
+
+  return `https://accounts.spotify.com/authorize?${params.toString()}`;
+}
+
+/** Exchange code for tokens (via your backend or edge function) */
+export async function exchangeSpotifyCode(code: string) {
+  const res = await fetch(
+    `${process.env.EXPO_PUBLIC_API_URL}/spotify/token`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code }),
+    }
+  );
+
+  if (!res.ok) throw new Error("Spotify token error");
+  return res.json();
+}
+
+/** Fetch user top artists */
+export async function fetchSpotifyTopArtists(
+  accessToken: string
+) {
+  const res = await fetch(
+    "https://api.spotify.com/v1/me/top/artists?limit=5",
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
+  if (!res.ok) throw new Error("Spotify artists error");
+
+  const data = await res.json();
+
+  return data.items.map((a: any) => ({
+    id: a.id,
+    name: a.name,
+    image: a.images?.[0]?.url,
+  }));
+}
+
+/** Fetch genres */
+export async function fetchSpotifyGenres(
+  accessToken: string
+) {
+  const artists = await fetchSpotifyTopArtists(accessToken);
+
+  const genres: string[] = [];
+
+  artists.forEach((a: any) => {
+    if (a.genres) genres.push(...a.genres);
+  });
+
+  return [...new Set(genres)];
+}

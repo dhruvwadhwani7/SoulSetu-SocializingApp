@@ -79,6 +79,7 @@ export const transformPrivateProfile = (profile: PrivateProfile): Profile => {
     first_name: profile.first_name,
     photos: profile.photos,
     answers: profile.answers,
+
     traits: traitsMapping.map((trait) => {
       const label = trait.privateLabel(profile);
       return {
@@ -87,6 +88,16 @@ export const transformPrivateProfile = (profile: PrivateProfile): Profile => {
         label: label || null,
       };
     }),
+
+    /** Spotify */
+    spotify_connected: profile.spotify_connected ?? false,
+    spotify_show_on_profile: profile.spotify_show_on_profile ?? false,
+    spotify_top_artists:
+      profile.spotify_top_artists?.map((a) => ({
+        id: a.id,
+        name: a.name,
+        image: a.image,
+      })) ?? [],
   };
 };
 
@@ -102,6 +113,7 @@ export const transformPublicProfile = (
     first_name: profile.first_name,
     photos: profile.photos ?? [],
     answers: profile.answers ?? [],
+
     traits: traitsMapping.map((trait) => {
       const label = trait.publicLabel(profile);
       return {
@@ -110,6 +122,17 @@ export const transformPublicProfile = (
         label: label || null,
       };
     }),
+
+    /** Spotify */
+    spotify_connected: (profile as any).spotify_connected ?? false,
+    spotify_show_on_profile:
+      (profile as any).spotify_show_on_profile ?? false,
+    spotify_top_artists:
+      ((profile as any).spotify_top_artists as any[])?.map((a) => ({
+        id: a.id,
+        name: a.name,
+        image: a.image,
+      })) ?? [],
   };
 };
 

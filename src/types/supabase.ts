@@ -453,6 +453,14 @@ export type Database = {
           neighborhood: string | null
           phone: string | null
           sexuality_id: number | null
+          spotify_access_token: string | null
+          spotify_connected: boolean | null
+          spotify_genres: string[] | null
+          spotify_refresh_token: string | null
+          spotify_show_on_profile: boolean | null
+          spotify_top_artists: Json | null
+          spotify_top_tracks: Json | null
+          spotify_user_id: string | null
           updated_at: string
           user_id: string | null
           zodiac_sign_id: number | null
@@ -478,6 +486,14 @@ export type Database = {
           neighborhood?: string | null
           phone?: string | null
           sexuality_id?: number | null
+          spotify_access_token?: string | null
+          spotify_connected?: boolean | null
+          spotify_genres?: string[] | null
+          spotify_refresh_token?: string | null
+          spotify_show_on_profile?: boolean | null
+          spotify_top_artists?: Json | null
+          spotify_top_tracks?: Json | null
+          spotify_user_id?: string | null
           updated_at?: string
           user_id?: string | null
           zodiac_sign_id?: number | null
@@ -503,6 +519,14 @@ export type Database = {
           neighborhood?: string | null
           phone?: string | null
           sexuality_id?: number | null
+          spotify_access_token?: string | null
+          spotify_connected?: boolean | null
+          spotify_genres?: string[] | null
+          spotify_refresh_token?: string | null
+          spotify_show_on_profile?: boolean | null
+          spotify_top_artists?: Json | null
+          spotify_top_tracks?: Json | null
+          spotify_user_id?: string | null
           updated_at?: string
           user_id?: string | null
           zodiac_sign_id?: number | null
@@ -584,6 +608,73 @@ export type Database = {
           name?: string
         }
         Relationships: []
+      }
+      proximity_events: {
+        Row: {
+          expires_at: string | null
+          id: string
+          resolved_at: string | null
+          resolver_profile_id: string
+          token: string
+        }
+        Insert: {
+          expires_at?: string | null
+          id?: string
+          resolved_at?: string | null
+          resolver_profile_id: string
+          token: string
+        }
+        Update: {
+          expires_at?: string | null
+          id?: string
+          resolved_at?: string | null
+          resolver_profile_id?: string
+          token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "proximity_events_resolver_profile_id_fkey"
+            columns: ["resolver_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      proximity_sessions: {
+        Row: {
+          created_at: string | null
+          expires_at: string
+          id: string
+          is_active: boolean | null
+          profile_id: string
+          session_token: string
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at: string
+          id?: string
+          is_active?: boolean | null
+          profile_id: string
+          session_token: string
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string
+          id?: string
+          is_active?: boolean | null
+          profile_id?: string
+          session_token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "proximity_sessions_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       sexualities: {
         Row: {
@@ -1039,6 +1130,10 @@ export type Database = {
         Args: { answer?: string; photo?: string; profile: string }
         Returns: string
       }
+      like_via_proximity: {
+        Args: { p_target_profile: string }
+        Returns: undefined
+      }
       longtransactionsenabled: { Args: never; Returns: boolean }
       match: { Args: { interaction: string }; Returns: undefined }
       populate_geometry_columns:
@@ -1082,6 +1177,15 @@ export type Database = {
       postgis_version: { Args: never; Returns: string }
       postgis_wagyu_version: { Args: never; Returns: string }
       remove_like: { Args: { interaction: string }; Returns: undefined }
+      resolve_proximity_session: {
+        Args: { p_session_token_prefix: string }
+        Returns: {
+          age: number
+          first_name: string
+          photo_url: string
+          profile_id: string
+        }[]
+      }
       review_profiles: { Args: never; Returns: undefined }
       skip_profile: { Args: { profile: string }; Returns: string }
       st_3dclosestpoint: {
@@ -1664,6 +1768,13 @@ export type Database = {
       st_wrapx: {
         Args: { geom: unknown; move: number; wrap: number }
         Returns: unknown
+      }
+      start_proximity_session: {
+        Args: never
+        Returns: {
+          expires_at: string
+          session_token: string
+        }[]
       }
       unlockrows: { Args: { "": string }; Returns: number }
       unmatch: { Args: { interaction: string }; Returns: undefined }

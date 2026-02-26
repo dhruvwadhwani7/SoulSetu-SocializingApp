@@ -5,6 +5,7 @@ import { ProfileAnswer } from "./profile-answer";
 import { ProfileItem } from "./profile-item";
 import { ProfilePhoto } from "./profile-photo";
 import { ProfileTraits } from "./profile-traits";
+import { ProfileSpotify } from "./profile-spotify";
 
 interface Props {
   profile: Profile;
@@ -38,7 +39,19 @@ export const ProfileView: FC<Props> = ({ profile, myProfile, onLike }) => {
         elements.push(
           <View key={`traits_${i}`} style={{ paddingHorizontal: 6 }}>
             <ProfileTraits profile={profile} />
-          </View>
+          </View>,
+        );
+      }
+
+      if (
+        item === "traits" &&
+        profile.spotify_show_on_profile &&
+        profile.spotify_top_artists?.length
+      ) {
+        elements.push(
+          <View key={`spotify_${i}`} style={{ paddingHorizontal: 6 }}>
+            <ProfileSpotify artists={profile.spotify_top_artists} />
+          </View>,
         );
       }
 
@@ -49,7 +62,7 @@ export const ProfileView: FC<Props> = ({ profile, myProfile, onLike }) => {
             <ProfileItem onLike={onLike} item={photo} type="photo">
               <ProfilePhoto photo={photo} />
             </ProfileItem>
-          </View>
+          </View>,
         );
       }
 
@@ -60,7 +73,7 @@ export const ProfileView: FC<Props> = ({ profile, myProfile, onLike }) => {
             <ProfileItem onLike={onLike} item={answer} type="answer">
               <ProfileAnswer answer={answer} />
             </ProfileItem>
-          </View>
+          </View>,
         );
       }
     });

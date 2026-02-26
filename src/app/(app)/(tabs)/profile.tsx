@@ -5,11 +5,14 @@ import { Image } from "expo-image";
 import { Link, router, Stack } from "expo-router";
 import { Pressable, Text, View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useConnectSpotify } from "@/hooks/useConnectSpotify";
 
 /* ================= PAGE ================= */
 
 export default function Page() {
   const { data: profile } = useMyProfile();
+
+  const { connect, connected } = useConnectSpotify();
 
   /** ✅ Stable random background image */
   const heroBackground = useMemo(() => {
@@ -182,6 +185,44 @@ export default function Page() {
               Places
             </Text>
           </Pressable>
+        </View>
+
+        <View className="px-6 mt-6">
+          {!connected && (
+            <Pressable
+              onPress={connect}
+              className="rounded-2xl px-5 py-4 bg-[#1DB954]"
+              style={{
+                shadowColor: "#1DB954",
+                shadowOpacity: 0.35,
+                shadowRadius: 14,
+                elevation: 6,
+              }}
+            >
+              <Text className="text-white text-center font-poppins-semibold">
+                Connect Spotify
+              </Text>
+            </Pressable>
+          )}
+
+          {connected && (
+            <View
+              className="rounded-2xl px-5 py-4 bg-[#E8F8EE] border border-[#B7E4C7]"
+              style={{
+                shadowColor: "#1DB954",
+                shadowOpacity: 0.18,
+                shadowRadius: 10,
+                elevation: 3,
+              }}
+            >
+              <View className="flex-row items-center justify-center gap-2">
+                <Ionicons name="musical-notes" size={18} color="#1DB954" />
+                <Text className="text-[#1DB954] font-poppins-semibold">
+                  Spotify Connected
+                </Text>
+              </View>
+            </View>
+          )}
         </View>
 
         {/* ===== PROFILE DETAILS ===== */}
