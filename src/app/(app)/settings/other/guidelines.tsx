@@ -1,5 +1,5 @@
+import { StackHeaderV2 } from "@/components/shared/stack-header-v2";
 import { COMMUNITY_GUIDELINES } from "@/constants/other";
-import { StackHeaderV2 } from "@/components/stack-header-v2";
 import { ScrollView, Text, View } from "react-native";
 
 export default function Page() {
@@ -10,10 +10,7 @@ export default function Page() {
     <View className="flex-1 bg-white">
       <StackHeaderV2 title="Community Guidelines" />
 
-      <ScrollView
-        className="px-5 pt-4"
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView className="px-5 pt-4" showsVerticalScrollIndicator={false}>
         {lines.map((line, index) => {
           // TITLE (## ...)
           if (line.startsWith("##")) {

@@ -1,11 +1,10 @@
 import { useMyProfile, useUpdateProfile } from "@/api/my-profile";
-import { StackHeaderV3 } from "@/components/stack-header-v3";
+import { StackHeaderV3 } from "@/components/shared/stack-header-v3";
 import { MaterialTopTabs } from "@/layouts/material-top-tabs";
 import { useEdit } from "@/store/edit";
 import { router, Stack } from "expo-router";
 import { isEqual } from "lodash";
 import { Alert } from "react-native";
-import colors from "tailwindcss/colors";
 
 export default function Layout() {
   const { data: profile } = useMyProfile();
@@ -30,7 +29,7 @@ export default function Layout() {
             router.dismiss();
           },
         },
-      ]
+      ],
     );
   };
 
@@ -87,7 +86,7 @@ export default function Layout() {
         screenOptions={{
           tabBarIndicatorStyle: {
             backgroundColor: "#5A3FE3", // refined purple
-            height: 2.5,                // thin iOS underline
+            height: 2.5, // thin iOS underline
             borderRadius: 10,
           },
           tabBarStyle: {

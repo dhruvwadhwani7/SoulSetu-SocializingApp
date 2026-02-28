@@ -1,20 +1,15 @@
-import { useLocalSearchParams, Stack, router } from "expo-router";
-import { View, Alert, Text, Pressable } from "react-native";
+import { useLikeProfile, useProfileById, useSkipProfile } from "@/api/profiles";
+import { ProfileView } from "@/components/profileView/profile-view";
+import { Fab } from "@/components/shared/fab";
+import { Loader } from "@/components/shared/loader";
 import { transformPublicProfile } from "@/utils/profile";
-import { ProfileView } from "@/components/profile-view";
-import { Loader } from "@/components/loader";
-import { Fab } from "@/components/fab";
-import {
-  useLikeProfile,
-  useSkipProfile,
-  useProfileById,
-} from "@/api/profiles";
 import { Ionicons } from "@expo/vector-icons";
+import { Stack, router, useLocalSearchParams } from "expo-router";
+import { Alert, Pressable, Text, View } from "react-native";
 
 export default function ScannedProfilePage() {
   const params = useLocalSearchParams();
-  const profileId =
-    typeof params.id === "string" ? params.id : undefined;
+  const profileId = typeof params.id === "string" ? params.id : undefined;
 
   const { data, isLoading } = useProfileById(profileId);
   const { mutate: like } = useLikeProfile();
@@ -24,7 +19,6 @@ export default function ScannedProfilePage() {
   if (!data) return null;
 
   const profile = transformPublicProfile(data);
-
 
   const handleLike = (itemId: string, type: "answer" | "photo") => {
     like(
@@ -43,20 +37,16 @@ export default function ScannedProfilePage() {
                 text: "OK",
                 onPress: () => router.replace("/(app)/(tabs)/profile"),
               },
-            ]
+            ],
           );
         },
         onError: () => {
-          Alert.alert(
-            "Error",
-            "Something went wrong while sending the like."
-          );
+          Alert.alert("Error", "Something went wrong while sending the like.");
         },
-      }
+      },
     );
   };
 
-  
   const handleSkip = () => {
     Alert.alert(
       "Skip Profile?",
@@ -71,7 +61,7 @@ export default function ScannedProfilePage() {
           style: "destructive",
           onPress: () => router.replace("/(app)/(tabs)/profile"),
         },
-      ]
+      ],
     );
   };
 
@@ -116,10 +106,7 @@ export default function ScannedProfilePage() {
 
       {/* ================= PROFILE CONTENT ================= */}
       <View className="flex-1 px-5 pt-2">
-        <ProfileView
-          profile={profile}
-          onLike={handleLike}
-        />
+        <ProfileView profile={profile} onLike={handleLike} />
       </View>
 
       {/* ================= SKIP FAB ================= */}

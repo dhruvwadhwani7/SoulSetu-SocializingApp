@@ -1,13 +1,12 @@
 import { useMyProfile } from "@/api/my-profile";
-import QRCode from "react-native-qrcode-svg";
-import { Stack } from "expo-router";
-import { StackHeaderV2 } from "@/components/stack-header-v2";
-import { View, Text, Image, Pressable, Alert } from "react-native";
-import ViewShot, { captureRef } from "react-native-view-shot";
-import * as Sharing from "expo-sharing";
+import { StackHeaderV2 } from "@/components/shared/stack-header-v2";
 import * as MediaLibrary from "expo-media-library";
-import { LinearGradient } from "expo-linear-gradient";
+import { Stack } from "expo-router";
+import * as Sharing from "expo-sharing";
 import { useRef } from "react";
+import { Alert, Image, Pressable, Text, View } from "react-native";
+import QRCode from "react-native-qrcode-svg";
+import ViewShot, { captureRef } from "react-native-view-shot";
 
 export default function MyQRPage() {
   const { data: profile } = useMyProfile();

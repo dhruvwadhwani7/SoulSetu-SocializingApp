@@ -1,5 +1,5 @@
-import { List } from "@/components/list";
-import { StackHeaderV2 } from "@/components/stack-header-v2";
+import { List } from "@/components/shared/list";
+import { StackHeaderV2 } from "@/components/shared/stack-header-v2";
 import { useEdit } from "@/store/edit";
 import { memberPreferences } from "@/utils/preferences";
 import { Text, View } from "react-native";
