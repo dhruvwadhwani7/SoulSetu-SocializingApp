@@ -1,8 +1,9 @@
 import { useVerifyOtp } from "@/api/auth";
+import { useMyProfile } from "@/api/my-profile";
 import { Fab } from "@/components/shared/fab";
 import { StackHeader } from "@/components/shared/stack-header";
 import * as Haptics from "expo-haptics";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams , router} from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Animated,
@@ -25,6 +26,7 @@ export default function Page() {
 
   const blinkAnim = useRef(new Animated.Value(1)).current;
   const loopRef = useRef<Animated.CompositeAnimation | null>(null);
+  const { refetch } = useMyProfile()
 
   const { phone } = useLocalSearchParams<{ phone: string }>();
 
@@ -60,8 +62,15 @@ export default function Page() {
     verifyOtp(
       { phone, token },
       {
-        onSuccess: () => {
+        onSuccess: async  () => {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+
+           const { data: profile } = await refetch()
+           if (!profile?.first_name) {
+              router.replace("/(app)/onboarding")
+            } else {
+              router.replace("/(app)/(tabs)")
+            }
         },
         onError: () => {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
