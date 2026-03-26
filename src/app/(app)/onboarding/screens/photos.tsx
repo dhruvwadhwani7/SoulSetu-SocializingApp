@@ -1,52 +1,81 @@
 import { View, Text } from "react-native";
+
 import { useMemo } from "react";
 
 import { useEdit } from "@/store/edit";
 
-import { PhotoGrid } from "@/components/profileView/photo-grid";
-import { StepFooter, StepHeader, StepLayout } from "@/components/onboarding";
+import {
 
-export default function Page() {
+  StepFooter,
+  StepHeader,
+  StepLayout,
+
+} from "@/components/onboarding";
+import { OnboardingPhotoGrid } from "../components/OnboardingPhotoGrid";
+
+
+export default function Page(){
+
   const { edits } = useEdit();
 
-  const photoCount = useMemo(() => {
-    if (!edits?.photos) return 0;
+  const photoCount = useMemo(
 
-    return edits.photos.filter(Boolean).length;
-  }, [edits?.photos]);
+    () => edits?.photos?.length ?? 0,
 
-  const isValid = photoCount >= 3;
+    [edits?.photos]
 
-  return (
+  );
+
+  const hasMinimumPhotos = photoCount >= 3;
+
+  return(
+
     <StepLayout
-      header={
-        <StepHeader
-          stepName="photos"
-          title="Add Photos"
-          subtitle="Upload at least 3 photos"
-        />
-      }
-      footer={
-        <StepFooter
-          nextRoute="/(app)/onboarding/prompts"
-          showSkip={false}
-          disabled={!isValid}
-        />
-      }
-    >
-      <View className="mt-4">
-        <PhotoGrid profile={edits} />
 
-        <Text className="text-neutral-500 text-sm mt-3">
+      header={
+
+        <StepHeader
+
+          stepName="photos"
+
+          title="Add your photos"
+
+          subtitle="Upload at least 3 photos"
+
+        />
+
+      }
+
+      footer={
+
+        <StepFooter
+
+          nextRoute="/(app)/onboarding/screens/profile-preview"
+
+          showSkip={false}
+
+          disabled={!hasMinimumPhotos}
+
+        />
+
+      }
+
+    >
+
+      <View className="pt-2 pb-28">
+
+        <OnboardingPhotoGrid />
+
+        <Text className="text-neutral-500 text-sm mt-4">
+
           {photoCount}/3 photos added
+
         </Text>
 
-        {!isValid && (
-          <Text className="text-red-500 text-xs mt-2">
-            Minimum 3 photos required
-          </Text>
-        )}
       </View>
+
     </StepLayout>
+
   );
+
 }

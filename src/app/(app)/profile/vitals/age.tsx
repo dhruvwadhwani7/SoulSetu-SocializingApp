@@ -1,7 +1,7 @@
 import { PrivateProfile } from "@/api/my-profile/types";
 import { StackHeaderV4 } from "@/components/shared/stack-header-v4";
 import { useEdit } from "@/store/edit";
-import { age } from "@/utils/age";
+import { age } from "@/utils/profile/age";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";

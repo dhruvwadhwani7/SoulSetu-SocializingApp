@@ -1,130 +1,47 @@
-import { View, Text } from "react-native";
+import { ScrollView, View } from "react-native";
 
 import { useEdit } from "@/store/edit";
-import { PrivateProfile } from "@/api/my-profile/types";
 
-import { RadioList } from "@/components/shared/radio-list";
-import { CheckboxList } from "@/components/shared/checkbox-list";
+import { StepFooter, StepHeader, StepLayout } from "@/components/onboarding";
 
-import {
-  useEthnicities,
-  useSexualities,
-  useZodiacSigns,
-  usePets,
-  useChildren,
-  useFamilyPlans,
-  useCovidVaccine,
-} from "@/api/options";
-import {
-  FieldLabel,
-  StepFooter,
-  StepHeader,
-  StepLayout,
-} from "@/components/onboarding";
+import { List } from "@/components/shared/list";
+
+import { onboardingIdentityLifestyle } from "@/utils/onboarding/identity";
+
+import { emptyProfile } from "@/utils/profile/emptyProfile";
 
 export default function Page() {
-  const { edits, setEdits } = useEdit();
-
-  const { data: ethnicities } = useEthnicities();
-  const { data: sexualities } = useSexualities();
-  const { data: zodiacs } = useZodiacSigns();
-
-  const { data: pets } = usePets();
-  const { data: children } = useChildren();
-  const { data: familyPlans } = useFamilyPlans();
-  const { data: covidVaccine } = useCovidVaccine();
-
-  const update = (field: string, value: any) => {
-    setEdits({
-      ...edits,
-      [field]: value,
-    } as PrivateProfile);
-  };
+  const { edits } = useEdit();
 
   return (
     <StepLayout
       header={
         <StepHeader
           stepName="identity-lifestyle"
-          title="Identity & Lifestyle"
-          subtitle="Optional but helps improve matches"
+          title="Identity & lifestyle"
+          subtitle="Optional but improves matches"
         />
       }
       footer={
-        <StepFooter nextRoute="/(app)/onboarding/location" showSkip={true} />
+        <StepFooter
+          nextRoute="/(app)/onboarding/screens/location"
+          showSkip={true}
+        />
       }
     >
-      <View className="mt-4">
-        {/* ETHNICITY */}
-
-        <FieldLabel label="Ethnicity" />
-
-        <RadioList
-          options={ethnicities}
-          initialValue={edits?.ethnicity}
-          onChange={(v) => update("ethnicity", v)}
-        />
-
-        {/* SEXUALITY */}
-
-        <FieldLabel label="Sexuality" />
-
-        <RadioList
-          options={sexualities}
-          initialValue={edits?.sexuality}
-          onChange={(v) => update("sexuality", v)}
-        />
-
-        {/* ZODIAC */}
-
-        <FieldLabel label="Zodiac" />
-
-        <RadioList
-          options={zodiacs}
-          initialValue={edits?.zodiac}
-          onChange={(v) => update("zodiac", v)}
-        />
-
-        {/* PETS */}
-
-        <FieldLabel label="Pets" />
-
-        <CheckboxList
-          options={pets}
-          initialSelection={edits?.pets || []}
-          onChange={(v) => update("pets", v)}
-        />
-
-        {/* CHILDREN */}
-
-        <FieldLabel label="Children" />
-
-        <RadioList
-          options={children}
-          initialValue={edits?.children}
-          onChange={(v) => update("children", v)}
-        />
-
-        {/* FAMILY PLANS */}
-
-        <FieldLabel label="Family Plans" />
-
-        <RadioList
-          options={familyPlans}
-          initialValue={edits?.family_plans}
-          onChange={(v) => update("family_plans", v)}
-        />
-
-        {/* COVID */}
-
-        <FieldLabel label="Covid Vaccine" />
-
-        <RadioList
-          options={covidVaccine}
-          initialValue={edits?.covid_vaccine}
-          onChange={(v) => update("covid_vaccine", v)}
-        />
-      </View>
+      <ScrollView
+        className="flex-1 bg-white"
+        contentContainerClassName="pb-28"
+        showsVerticalScrollIndicator={false}
+      >
+        <View className="px-6 pt-6">
+          <List
+            title="Identity & Lifestyle"
+            data={onboardingIdentityLifestyle}
+            profile={edits ?? emptyProfile}
+          />
+        </View>
+      </ScrollView>
     </StepLayout>
   );
 }

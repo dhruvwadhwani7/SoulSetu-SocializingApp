@@ -9,7 +9,7 @@ import { Empty } from "@/components/shared/empty";
 import { Fab } from "@/components/shared/fab";
 import { Loader } from "@/components/shared/loader";
 import { useRefreshOnFocus } from "@/hooks/refetch";
-import { transformPublicProfile } from "@/utils/profile";
+import { transformPublicProfile } from "@/utils/profile/profile";
 import { Ionicons } from "@expo/vector-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, router } from "expo-router";

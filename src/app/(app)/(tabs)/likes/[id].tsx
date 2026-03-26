@@ -1,7 +1,7 @@
 import { useLikes, useMatch, useRemoveLike } from "@/api/profiles";
 import { ProfileView } from "@/components/profileView/profile-view";
 import { Fab } from "@/components/shared/fab";
-import { transformPublicProfile } from "@/utils/profile";
+import { transformPublicProfile } from "@/utils/profile/profile";
 import { Image } from "expo-image";
 import { Redirect, Stack, router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
