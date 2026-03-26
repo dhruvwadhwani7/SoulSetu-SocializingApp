@@ -1,9 +1,9 @@
+import { StackHeaderV2 } from "@/components/shared/stack-header-v2";
 import { CameraView, useCameraPermissions } from "expo-camera";
+import * as Linking from "expo-linking";
 import { Stack, router } from "expo-router";
 import { useCallback, useState } from "react";
-import { View, Text, Pressable } from "react-native";
-import * as Linking from "expo-linking";
-import { StackHeaderV2 } from "@/components/stack-header-v2";
+import { Pressable, Text, View } from "react-native";
 
 export default function ScanQRPage() {
   const [permission, requestPermission] = useCameraPermissions();
@@ -18,23 +18,22 @@ export default function ScanQRPage() {
       const profileId = data.replace("soulsetu://profile/", "");
       router.replace(`/(app)/qr/scannedProfile.tsx/${profileId}`);
     },
-    [scanned]
+    [scanned],
   );
 
   if (!permission) {
     return <View className="flex-1 bg-white" />;
   }
 
- //for particularly IOS this part is changed
+  //for particularly IOS this part is changed
   if (!permission.granted) {
-    const permanentlyDenied =
-      permission.canAskAgain === false;
+    const permanentlyDenied = permission.canAskAgain === false;
 
     return (
       <View className="flex-1 items-center justify-center bg-white px-6">
         {/* Hide header */}
-        <Stack.Screen options={{ headerShown: true }} />
         <StackHeaderV2 title="Scan QR" />
+        <Stack.Screen options={{ headerShown: true }} />
 
         <Text className="text-center text-neutral-700 mb-4">
           Camera permission is required to scan QR codes
@@ -76,8 +75,8 @@ export default function ScanQRPage() {
 
   return (
     <View className="flex-1 bg-black">
-      <Stack.Screen options={{ headerShown: false }} />
       <StackHeaderV2 title="Scan QR" />
+      <Stack.Screen options={{ headerShown: true }} />
 
       <CameraView
         style={{ flex: 1 }}

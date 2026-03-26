@@ -1,4 +1,4 @@
-import { ProfileView } from "@/components/profile-view";
+import { ProfileView } from "@/components/profileView/profile-view";
 import { useEdit } from "@/store/edit";
 import { transformPrivateProfile } from "@/utils/profile";
 import { Text, View } from "react-native";

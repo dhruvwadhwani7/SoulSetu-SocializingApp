@@ -21,6 +21,7 @@
   dispatch_once(&nativeComponentsToken, ^{
     thirdPartyComponents = @{
 		@"RNDateTimePicker": NSClassFromString(@"RNDateTimePickerComponentView"), // @react-native-community/datetimepicker
+		@"RNCSlider": NSClassFromString(@"RNCSliderComponentView"), // @react-native-community/slider
 		@"RNCPicker": NSClassFromString(@"RNCPickerComponentView"), // @react-native-picker/picker
 		@"LottieAnimationView": NSClassFromString(@"LottieAnimationViewComponentView"), // lottie-react-native
 		@"RNGestureHandlerButton": NSClassFromString(@"RNGestureHandlerButtonComponentView"), // react-native-gesture-handler

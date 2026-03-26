@@ -1,6 +1,6 @@
-import { AnswerList } from "@/components/answer-list";
-import { List } from "@/components/list";
-import { PhotoGrid } from "@/components/photo-grid";
+import { AnswerList } from "@/components/profileView/answer-list";
+import { PhotoGrid } from "@/components/profileView/photo-grid";
+import { List } from "@/components/shared/list";
 import { useEdit } from "@/store/edit";
 import { identity } from "@/utils/identity";
 import { vitals } from "@/utils/vitals";

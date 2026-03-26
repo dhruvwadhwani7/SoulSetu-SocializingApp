@@ -1,7 +1,7 @@
 import { useLikes } from "@/api/profiles";
-import { Empty } from "@/components/empty";
-import { LikeCard } from "@/components/like-card";
-import { Loader } from "@/components/loader";
+import { LikeCard } from "@/components/profileView/like-card";
+import { Empty } from "@/components/shared/empty";
+import { Loader } from "@/components/shared/loader";
 import { useRefreshOnFocus } from "@/hooks/refetch";
 import { Link } from "expo-router";
 import { FlatList, Pressable, Text, View } from "react-native";
@@ -13,7 +13,7 @@ export default function Page() {
 
   /* ===== Empty / Error / Loading ===== */
   const renderEmpty = () => {
-    if (isFetching) return <Loader width={120} height={120}/>;
+    if (isFetching) return <Loader width={120} height={120} />;
 
     if (isError) {
       return (

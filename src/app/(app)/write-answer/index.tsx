@@ -1,7 +1,7 @@
 import { Answer } from "@/api/my-profile/types";
 import { usePrompts } from "@/api/options";
 import { Prompt } from "@/api/options/types";
-import { StackHeaderV3 } from "@/components/stack-header-v3";
+import { StackHeaderV3 } from "@/components/shared/stack-header-v3";
 import { useEdit } from "@/store/edit";
 import * as Crypto from "expo-crypto";
 import { Link, router, useLocalSearchParams } from "expo-router";

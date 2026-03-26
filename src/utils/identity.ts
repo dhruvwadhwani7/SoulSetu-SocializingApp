@@ -1,3 +1,4 @@
+// import { identity } from './identity';
 import { PrivateProfile } from "@/api/my-profile/types";
 
 export const identity = [
@@ -8,21 +9,21 @@ export const identity = [
         profile?.pronouns.map((pronoun) => pronoun.name).join(", ") || "None"
       );
     },
-    route: "/profile/pronouns",
+    route: "/profile/identity/pronouns",
   },
   {
     title: "Gender",
     getValue: (profile: PrivateProfile) => {
       return profile?.gender?.name || "None";
     },
-    route: "/profile/gender",
+    route: "/profile/identity/gender",
   },
   {
     title: "Sexuality",
     getValue: (profile: PrivateProfile) => {
       return profile?.sexuality?.name || "None";
     },
-    route: "/profile/sexuality",
+    route: "/profile/identity/sexuality",
   },
   {
     title: "I'm interested in",
@@ -32,6 +33,6 @@ export const identity = [
         "Everyone"
       );
     },
-    route: "/profile/gender-preferences",
+    route: "/profile/identity/gender-preferences",
   },
 ];

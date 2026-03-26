@@ -1,6 +1,6 @@
 import { usePrompts } from "@/api/options";
 import { Prompt } from "@/api/options/types";
-import { StackHeaderV2 } from "@/components/stack-header-v2";
+import { StackHeaderV2 } from "@/components/shared/stack-header-v2";
 import { router, useLocalSearchParams } from "expo-router";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 
@@ -58,7 +58,6 @@ export default function Page() {
             <Text className="text-[16px] font-poppins-medium text-[#111] leading-snug">
               {item.question}...
             </Text>
-
           </TouchableOpacity>
         )}
       />

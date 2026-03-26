@@ -9,28 +9,28 @@ export const memberPreferences = [
         "Everyone"
       );
     },
-    route: "/preferences/gender",
+    route: "/preferences/preferTypes/gender",
   },
   {
     title: "My neighborhood",
     getValue: (profile: PrivateProfile) => {
       return profile?.neighborhood || "None";
     },
-    route: "/preferences/neighborhood",
+    route: "/preferences/preferTypes/neighborhood",
   },
   {
     title: "Maximum distance",
     getValue: (profile: PrivateProfile) => {
       return `${profile?.max_distance_km} km`;
     },
-    route: "/preferences/distance",
+    route: "/preferences/preferTypes/distance",
   },
   {
     title: "Age range",
     getValue: (profile: PrivateProfile) => {
       return `${profile?.min_age} - ${profile?.max_age}`;
     },
-    route: "/preferences/age",
+    route: "/preferences/preferTypes/age",
   },
   {
     title: "Ethnicity",
@@ -41,6 +41,6 @@ export const memberPreferences = [
           .join(", ") || "Open to all"
       );
     },
-    route: "/preferences/ethnicity",
+    route: "/preferences/preferTypes/ethnicity",
   },
 ];

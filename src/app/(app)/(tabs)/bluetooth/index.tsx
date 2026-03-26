@@ -341,7 +341,7 @@ export default function Page() {
                     shadowRadius: 20,
                   }}
                 >
-                  <View className="h-44 w-full relative bg-neutral-100">
+                  <View className="h-80 w-full relative bg-neutral-100">
                     {item.photoUrl ? (
                       <RNImage
                         source={{ uri: item.photoUrl }}
@@ -372,7 +372,7 @@ export default function Page() {
                     <View className="absolute top-4 left-4 flex-row items-center bg-black/40 px-3 py-1.5 rounded-full border border-white/20">
                       <View className="w-2 h-2 rounded-full bg-green-400 mr-2" />
                       <Text className="text-white text-[11px] font-poppins-semibold tracking-wider">
-                        NEARBY SECS AGO
+                        Online
                       </Text>
                     </View>
 
@@ -395,19 +395,6 @@ export default function Page() {
                         />
                       </View>
                     </View>
-                  </View>
-
-                  {/* Fun Bottom Bar */}
-                  <View className="px-5 py-4 bg-white flex-row items-center justify-between">
-                    <View className="flex-row items-center">
-                      <View className="w-8 h-8 rounded-full bg-orange-50 items-center justify-center mr-3">
-                        <Text className="text-[14px]">👋</Text>
-                      </View>
-                      <Text className="text-[#111827] text-[13px] font-medium">
-                        Say Hi via Bluetooth!
-                      </Text>
-                    </View>
-                    <Ionicons name="bluetooth" size={16} color="#6366f1" />
                   </View>
                 </View>
               </TouchableOpacity>
