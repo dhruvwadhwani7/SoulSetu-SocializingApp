@@ -1,5 +1,5 @@
 import { PrivateProfile } from "@/api/my-profile/types";
-import { age } from "@/utils/age";
+import { age } from "@/utils/profile/age";
 
 export const vitals = [
   {

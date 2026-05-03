@@ -1,6 +1,6 @@
 import { ProfileView } from "@/components/profileView/profile-view";
 import { useEdit } from "@/store/edit";
-import { transformPrivateProfile } from "@/utils/profile";
+import { transformPrivateProfile } from "@/utils/profile/profile";
 import { Text, View } from "react-native";
 
 export default function Page() {

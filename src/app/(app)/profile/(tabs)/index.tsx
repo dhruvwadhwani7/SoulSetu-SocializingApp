@@ -2,8 +2,8 @@ import { AnswerList } from "@/components/profileView/answer-list";
 import { PhotoGrid } from "@/components/profileView/photo-grid";
 import { List } from "@/components/shared/list";
 import { useEdit } from "@/store/edit";
-import { identity } from "@/utils/identity";
-import { vitals } from "@/utils/vitals";
+import { identity } from "@/utils/profile/identity";
+import { vitals } from "@/utils/profile/vitals";
 import { ScrollView, Text, View } from "react-native";
 
 export default function Page() {

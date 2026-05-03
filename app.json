@@ -15,6 +15,7 @@
       "supportsTablet": true,
       "infoPlist": {
         "NSBluetoothAlwaysUsageDescription": "We use Bluetooth to discover nearby users.",
+        // "NSPhotoLibraryUsageDescription": "Upload profile photos",
         "UIBackgroundModes": [
           "bluetooth-central",
           "bluetooth-peripheral"

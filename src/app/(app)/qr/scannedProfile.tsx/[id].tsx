@@ -2,7 +2,7 @@ import { useLikeProfile, useProfileById, useSkipProfile } from "@/api/profiles";
 import { ProfileView } from "@/components/profileView/profile-view";
 import { Fab } from "@/components/shared/fab";
 import { Loader } from "@/components/shared/loader";
-import { transformPublicProfile } from "@/utils/profile";
+import { transformPublicProfile } from "@/utils/profile/profile";
 import { Ionicons } from "@expo/vector-icons";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { Alert, Pressable, Text, View } from "react-native";
